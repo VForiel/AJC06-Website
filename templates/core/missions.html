@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load ajc %}
+{% block title %}Missions{% endblock %}
+{% block description %}Soutenir, accompagner et représenter les doctorant·es et jeunes chercheur·es des Alpes-Maritimes : les quatre missions de l'AJC06.{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Pourquoi l'AJC06 existe</p>
+    <h1 class="page-title">Nos missions</h1>
+    <p class="page-lede">L'AJC06 soutient, accompagne et promeut les doctorant·es et jeunes chercheur·es de la région à travers des événements, des initiatives et des collaborations, pour leur épanouissement personnel, académique et professionnel.</p>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  <section class="mission">
+    <div><span class="mission-n">01</span><p class="kicker">Science et culture</p><h2>Dynamiser la vie doctorale d'Université Côte d'Azur</h2></div>
+    <ul>
+      <li>Organisation d'événements sociaux : concerts, randonnées, soirées des doctorant·es</li>
+      <li>Participation à la Fête de la science</li>
+      <li>Soutien aux associations de doctorant·es d'Université Côte d'Azur</li>
+    </ul>
+  </section>
+  <section class="mission">
+    <div><span class="mission-n">02</span><p class="kicker">Communication</p><h2>Faire circuler l'information entre doctorant·es</h2></div>
+    <ul>
+      <li>Annonces et discussions sur la <a href="{{ WHATSAPP_URL }}" rel="noopener">communauté WhatsApp</a>, fil d'actualité sur <a href="{{ INSTAGRAM_URL }}" rel="noopener">Instagram</a>, LinkedIn et le site internet</li>
+      <li>Liens utiles réunis dans la rubrique <a href="{% url 'core:resources' %}">Ressources</a></li>
+    </ul>
+  </section>
+  <section class="mission">
+    <div><span class="mission-n">03</span><p class="kicker">Carrière</p><h2>Valoriser la formation par la recherche et préparer l'après-thèse</h2></div>
+    <ul>
+      <li>Ateliers sur la poursuite de carrière : entrepreneuriat, entreprise, académique…</li>
+      <li>Membre du réseau BioTechno, qui valorise la formation des docteur·es et œuvre à l'insertion des jeunes diplômé·es en biologie</li>
+      <li>Membre du Conseil scientifique et d'orientation de l'OTECCA (Observatoire de la transition écologique et citoyenne Côte d'Azur)</li>
+    </ul>
+  </section>
+  <section class="mission">
+    <div><span class="mission-n">04</span><p class="kicker">Représentation</p><h2>Représenter et défendre les jeunes chercheur·es des Alpes-Maritimes</h2></div>
+    <ul>
+      <li>Échanges avec Université Côte d'Azur et les syndicats étudiants</li>
+      <li>Plaidoyer local et national pour améliorer les conditions de travail des jeunes chercheur·es</li>
+      <li>Fiche pratique sur <a href="{% url 'core:resource' 'les-droits-des-doctorantes' %}">les droits des doctorant·es</a></li>
+    </ul>
+  </section>
+
+  <div class="donate-box">
+    <div>
+      <h2>Une idée, un projet, une galère&nbsp;?</h2>
+      <p>Le bureau est composé de doctorant·es bénévoles. Écris-nous : on relaie, on aide, ou on monte le projet avec toi.</p>
+    </div>
+    <a class="btn btn-blue" href="{% url 'core:contact' %}">{% icon "mail" 18 %} Nous écrire</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+Django>=5.2,<5.3
+fpdf2>=2.8
+gunicorn>=26
+Markdown>=3.11
+nh3>=0.3
+Pillow>=13
+pypdf>=6
+whitenoise>=6.12

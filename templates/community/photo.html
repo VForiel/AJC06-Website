@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% if photo.caption %}{{ photo.caption }}{% else %}{% translate "Photo" %}{% endif %}{% endblock %}
+{% block og_image %}<meta property="og:image" content="{{ SITE_URL }}{{ photo.image.url }}">{% endblock %}
+
+{% block content %}
+<div class="wrap page-body">
+  <div class="page-head"><a class="breadcrumb" href="{% url 'community:photos' %}">{% icon "arrow-left" 16 %} {% translate "Photos" %}</a></div>
+  <figure class="photo-view">
+    <img src="{{ photo.image.url }}" alt="{{ photo.caption }}">
+    <figcaption>
+      {% if photo.caption %}<p class="photo-caption">{{ photo.caption }}</p>{% endif %}
+      <p class="help">
+        {% if photo.event %}<a href="{{ photo.event.get_absolute_url }}">{{ photo.event.title_tr }}</a> · {% endif %}
+        {% if user.is_authenticated and photo.uploader %}{% blocktranslate with name=photo.uploader.profile.display_name %}Partagée par {{ name }}{% endblocktranslate %} · {% endif %}
+        {{ photo.created_at|date:"j F Y" }}
+      </p>
+      {% if user.is_authenticated %}
+        {% if tagged %}
+        <p class="photo-tags">{% icon "users" 16 %}
+          {% for u in tagged %}<a href="{{ u.profile.get_absolute_url }}">{{ u.profile.display_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+        </p>
+        {% endif %}
+        <div class="photo-actions">
+          {% if is_tagged %}<form method="post" action="{% url 'community:photo_untag' photo.pk %}">{% csrf_token %}<button class="btn btn-ghost" type="submit">{% translate "Retirer mon identification" %}</button></form>{% endif %}
+          {% if can_delete %}<form method="post" action="{% url 'community:photo_delete' photo.pk %}">{% csrf_token %}<button class="btn btn-danger" type="submit">{% translate "Supprimer la photo" %}</button></form>{% endif %}
+          <a class="report-link" href="{% url 'community:report' 'photo' photo.pk %}">{% translate "Signaler cette photo" %}</a>
+        </div>
+      {% else %}
+        {% if tagged %}<p class="help">{% translate "Connecte-toi pour voir qui est sur la photo." %}</p>{% endif %}
+      {% endif %}
+    </figcaption>
+  </figure>
+</div>
+{% endblock %}

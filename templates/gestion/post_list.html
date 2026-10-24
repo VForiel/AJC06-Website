@@ -1,0 +1,28 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Articles{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <h1>Articles</h1>
+  <div class="g-head-actions"><a class="btn btn-primary" href="{% url 'gestion:post_new' %}">{% icon "plus" 18 %} Nouvel article</a></div>
+</header>
+
+<section class="g-panel">
+  {% if posts %}
+  <table class="g-table">
+    <thead><tr><th>Date</th><th>Titre</th><th>Statut</th><th><span class="sr">Actions</span></th></tr></thead>
+    <tbody>
+      {% for p in posts %}
+      <tr>
+        <td class="g-nowrap">{{ p.published_at|date:"d/m/Y" }}</td>
+        <td><a href="{% url 'gestion:post_edit' p.pk %}"><strong>{{ p.title }}</strong></a></td>
+        <td>{% if p.is_live %}<span class="g-badge g-badge-ok">En ligne</span>{% elif p.status == 'published' %}<span class="g-badge">Programmé</span>{% else %}<span class="g-badge">Brouillon</span>{% endif %}</td>
+        <td class="g-actions"><a href="{{ p.get_absolute_url }}" title="Voir">{% icon "external" 16 %}<span class="sr">Voir</span></a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p class="g-empty">Aucun article pour l'instant.</p>{% endif %}
+</section>
+{% endblock %}

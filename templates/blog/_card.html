@@ -1,0 +1,12 @@
+{% load static i18n %}<article class="card">
+  <a class="card-link" href="{{ post.get_absolute_url }}">
+    <div class="card-media{% if not post.cover %} card-media-empty{% endif %}">
+      {% if post.cover %}<img src="{{ post.cover.url }}" alt="" loading="lazy">{% else %}<img src="{% static 'img/logo-mark.svg' %}" alt="">{% endif %}
+    </div>
+    <div class="card-body">
+      <p class="card-meta"><time datetime="{{ post.published_at|date:'c' }}">{{ post.published_at|date:"j F Y" }}</time> · {% blocktranslate with n=post.reading_minutes %}{{ n }} min{% endblocktranslate %}</p>
+      <h3 class="card-title">{{ post.title_tr }}</h3>
+      <p class="card-text">{{ post.teaser|truncatechars:150 }}</p>
+    </div>
+  </a>
+</article>

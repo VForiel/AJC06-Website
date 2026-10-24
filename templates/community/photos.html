@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Photos" %}{% endblock %}
+{% block description %}{% translate "Les photos des événements et sorties de l'AJC06, partagées par les membres." %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Communauté" %}</p>
+    <h1 class="page-title">{% translate "Photos" %}</h1>
+    <p class="page-lede">{% translate "Les souvenirs des événements et des sorties, partagés par les membres." %}</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="{% url 'community:photo_new' %}">{% icon "plus" 18 %} {% translate "Ajouter une photo" %}</a></div>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  {% if page.object_list %}
+  <div class="wall photo-wall">
+    {% for p in page.object_list %}
+    <a class="wall-item" href="{{ p.get_absolute_url }}">
+      <img src="{{ p.image.url }}" alt="{{ p.caption }}" loading="lazy">
+      <span class="wall-caption">{% if p.event %}<span>{{ p.event.title_tr }}</span>{% endif %}{{ p.caption }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% if page.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="{% translate "Pages" %}">
+    {% for n in page.paginator.page_range %}{% if n == page.number %}<span aria-current="page">{{ n }}</span>{% else %}<a href="?page={{ n }}">{{ n }}</a>{% endif %}{% endfor %}
+  </nav>
+  {% endif %}
+  {% else %}
+  <div class="empty"><h3>{% translate "Pas encore de photo." %}</h3><p>{% translate "Partage la première, d'un événement ou d'une sortie entre doctorant·es." %}</p></div>
+  {% endif %}
+</div>
+{% endblock %}

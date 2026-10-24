@@ -1,0 +1,47 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Comptes{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <h1>Comptes</h1>
+    <p class="g-muted">
+      {% if mode == "bureau" %}Les nouvelles inscriptions attendent ta validation : sans elle, la personne ne peut pas se connecter.
+      {% elif mode == "courriel" %}Les nouveaux comptes s'activent avec le lien reçu par courriel ; tu peux aussi les valider ici si le message n'arrive pas.
+      {% else %}Les inscriptions sont actives tout de suite : rien n'attend de validation.{% endif %}
+      Vérifie qu'il s'agit bien d'un·e doctorant·e ou jeune chercheur·se (nom, adresse). Pour désactiver un compte existant :
+      <a href="{% url 'admin:auth_user_changelist' %}">admin › Utilisateurs</a>, décocher « actif ».
+    </p>
+  </div>
+</header>
+
+<section class="g-panel{% if pending %} g-panel-alert{% endif %}">
+  <header><h2>En attente de validation ({{ pending|length }})</h2></header>
+  {% for u in pending %}
+  <div class="g-account">
+    <div>
+      <strong>{{ u.profile.display_name }}</strong>
+      <span class="g-muted">{{ u.email }} · inscrit·e le {{ u.date_joined|date:"j F Y à H:i" }}</span>
+    </div>
+    <form class="g-head-actions" method="post" action="{% url 'gestion:account_decide' u.pk %}">{% csrf_token %}
+      <button class="btn btn-blue" type="submit" name="decision" value="valider">{% icon "check" 16 %} Valider</button>
+      <button class="btn btn-ghost" type="submit" name="decision" value="refuser" data-confirm="Refuser et supprimer l'inscription de {{ u.profile.display_name }} ?">Refuser</button>
+    </form>
+  </div>
+  {% empty %}
+  <p class="g-empty">Aucun compte en attente.</p>
+  {% endfor %}
+</section>
+
+<section class="g-panel">
+  <header><h2>Derniers comptes actifs</h2><a href="{% url 'admin:auth_user_changelist' %}">Tous dans l'admin</a></header>
+  {% for u in recent %}
+  <a class="g-line" href="{{ u.profile.get_absolute_url }}">
+    <span class="g-date">{{ u.date_joined|date:"j" }} {{ u.date_joined|month_short }}</span>
+    <span class="g-line-title">{{ u.profile.display_name }} <span class="g-muted">{{ u.email }}</span></span>
+    {% if u.is_staff %}<span class="g-badge">bureau</span>{% endif %}
+  </a>
+  {% endfor %}
+</section>
+{% endblock %}

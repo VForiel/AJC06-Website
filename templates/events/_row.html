@@ -1,0 +1,17 @@
+{% load i18n ajc %}<article class="row{% if event.is_upcoming %} row-upcoming{% endif %}">
+  <a class="row-link" href="{{ event.get_absolute_url }}">
+    <time class="row-date" datetime="{{ event.start_date|date:'Y-m-d' }}">
+      <span class="row-day">{{ event.start_date|date:"j" }}{% if event.multi_day %}<small>–{{ event.end_date|date:"j" }}</small>{% endif %}</span>
+      <span class="row-month">{{ event.start_date|month_short }}{% if show_year %} {{ event.start_date|date:"Y" }}{% endif %}</span>
+      <span class="row-weekday">{{ event.start_date|date:"l" }}</span>
+    </time>
+    <div class="row-main">
+      <p class="row-meta">{% for code, emoji, label in event.type_tags|slice:":2" %}<span class="tag tag-{{ code }}">{% if emoji %}<span class="tag-emoji" aria-hidden="true">{{ emoji }}</span>{% endif %}{{ label }}</span>{% endfor %}{% if event.supported %}<span class="tag tag-supported">{% translate "Soutenu par l'AJC06" %}</span>{% elif event.is_community %}<span class="tag tag-community">{% translate "Communauté" %}</span>{% endif %}{% if event.is_upcoming %}<span class="row-countdown">{{ event|countdown }}</span>{% endif %}</p>
+      <h3 class="row-title">{{ event.title_tr }}</h3>
+      {% if event.is_community and event.organizer %}<p class="row-by">{% blocktranslate with name=event.organizer.profile.display_name %}Proposé par {{ name }}{% endblocktranslate %}</p>{% endif %}
+      <p class="row-where">{% if event.venue %}{{ event.venue }} · {% endif %}{{ event|hours }}{% if event.price_tr %} · {{ event.price_tr|truncatechars:40 }}{% endif %}</p>
+    </div>
+    {% if event.poster %}<img class="row-poster" src="{{ event.poster.url }}" alt="" loading="lazy" width="96" height="96">{% endif %}
+    <span class="row-go">{% icon "arrow" 22 %}</span>
+  </a>
+</article>

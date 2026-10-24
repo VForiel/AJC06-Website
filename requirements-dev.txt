@@ -1,0 +1,6 @@
+-r requirements.txt
+# Reprise du contenu de l ancien site (scripts/scrape_wordpress.py) et polices PDF (fontTools)
+beautifulsoup4
+markdownify
+fonttools
+brotli

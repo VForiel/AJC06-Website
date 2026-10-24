@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Mentions légales{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap"><h1 class="page-title">Mentions légales</h1></div>
+</header>
+<div class="wrap page-body prose">
+  <h2>Éditeur</h2>
+  <p>Le site {{ SITE_URL }} est édité par l'Association des Jeunes Chercheurs des Alpes-Maritimes (AJC06), 28 avenue de Valrose, 06103 Nice.<br>
+  Courriel : <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a></p>
+  <p>Directeur·rice de la publication : la présidence de l'association.</p>
+
+  <h2>Hébergement</h2>
+  <p>{{ LEGAL_HOST }}</p>
+
+  <h2>Conception</h2>
+  <p>Site conçu et développé par les bénévoles de l'AJC06. Police de caractères Archivo (Omnibus-Type), sous licence SIL Open Font License.</p>
+
+  <h2>Contenus</h2>
+  <p>Les textes, affiches et photos sont la propriété de l'AJC06 ou de leurs auteur·rices et ne peuvent être réutilisés sans autorisation.</p>
+</div>
+{% endblock %}

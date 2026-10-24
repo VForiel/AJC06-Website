@@ -1,0 +1,10 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate %}Bonjour {{ name }},
+
+Ton compte sur le site de l'AJC06 vient d'être validé par le bureau. Tu peux te connecter avec ton courriel et ton mot de passe :{% endblocktranslate %}
+
+{{ link }}
+
+{% blocktranslate %}À bientôt à une prochaine sortie !
+
+— L'AJC06{% endblocktranslate %}
+{% endautoescape %}

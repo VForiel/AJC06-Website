@@ -1,0 +1,30 @@
+{% load static ajc %}<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Connexion · AJC06</title>
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <link rel="stylesheet" href="{% static 'css/gestion.css' %}">
+  <script nonce="{{ csp_nonce }}">try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body class="g-login">
+  <form class="g-login-card" method="post">
+    {% csrf_token %}
+    <a class="brand" href="{% url 'core:home' %}">
+      <img src="{% static 'img/logo-mark.svg' %}" alt="" width="40" height="39">
+      <span class="brand-name">AJC<span>06</span></span>
+    </a>
+    <h1>Espace bureau</h1>
+    <p>Pour publier les événements et les articles du site.</p>
+    {% if form.errors %}<p class="g-error">Identifiant ou mot de passe incorrect.</p>{% endif %}
+    <div class="field"><label for="id_username">Identifiant</label><input type="text" name="username" id="id_username" autocomplete="username" required autofocus></div>
+    <div class="field"><label for="id_password">Mot de passe</label><input type="password" name="password" id="id_password" autocomplete="current-password" required></div>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="btn btn-primary" type="submit">Se connecter {% icon "arrow" 18 %}</button>
+    <p class="g-muted">Pas de compte ? Demande à la présidence ou au secrétariat de t'en créer un.</p>
+  </form>
+</body>
+</html>

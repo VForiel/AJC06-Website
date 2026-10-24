@@ -1,0 +1,37 @@
+{% extends "community/_auth_base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Rejoindre la communauté" %}{% endblock %}
+{% block description %}{% translate "Crée ton compte pour proposer des sorties, retrouver d'autres doctorant·es et voir qui vient aux événements." %}{% endblock %}
+
+{% block pitch %}
+<p class="kicker">{% translate "Espace membres" %}</p>
+<h1 class="page-title">{% translate "Rejoins la communauté" %}</h1>
+<ul class="auth-perks">
+  <li>{% icon "calendar" 22 %}<div><strong>{% translate "Propose tes propres sorties" %}</strong><span>{% translate "Un afterwork, une rando, une soirée jeux : publie-la, les autres doctorant·es s'inscrivent en un clic." %}</span></div></li>
+  <li>{% icon "users" 22 %}<div><strong>{% translate "Retrouve les autres doctorant·es" %}</strong><span>{% translate "Par discipline, école doctorale ou centres d'intérêt, et ajoute-les en amis." %}</span></div></li>
+  <li>{% icon "check" 22 %}<div><strong>{% translate "Vois qui vient" %}</strong><span>{% translate "Indique que tu y vas, invite tes amis et vois lesquels seront là." %}</span></div></li>
+</ul>
+{% endblock %}
+
+{% block card %}
+<h2>{% translate "Créer mon compte" %}</h2>
+<form class="form" method="post" novalidate>
+  {% csrf_token %}
+  {% for field in form %}
+    {% if field.name == "website" %}
+    <div class="hp" aria-hidden="true">{{ field.label_tag }}{{ field }}</div>
+    {% elif field.name == "consent" %}
+    <div class="field"><label class="check">{{ field }} <span>{{ field.label }}</span></label>{{ field.errors }}</div>
+    {% else %}
+    <div class="field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
+      {{ field.errors }}
+    </div>
+    {% endif %}
+  {% endfor %}
+  <button class="btn btn-primary" type="submit">{% translate "C'est parti" %} {% icon "arrow" 18 %}</button>
+</form>
+<p class="auth-switch">{% translate "Déjà membre ?" %} <a href="{% url 'community:login' %}">{% translate "Se connecter" %}</a></p>
+{% endblock %}

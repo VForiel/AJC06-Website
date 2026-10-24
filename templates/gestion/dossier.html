@@ -1,0 +1,125 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Dossier — {{ event.title }}{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <a class="breadcrumb" href="{% url 'gestion:events' %}">{% icon "arrow-left" 16 %} Événements</a>
+    <h1>Dossier université</h1>
+    <p class="g-muted"><a href="{% url 'gestion:event_edit' event.pk %}">{{ event.title }}</a> · {{ event.start_date|date:"l j F Y" }}{% if event.supported and support %} · soutien accordé à {{ support.requester.profile.display_name|default:"un membre" }} ({{ support.amount }} €){% endif %}</p>
+  </div>
+  <div class="g-head-actions">
+    <a class="btn btn-primary" href="{% url 'gestion:dossier_pdf' event.pk 'previsionnel' %}">{% icon "download" 18 %} Projet prévisionnel (PDF)</a>
+    <a class="btn btn-ghost" href="{% url 'gestion:dossier_pdf' event.pk 'bilan' %}">{% icon "download" 18 %} Bilan (PDF)</a>
+  </div>
+</header>
+
+<div class="g-steps">
+  <div class="g-step{% if event.on_hold %} is-current{% endif %}">
+    <strong>1. En attente</strong>
+    <span>{% if event.on_hold %}L'événement n'est pas visible sur le site.{% else %}Publié sur le site.{% endif %}</span>
+    <form method="post" action="{% url 'gestion:event_hold' event.pk %}">{% csrf_token %}
+      <button class="btn btn-ghost" type="submit">{% if event.on_hold %}Publier sur le site{% else %}Remettre en attente{% endif %}</button>
+    </form>
+  </div>
+  <div class="g-step{% if not dossier.submitted_at and event.is_upcoming %} is-current{% endif %}">
+    <strong>2. Projet prévisionnel</strong>
+    {% if dossier.submitted_at %}<span>Transmis le {{ dossier.submitted_at|date:"j F Y" }}.</span>
+    {% else %}<span class="{% if deadline < today %}g-late{% endif %}">À transmettre à l'université avant le <b>{{ deadline|date:"l j F" }}</b> (deux semaines avant).</span>{% endif %}
+  </div>
+  <div class="g-step{% if not event.is_upcoming and not dossier.report_submitted_at %} is-current{% endif %}">
+    <strong>3. Bilan</strong>
+    <span>{% if dossier.report_submitted_at %}Transmis le {{ dossier.report_submitted_at|date:"j F Y" }}.{% else %}Après l'événement : récit, participation, bilan financier, photos et factures.{% endif %}</span>
+  </div>
+</div>
+
+<form class="g-form g-dossier" method="post" novalidate>
+  {% csrf_token %}
+  {% if form.errors or prev.errors or real.errors %}<p class="g-error">Quelques champs sont à corriger.</p>{% endif %}
+  <div class="g-form-main">
+    <fieldset class="g-fieldset">
+      <legend>Projet prévisionnel</legend>
+      {% include "gestion/_field.html" with field=form.convention_line %}
+      {% include "gestion/_field.html" with field=form.resume %}
+      {% include "gestion/_field.html" with field=form.objectives %}
+      {% include "gestion/_field.html" with field=form.audience %}
+      <div class="g-grid g-grid-2">
+        {% include "gestion/_field.html" with field=form.transport %}
+        {% include "gestion/_field.html" with field=form.equipment %}
+      </div>
+      {% include "gestion/_field.html" with field=form.services %}
+      {% include "gestion/_field.html" with field=form.programme %}
+      {% include "gestion/_field.html" with field=form.impact %}
+      {% include "gestion/_field.html" with field=form.quotes %}
+    </fieldset>
+
+    <fieldset class="g-fieldset">
+      <legend>Budget prévisionnel</legend>
+      <p class="g-help">Une ligne par poste. Côté recettes : « Convention UniCA », participation des doctorant·es…</p>
+      {% include "gestion/_budget.html" with formset=prev totals=forecast_totals %}
+    </fieldset>
+
+    <fieldset class="g-fieldset">
+      <legend>Bilan (après l'événement)</legend>
+      <div class="g-grid g-grid-2">
+        {% include "gestion/_field.html" with field=form.registered_count %}
+        {% include "gestion/_field.html" with field=form.present_count %}
+      </div>
+      {% include "gestion/_field.html" with field=form.report_story %}
+      {% include "gestion/_field.html" with field=form.report_assessment %}
+      {% include "gestion/_field.html" with field=form.objectives_met %}
+    </fieldset>
+
+    <fieldset class="g-fieldset">
+      <legend>Bilan financier (réalisé)</legend>
+      <p class="g-help">Vide = le bilan reprend le budget prévisionnel.</p>
+      {% include "gestion/_budget.html" with formset=real totals=real_totals %}
+    </fieldset>
+  </div>
+
+  <aside class="g-form-side">
+    <div class="g-panel g-sticky">
+      {% include "gestion/_field.html" with field=form.submitted_at %}
+      {% include "gestion/_field.html" with field=form.report_submitted_at %}
+      <div class="g-buttons"><button class="btn btn-primary" type="submit">{% icon "check" 18 %} Enregistrer le dossier</button></div>
+    </div>
+
+    <div class="g-panel">
+      <h2 class="g-panel-title">Participant·es ({{ participants|length }})</h2>
+      {% if helloasso_link %}
+      <p class="g-help">HelloAsso : {{ event.helloasso_count|default:"?" }} inscription(s){% if event.helloasso_synced_at %}, mis à jour {{ event.helloasso_synced_at|timesince }}{% endif %}.</p>
+      {% endif %}
+      {% if participants %}<ol class="g-people">{% for name in participants|slice:":40" %}<li>{{ name }}</li>{% endfor %}</ol>{% if participants|length > 40 %}<p class="g-help">… et {{ participants|length|add:"-40" }} autres, tous dans le PDF.</p>{% endif %}
+      {% else %}<p class="g-empty">Personne pour l'instant.</p>{% endif %}
+    </div>
+  </aside>
+</form>
+
+{% if helloasso_link %}
+<form class="g-inline-form" method="post" action="{% url 'gestion:helloasso_sync' event.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}">
+  <button class="btn btn-ghost" type="submit">{% icon "ticket" 18 %} Récupérer les inscrit·es HelloAsso</button>
+</form>
+{% endif %}
+
+<section class="g-panel">
+  <header><h2>Pièces jointes</h2></header>
+  <p class="g-help">Devis (joints au projet prévisionnel), factures et photos (jointes au bilan). Les PDF sont ajoutés à la fin du document ; les photos des membres liées à l'événement sont reprises automatiquement.</p>
+  {% if attachments %}
+  <ul class="g-files">
+    {% for a in attachments %}
+    <li>
+      <span class="g-badge">{{ a.get_kind_display }}</span>
+      <a href="{{ a.file.url }}" target="_blank" rel="noopener">{{ a }}</a>
+      <form method="post" action="{% url 'gestion:dossier_detach' event.pk a.pk %}">{% csrf_token %}<button class="g-link-danger" type="submit">retirer</button></form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <form class="g-attach" method="post" action="{% url 'gestion:dossier_attach' event.pk %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ attach_form.kind }} {{ attach_form.file }} {{ attach_form.label }}
+    <button class="btn btn-blue" type="submit">{% icon "plus" 16 %} Ajouter</button>
+  </form>
+</section>
+{% endblock %}

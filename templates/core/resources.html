@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Ressources" %}{% endblock %}
+{% block description %}{% translate "Financer sa thèse, connaître ses droits, trouver un emploi après le doctorat : les fiches pratiques de l'AJC06." %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Fiches pratiques" %}</p>
+    <h1 class="page-title">{% translate "Ressources" %}</h1>
+    <p class="page-lede">{% translate "Les liens et informations utiles que nous avons rassemblés pour le doctorat à Université Côte d'Azur, pendant la thèse et après." %}</p>
+  </div>
+</header>
+
+<div class="wrap page-body res-groups">
+  {% for value, label, items in groups %}{% if items %}
+  <section class="res-group" aria-labelledby="g-{{ value }}">
+    <h2 id="g-{{ value }}">{{ label }}</h2>
+    <div class="res-list">
+      {% for r in items %}
+      <a class="res-item" href="{{ r.get_absolute_url }}">
+        <h3>{{ r.title_tr }} {% icon "arrow" 20 %}</h3>
+        <p>{{ r.summary_tr }}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}{% endfor %}
+
+  <section class="res-group">
+    <h2>{% translate "Ailleurs" %}</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://www.enseignementsup-recherche.gouv.fr/fr" rel="noopener">
+        <h3>{% translate "Ministère de l'Enseignement supérieur et de la Recherche" %} {% icon "external" 20 %}</h3>
+        <p>{% translate "Réglementation du doctorat, contrats doctoraux, actualités nationales." %}</p>
+      </a>
+    </div>
+  </section>
+</div>
+{% endblock %}

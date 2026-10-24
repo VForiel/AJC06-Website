@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Confidentialité{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <h1 class="page-title">Confidentialité</h1>
+    <p class="page-lede">Version courte : pas de publicité, pas de mesure d'audience, pas de cookie tiers. Nous ne gardons que ce que tu nous écris et ce que tu mets sur ton profil, et tu peux tout supprimer toi-même.</p>
+  </div>
+</header>
+<div class="wrap page-body prose">
+  <h2>Responsable du traitement</h2>
+  <p>L'Association des Jeunes Chercheurs des Alpes-Maritimes (AJC06), 28 avenue de Valrose, 06103 Nice, représentée par sa présidence. Contact : <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</p>
+
+  <h2>Ce que nous collectons</h2>
+  <p>Tu peux consulter tout le site sans rien nous communiquer. Sans compte, les seules données personnelles traitées sont celles que tu saisis dans le <a href="{% url 'core:contact' %}">formulaire de contact</a> : nom, courriel, objet et message. Elles servent uniquement à te répondre et ne sont jamais vendues ni transmises à des tiers.</p>
+  <p>Les inscriptions aux événements et les dons passent par HelloAsso, qui applique sa propre politique de confidentialité.</p>
+
+  <h2>Compte membre</h2>
+  <p>Si tu crées un compte, nous conservons ton nom affiché et ton courriel (pour te connecter), ainsi que ce que tu choisis d'ajouter à ton profil : photo, discipline, école doctorale, laboratoire, sujet de thèse, présentation, centres d'intérêt, liens. S'y ajoutent tes amitiés, les événements que tu proposes ou auxquels tu indiques aller, et tes notifications.</p>
+  <ul>
+    <li><strong>Qui voit ton profil :</strong> par défaut, seulement les membres connectés. Tu peux le rendre public dans tes réglages. Ton courriel n'est jamais affiché.</li>
+    <li><strong>Qui voit ta participation :</strong> les membres connectés voient qui va à un événement ; tu peux masquer cette liste sur ton propre profil.</li>
+    <li><strong>Finalité :</strong> faire vivre la communauté des doctorant·es (base légale : ton consentement, donné à l'inscription).</li>
+    <li><strong>Durée :</strong> tant que ton compte existe. Tu peux le supprimer à tout moment depuis tes réglages ; tout est alors effacé, sauf les événements que tu as proposés, qui restent en ligne sans ton nom.</li>
+    <li><strong>Modération :</strong> le bureau de l'AJC06 peut lire les signalements et masquer un événement ou désactiver un compte qui ne respecte pas l'esprit de la communauté.</li>
+  </ul>
+
+  <h2>Durée de conservation</h2>
+  <p>Les messages de contact sont conservés le temps de traiter ta demande, et au plus 24 mois.</p>
+
+  <h2>Cookies</h2>
+  <p>Le site ne dépose aucun cookie de mesure d'audience, de publicité ou de réseau social, d'où l'absence de bandeau. Seuls existent des cookies techniques, exemptés de consentement : le jeton de sécurité des formulaires et la session des membres connectés. Ton choix de thème clair ou sombre est enregistré dans ton navigateur et ne nous est pas transmis.</p>
+
+  <h2>Tes droits</h2>
+  <p>Conformément au RGPD et à la loi Informatique et Libertés, tu peux accéder à tes données, les faire rectifier ou effacer, t'opposer à leur traitement ou en demander la portabilité en écrivant à <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>. Nous répondons dans un délai d'un mois au plus.</p>
+  <p>Si tu estimes que nous ne respectons pas ces engagements, tu peux saisir la CNIL : <a href="https://www.cnil.fr/fr/plaintes" rel="noopener">cnil.fr/fr/plaintes</a>.</p>
+</div>
+{% endblock %}

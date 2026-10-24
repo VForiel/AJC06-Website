@@ -1,0 +1,22 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Événements{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <h1>Événements</h1>
+  <div class="g-head-actions">
+    <form class="g-search" method="get" role="search"><input type="search" name="q" value="{{ q }}" placeholder="Rechercher…" aria-label="Rechercher un événement"></form>
+    <a class="btn btn-primary" href="{% url 'gestion:event_new' %}">{% icon "plus" 18 %} Nouvel événement</a>
+  </div>
+</header>
+
+<section class="g-panel">
+  <header><h2>À venir ({{ upcoming|length }})</h2></header>
+  {% include "gestion/_event_table.html" with items=upcoming %}
+</section>
+<section class="g-panel">
+  <header><h2>Passés ({{ past|length }})</h2></header>
+  {% include "gestion/_event_table.html" with items=past %}
+</section>
+{% endblock %}

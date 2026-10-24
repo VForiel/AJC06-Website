@@ -1,0 +1,53 @@
+{% load static ajc %}<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>{% block title %}Espace bureau{% endblock %} · AJC06</title>
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <link rel="stylesheet" href="{% static 'css/gestion.css' %}">
+  <link rel="stylesheet" href="{% static 'css/effects.css' %}">
+  <link rel="stylesheet" href="{% static 'css/community.css' %}">
+  <script nonce="{{ csp_nonce }}">try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+  <script src="{% static 'js/site.js' %}" defer></script>
+  <script src="{% static 'js/editor.js' %}" defer></script>
+</head>
+<body class="g">
+  <aside class="g-side">
+    <a class="brand" href="{% url 'gestion:dashboard' %}">
+      <img src="{% static 'img/logo-mark.svg' %}" alt="" width="32" height="31">
+      <span class="brand-name">AJC<span>06</span></span>
+    </a>
+    <p class="g-side-label">Espace bureau</p>
+    {% with name=request.resolver_match.url_name %}
+    <nav class="g-nav" aria-label="Espace bureau">
+      <a href="{% url 'gestion:dashboard' %}"{% if name == 'dashboard' %} aria-current="page"{% endif %}>{% icon "check" 18 %} Tableau de bord</a>
+      <a href="{% url 'gestion:events' %}"{% if 'event' in name %} aria-current="page"{% endif %}>{% icon "calendar" 18 %} Événements</a>
+      <a href="{% url 'gestion:posts' %}"{% if 'post' in name %} aria-current="page"{% endif %}>{% icon "edit" 18 %} Articles</a>
+      <a href="{% url 'gestion:inbox' %}"{% if 'inbox' in name %} aria-current="page"{% endif %}>{% icon "mail" 18 %} Messages</a>
+      <a href="{% url 'gestion:supports' %}"{% if 'support' in name %} aria-current="page"{% endif %}>{% icon "heart" 18 %} Demandes de soutien</a>
+      {% pending_accounts_count as pending_count %}
+      <a href="{% url 'gestion:accounts' %}"{% if 'account' in name %} aria-current="page"{% endif %}>{% icon "users" 18 %} Comptes{% if pending_count %} <span class="g-count">{{ pending_count }}</span>{% endif %}</a>
+      <a href="{% url 'gestion:reports' %}"{% if 'report' in name %} aria-current="page"{% endif %}>{% icon "users" 18 %} Signalements</a>
+      <a href="{% url 'gestion:announcements' %}"{% if 'announcement' in name %} aria-current="page"{% endif %}>{% icon "mail" 18 %} Bandeau d'annonce</a>
+      <a href="{% url 'gestion:effects' %}"{% if name == 'effects' %} aria-current="page"{% endif %}>{% icon "sun" 18 %} Effets saisonniers</a>
+      <a href="{% url 'admin:index' %}">{% icon "edit" 18 %} Équipe, ressources, comptes</a>
+    </nav>
+    {% endwith %}
+    <div class="g-side-foot">
+      <a href="{% url 'core:home' %}">{% icon "external" 16 %} Voir le site</a>
+      <form method="post" action="{% url 'gestion:logout' %}">{% csrf_token %}<button type="submit">Se déconnecter ({{ user.get_short_name|default:user.username }})</button></form>
+      <button class="theme-toggle" type="button" aria-label="Changer de thème"><span class="when-light">{% icon "moon" 16 %}</span><span class="when-dark">{% icon "sun" 16 %}</span></button>
+    </div>
+  </aside>
+
+  <main class="g-main">
+    {% if messages %}
+    <div class="flash" role="status">{% for message in messages %}<p class="flash-item">{% icon "check" 18 %} {{ message }}</p>{% endfor %}</div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

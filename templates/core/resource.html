@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{{ resource.title_tr }}{% endblock %}
+{% block description %}{{ resource.summary_tr }}{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <header class="page-head">
+    <a class="breadcrumb" href="{% url 'core:resources' %}">{% icon "arrow-left" 16 %} {% translate "Ressources" %}</a>
+    <p class="kicker kicker-gap">{{ resource.get_category_display }}</p>
+    <h1 class="page-title">{{ resource.title_tr }}</h1>
+    <p class="page-lede">{{ resource.summary_tr }}</p>
+  </header>
+
+  <div class="res-layout">
+    <div class="prose">{{ resource.body_html }}</div>
+    <aside class="res-aside">
+      <h2>{% translate "À lire aussi" %}</h2>
+      {% for r in siblings %}<a href="{{ r.get_absolute_url }}">{{ r.title_tr }}</a>{% endfor %}
+      <a href="{% url 'core:resources' %}">{% translate "Toutes les ressources" %}</a>
+      {% url 'core:contact' as contact_url %}
+      <p class="member-about">{% blocktranslate trimmed with url=contact_url %}
+        Une info périmée ou un lien cassé&nbsp;? <a href="{{ url }}">Dis-le nous</a>.
+      {% endblocktranslate %}</p>
+    </aside>
+  </div>
+</div>
+{% endblock %}

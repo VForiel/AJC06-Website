@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{{ event.title_tr }}{% endblock %}
+{% block description %}{{ event.start_date|date:"j F Y" }}{% if event.venue %}, {{ event.venue }}{% endif %}. {{ event.teaser }}{% endblock %}
+{% block og_title %}{{ event.title_tr }} — {{ event.start_date|date:"j F Y" }}{% endblock %}
+{% block og_description %}{{ event.teaser }}{% endblock %}
+{% block og_image %}{% if event.poster %}<meta property="og:image" content="{{ SITE_URL }}{{ event.poster.url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block head %}
+<script type="application/ld+json" nonce="{{ csp_nonce }}">{
+  "@context": "https://schema.org", "@type": "Event",
+  "name": "{{ event.title_tr|escapejs }}",
+  "startDate": "{% if event.all_day %}{{ event.start_date|date:'Y-m-d' }}{% else %}{{ event.starts_at|date:'c' }}{% endif %}",
+  "endDate": "{% if event.all_day %}{{ event.last_date|date:'Y-m-d' }}{% else %}{{ event.ends_at|date:'c' }}{% endif %}",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  {% if event.venue %}"location": {"@type": "Place", "name": "{{ event.venue|escapejs }}", "address": "{{ event.address|escapejs }}"},{% endif %}
+  {% if event.poster %}"image": "{{ SITE_URL }}{{ event.poster.url }}",{% endif %}
+  "description": "{{ event.teaser|escapejs }}",
+  "organizer": {"@type": "Organization", "name": "AJC06", "url": "{{ SITE_URL }}"}
+}</script>
+{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <div class="page-head">
+    <a class="breadcrumb" href="{% url 'events:list' %}">{% icon "arrow-left" 16 %} {% translate "Agenda" %}</a>
+  </div>
+
+  <article class="event">
+    <div class="event-poster">
+      {% if event.poster %}
+      <img src="{{ event.poster.url }}" alt="{% blocktranslate with title=event.title_tr %}Affiche : {{ title }}{% endblocktranslate %}">
+      {% else %}
+      <div class="event-poster-empty"><span>{{ event.title_tr }}</span></div>
+      {% endif %}
+    </div>
+
+    <div class="event-main">
+      <p class="row-meta">{% for code, emoji, label in event.type_tags %}<span class="tag tag-{{ code }}">{% if emoji %}<span class="tag-emoji" aria-hidden="true">{{ emoji }}</span>{% endif %}{{ label }}</span>{% endfor %}{% if event.supported %}<span class="tag tag-supported">{% translate "Avec le soutien de l'AJC06" %}</span>{% elif event.is_community %}<span class="tag tag-community">{% translate "Proposé par un membre" %}</span>{% endif %}{% if event.is_upcoming %}<span class="row-countdown">{{ event|countdown }}</span>{% endif %}</p>
+      <h1 class="event-title">{{ event.title_tr }}</h1>
+
+      {% if not visible %}
+      <p class="past-note pending-note">
+        {% if event.support_request and event.support_request.status == "attente" %}{% translate "Demande de soutien en cours d'examen par le bureau : cet événement n'est visible que par toi et le bureau pour l'instant." %}
+        {% elif event.support_request and event.support_request.status == "refusee" %}{% translate "Le bureau n'a pas pu soutenir cet événement." %} {% if event.support_request.decision_note %}« {{ event.support_request.decision_note }} »{% endif %}
+        {% elif event.on_hold %}{% translate "En attente : cet événement n'est pas encore visible sur le site." %}
+        {% else %}{% translate "Non publié : cet événement n'est pas visible sur le site." %}{% endif %}
+      </p>
+      {% if event.support_request.status == "refusee" and event.organizer_id == user.pk %}
+      <form method="post" action="{% url 'community:event_publish' event.slug %}">{% csrf_token %}<button class="btn btn-primary" type="submit">{% translate "Publier quand même, sans le soutien de l'asso" %}</button></form>
+      {% endif %}
+      {% endif %}
+
+      {% if event.organizer and event.is_community %}
+      <a class="organizer" href="{{ event.organizer.profile.get_absolute_url }}">
+        {% include "community/_avatar.html" with p=event.organizer.profile size="md" %}
+        <span><small>{% translate "Proposé par" %}</small><strong>{{ event.organizer.profile.display_name }}</strong></span>
+      </a>
+      {% endif %}
+      {% if can_edit %}
+      <p class="owner-tools"><a href="{% url 'community:event_edit' event.slug %}">{% icon "edit" 16 %} {% translate "Modifier" %}</a> · <a class="danger-link" href="{% url 'community:event_delete' event.slug %}">{% translate "Supprimer" %}</a></p>
+      {% endif %}
+
+      {% url 'events:list' as agenda_url %}
+      {% if not event.is_upcoming %}
+      <p class="past-note">{% blocktranslate trimmed with wa=WHATSAPP_URL agenda=agenda_url %}
+        Cet événement est passé. Pour ne pas rater le prochain, <a href="{{ wa }}" rel="noopener">rejoins la communauté WhatsApp</a> ou <a href="{{ agenda }}">regarde l'agenda</a>.
+      {% endblocktranslate %}</p>
+      {% endif %}
+
+      <div class="facts">
+        <div class="fact">{% icon "calendar" 20 %}<div><strong>{{ event|when|capfirst }}</strong><span>{{ event|hours }}</span></div></div>
+        {% if event.venue or event.address %}
+        <div class="fact">{% icon "pin" 20 %}<div>
+          <strong>{{ event.venue|default:event.address }}</strong>
+          {% if event.venue and event.address %}<span>{{ event.address }}</span>{% endif %}
+          {% if event.maps_url %}<br><a href="{{ event.maps_url }}" rel="noopener">{% translate "Voir sur Google Maps" %}</a>{% endif %}
+        </div></div>
+        {% endif %}
+        {% if event.price_tr %}
+        <div class="fact">{% icon "euro" 20 %}<div><strong>{{ event.price_tr }}</strong></div></div>
+        {% endif %}
+        {% if event.helloasso_count %}
+        <div class="fact">{% icon "ticket" 20 %}<div><strong>{% blocktranslate count n=event.helloasso_count %}{{ n }} inscription sur HelloAsso{% plural %}{{ n }} inscriptions sur HelloAsso{% endblocktranslate %}</strong>{% if event.helloasso_synced_at %}<span>{% blocktranslate with when=event.helloasso_synced_at|timesince %}mis à jour il y a {{ when }}{% endblocktranslate %}</span>{% endif %}</div></div>
+        {% endif %}
+        {% if event.capacity %}
+        <div class="fact">{% icon "users" 20 %}<div><strong>{% blocktranslate count n=event.capacity %}{{ n }} place{% plural %}{{ n }} places{% endblocktranslate %}</strong><span>{% if event.is_full %}{% translate "Complet" %}{% else %}{% blocktranslate with n=attendee_count %}{{ n }} inscrit·es pour l'instant{% endblocktranslate %}{% endif %}</span></div></div>
+        {% endif %}
+      </div>
+
+      {% if event.is_upcoming %}
+      <div class="event-actions">
+        {% if event.registration_url %}
+        <a class="btn {% if event.is_community %}btn-ghost{% else %}btn-primary{% endif %}" href="{{ event.registration_url }}" rel="noopener">{% if event.is_community %}{% icon "external" 18 %} {% translate "Lien utile" %}{% else %}{% icon "ticket" 18 %} {% translate "S'inscrire" %}{% endif %}</a>
+        {% endif %}
+        <a class="btn btn-ghost" href="{% url 'events:ics' event.slug %}">{% icon "calendar" 18 %} {% translate "Ajouter à mon agenda" %}</a>
+      </div>
+      {% endif %}
+
+      <section class="attend" id="participants" aria-labelledby="attend-title">
+        <header class="attend-head">
+          <h2 id="attend-title">{% blocktranslate count n=attendee_count %}{{ n }} membre y va{% plural %}{{ n }} membres y vont{% endblocktranslate %}</h2>
+          {% if event.is_upcoming %}
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'community:attend' event.slug %}">{% csrf_token %}
+              {% if is_going %}<button class="btn btn-ghost" type="submit">{% icon "check" 18 %} {% translate "J'y vais" %} · {% translate "annuler" %}</button>
+              {% elif event.is_full %}<button class="btn btn-ghost" type="button" disabled>{% translate "Complet" %}</button>
+              {% else %}<button class="btn btn-primary" type="submit">{% icon "plus" 18 %} {% translate "J'y vais" %}</button>{% endif %}
+            </form>
+            {% else %}
+            <a class="btn btn-primary" href="{% url 'community:login' %}?next={{ request.path }}">{% translate "Se connecter pour dire que tu y vas" %}</a>
+            {% endif %}
+          {% endif %}
+        </header>
+        {% if not event.is_community and event.registration_url and event.is_upcoming %}<p class="help">{% translate "« J'y vais » sert à prévenir les autres membres : l'inscription officielle se fait toujours via le bouton « S'inscrire »." %}</p>{% endif %}
+
+        {% if user.is_authenticated %}
+          {% if friends_going %}<p class="friends-going">{% icon "users" 16 %} {% blocktranslate count n=friends_going|length %}{{ n }} de tes amis y va{% plural %}{{ n }} de tes amis y vont{% endblocktranslate %}</p>{% endif %}
+          {% if attendees %}
+          <ul class="attendee-list">
+            {% for a in attendees %}<li><a href="{{ a.profile.get_absolute_url }}" title="{{ a.profile.display_name }}">{% include "community/_avatar.html" with p=a.profile size="sm" %}<span>{{ a.profile.display_name }}</span></a></li>{% endfor %}
+          </ul>
+          {% endif %}
+          {% if invitable and event.is_upcoming %}
+          <details class="invite">
+            <summary>{% icon "mail" 16 %} {% translate "Inviter des amis" %}</summary>
+            <form method="post" action="{% url 'community:invite' event.slug %}">{% csrf_token %}
+              <ul class="invite-list">
+                {% for f in invitable %}<li><label class="check"><input type="checkbox" name="friends" value="{{ f.pk }}"> {% include "community/_avatar.html" with p=f.profile size="sm" %} {{ f.profile.display_name }}</label></li>{% endfor %}
+              </ul>
+              <button class="btn btn-blue" type="submit">{% translate "Envoyer les invitations" %}</button>
+            </form>
+          </details>
+          {% endif %}
+          {% if event.is_community and event.organizer_id != user.pk %}<p class="report-link"><a href="{% url 'community:report' 'evenement' event.slug %}">{% translate "Signaler cet événement" %}</a></p>{% endif %}
+        {% elif attendee_count %}
+          <p class="help">{% translate "Connecte-toi pour voir qui y va." %}</p>
+        {% endif %}
+      </section>
+
+      {% get_current_language as LANG %}
+      {% if LANG == 'en' and not event.is_community and not event.body_en and event.body %}<p class="lang-note">{% translate "Cette description n'existe qu'en français." %}</p>{% endif %}
+      <div class="prose"{% if LANG == 'en' and not event.is_community and not event.body_en %} lang="fr"{% endif %}>{{ event.body_html }}</div>
+
+      <section class="event-photos" id="photos" aria-labelledby="photos-title">
+        <header class="attend-head">
+          <h2 id="photos-title">{% translate "Photos" %}</h2>
+          {% if user.is_authenticated %}<a class="btn btn-ghost" href="{% url 'community:photo_new' %}?evenement={{ event.slug }}">{% icon "plus" 18 %} {% translate "Ajouter une photo" %}</a>{% endif %}
+        </header>
+        {% if photos %}
+        <div class="photo-strip">{% for p in photos %}<a href="{{ p.get_absolute_url }}"><img src="{{ p.image.url }}" alt="{{ p.caption }}" loading="lazy"></a>{% endfor %}</div>
+        {% else %}
+        <p class="help">{% translate "Pas encore de photo de cet événement." %}</p>
+        {% endif %}
+      </section>
+    </div>
+  </article>
+</div>
+
+{% if others %}
+<section class="section" aria-labelledby="others-title">
+  <div class="wrap page-body">
+    <header class="section-head">
+      <h2 class="section-title" id="others-title">{% if others.0.is_upcoming %}{% translate "Également au programme" %}{% else %}{% translate "Dans le même esprit" %}{% endif %}</h2>
+    </header>
+    <div class="rows">{% for event in others %}{% include "events/_row.html" with show_year=True %}{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

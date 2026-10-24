@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static i18n ajc %}
+{% block title %}AJC06{% endblock %}
+{% block title_suffix %} · {% translate "Association des Jeunes Chercheurs des Alpes-Maritimes" %}{% endblock %}
+{% block body_class %}page-home{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <p class="kicker">{% translate "Doctorant·es et jeunes docteur·es · Alpes-Maritimes" %}</p>
+      <h1 class="hero-title">{% blocktranslate trimmed %}Sors du <span class="hl">labo</span>.{% endblocktranslate %}</h1>
+      <p class="hero-lede">
+        {% blocktranslate trimmed %}
+        Sorties en mer et en montagne, soirées, visites, camps d'un week-end, coups de main pour la suite :
+        l'AJC06 rassemble les jeunes chercheuses et chercheurs d'Université Côte d'Azur.
+        {% endblocktranslate %}
+        <strong>{% translate "Par des doctorant·es, pour des doctorant·es." %}</strong>
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{ WHATSAPP_URL }}" rel="noopener">{% icon "whatsapp" 18 %} {% translate "Rejoindre la communauté WhatsApp" %}</a>
+        <a class="btn btn-ghost" href="{% url 'events:list' %}">{% translate "Voir l'agenda" %} {% icon "arrow" 18 %}</a>
+      </div>
+    </div>
+
+    <div class="hero-board" aria-hidden="true">
+      {% for event in wall|slice:":3" %}
+      <a class="pin pin-{{ forloop.counter }}" href="{{ event.get_absolute_url }}" tabindex="-1">
+        <img src="{{ event.poster.url }}" alt="" width="320" height="320"{% if forloop.first %} fetchpriority="high"{% endif %}>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="anniversary" aria-labelledby="anniversary-title">
+  <div class="wrap">
+    <div class="anniversary-card">
+      <p class="anniversary-age">{{ asso_age }}<small>{% translate "ans" %}</small></p>
+      <div>
+        <h2 id="anniversary-title">{% blocktranslate with n=asso_age %}L'AJC06 fête ses {{ n }} ans{% endblocktranslate %}</h2>
+        <p>{% translate "Depuis sa création le 24 avril 1996, l'association rassemble les doctorant·es des Alpes-Maritimes : des générations de jeunes chercheuses et chercheurs qui se retrouvent, s'entraident et défendent leurs conditions de travail." %}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="next" aria-labelledby="next-title">
+  <div class="wrap">
+    {% with event=upcoming.0 %}
+    {% if event %}
+    <a class="next-card" href="{{ event.get_absolute_url }}">
+      <div class="next-when">
+        <span class="next-label" id="next-title">{% translate "Prochain rendez-vous" %}</span>
+        <span class="next-countdown">{{ event|countdown }}</span>
+      </div>
+      <div class="next-what">
+        <h2>{{ event.title_tr }}</h2>
+        <p>{{ event|when|capfirst }} · {{ event|hours }}{% if event.venue %} · {{ event.venue }}{% endif %}</p>
+      </div>
+      <span class="next-go">{% if event.registration_url %}{% translate "S'inscrire" %}{% else %}{% translate "En savoir plus" %}{% endif %} {% icon "arrow" 20 %}</span>
+    </a>
+    {% else %}
+    <div class="next-card next-empty">
+      <div class="next-when">
+        <span class="next-label" id="next-title">{% translate "Prochain rendez-vous" %}</span>
+        <span class="next-countdown">{% translate "Bientôt" %}</span>
+      </div>
+      <div class="next-what">
+        <h2>{% translate "Le prochain événement se prépare." %}</h2>
+        <p>{% translate "En attendant, les annonces passent par la communauté WhatsApp et Instagram." %}</p>
+      </div>
+      <a class="next-go" href="{{ WHATSAPP_URL }}" rel="noopener">{% translate "Rejoindre la communauté" %} {% icon "arrow" 20 %}</a>
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+</section>
+
+<section class="numbers" aria-label="{% translate "L'AJC06 en chiffres" %}">
+  <div class="wrap numbers-grid">
+    <p><strong>{{ stats.events }}</strong> {% blocktranslate with since=stats.first_event.start_date|date:"F Y" %}événements organisés depuis {{ since }}{% endblocktranslate %}</p>
+    <p><strong>{{ stats.volunteers }}</strong> {% blocktranslate with since=stats.since %}doctorant·es bénévoles élu·es au bureau depuis {{ since }}{% endblocktranslate %}</p>
+    <p><strong>{{ stats.places }}</strong> {% translate "lieux explorés, des îles de Lérins aux pistes d'Auron" %}</p>
+  </div>
+</section>
+
+{% if upcoming|length > 1 %}
+<section class="section">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="section-title">{% translate "Au programme" %}</h2>
+      <a class="link-more" href="{% url 'events:list' %}">{% translate "Tout l'agenda" %} {% icon "arrow" 18 %}</a>
+    </header>
+    <div class="rows">
+      {% for event in upcoming|slice:"1:" %}{% include "events/_row.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section community-teaser" aria-labelledby="community-title">
+  <div class="wrap">
+    <header class="section-head">
+      <div>
+        <h2 class="section-title" id="community-title">{% translate "Proposé par les doctorant·es" %}</h2>
+        <p class="section-lede">{% translate "Un afterwork, une rando, une soirée jeux : n'importe quel membre peut lancer une sortie et inviter les autres." %}</p>
+      </div>
+      <a class="btn btn-primary" href="{% url 'community:event_new' %}">{% icon "plus" 18 %} {% translate "Proposer une sortie" %}</a>
+    </header>
+    {% if community %}
+    <div class="rows">{% for event in community %}{% include "events/_row.html" %}{% endfor %}</div>
+    <p class="more-line"><a class="link-more" href="{% url 'events:list' %}?par=communaute">{% translate "Toutes les sorties des membres" %} {% icon "arrow" 18 %}</a></p>
+    {% else %}
+    <div class="empty">
+      <h3>{% translate "Aucune sortie proposée pour l'instant." %}</h3>
+      <p>{% translate "Lance la première : crée ton compte, propose une date et un lieu, et les autres s'inscrivent en un clic." %}</p>
+      <div class="empty-actions">
+        {% if not user.is_authenticated %}<a class="btn btn-ghost" href="{% url 'community:signup' %}">{% icon "users" 18 %} {% translate "Créer mon compte" %}</a>{% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section missions-teaser">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="section-title">{% translate "Ce que fait l'asso" %}</h2>
+      <a class="link-more" href="{% url 'core:missions' %}">{% translate "Nos missions" %} {% icon "arrow" 18 %}</a>
+    </header>
+    <ol class="pillars">
+      <li>
+        <h3>{% translate "Faire vivre la vie doctorale" %}</h3>
+        <p>{% translate "Meet-ups, randonnées, soirées, camps d'été et d'hiver, Fête de la science : de quoi rencontrer d'autres doctorant·es, toutes disciplines confondues." %}</p>
+      </li>
+      <li>
+        <h3>{% translate "Faire circuler l'info" %}</h3>
+        <p>{% translate "Appels à candidatures, prix de thèse, formations, webinaires : on relaie ce qui compte sur la communauté WhatsApp, Instagram et le site." %}</p>
+      </li>
+      <li>
+        <h3>{% translate "Préparer l'après-thèse" %}</h3>
+        <p>{% translate "Ateliers sur la poursuite de carrière (entreprise, entrepreneuriat, académique) et participation au réseau BioTechno." %}</p>
+      </li>
+      <li>
+        <h3>{% translate "Représenter les jeunes chercheur·es" %}</h3>
+        <p>{% translate "Échanges avec Université Côte d'Azur et les syndicats, plaidoyer local et national pour de meilleures conditions de travail." %}</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+{% if wall %}
+<section class="section wall-section">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="section-title">{% translate "Ce que tu as manqué" %}</h2>
+      <a class="link-more" href="{% url 'events:list' %}#archives">{% blocktranslate with n=stats.events %}Les {{ n }} événements passés{% endblocktranslate %} {% icon "arrow" 18 %}</a>
+    </header>
+    <div class="wall">
+      {% for event in wall %}
+      <a class="wall-item" href="{{ event.get_absolute_url }}">
+        <img src="{{ event.poster.url }}" alt="{% blocktranslate with title=event.title_tr %}Affiche : {{ title }}{% endblocktranslate %}" loading="lazy">
+        <span class="wall-caption"><span>{{ event.start_date|date:"j" }} {{ event.start_date|month_short }} {{ event.start_date|date:"Y" }}</span>{{ event.title_tr }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if posts %}
+<section class="section">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="section-title">{% translate "Actu" %}</h2>
+      <a class="link-more" href="{% url 'blog:list' %}">{% translate "Toutes les actus" %} {% icon "arrow" 18 %}</a>
+    </header>
+    <div class="cards">
+      {% for post in posts %}{% include "blog/_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="join" id="participer" aria-labelledby="join-title">
+  <div class="wrap">
+    <h2 class="join-title" id="join-title">{% translate "Comment on participe ?" %}</h2>
+    <p class="join-lede">{% translate "Les événements sont ouverts aux doctorant·es d'Université Côte d'Azur, et souvent aux post-docs et jeunes docteur·es. Trois façons de commencer :" %}</p>
+    <ol class="steps">
+      <li>
+        <span class="step-n">1</span>
+        <h3>{% translate "Rejoins la communauté WhatsApp" %}</h3>
+        <p>{% translate "C'est là que passent les annonces et les discussions entre doctorant·es. Tu préfères Discord ? Le serveur existe aussi." %}</p>
+        <div class="step-actions">
+          <a class="btn btn-primary" href="{{ WHATSAPP_URL }}" rel="noopener">{% icon "whatsapp" 18 %} WhatsApp</a>
+          <a class="btn btn-light" href="{{ DISCORD_URL }}" rel="noopener">{% icon "discord" 18 %} Discord</a>
+        </div>
+      </li>
+      <li>
+        <span class="step-n">2</span>
+        <h3>{% translate "Crée ton compte" %}</h3>
+        <p>{% translate "Pour dire que tu viens, voir qui sera là, ajouter d'autres doctorant·es en amis et proposer tes propres sorties." %}</p>
+        {% if user.is_authenticated %}<a class="btn btn-light" href="{% url 'community:members' %}">{% icon "users" 18 %} {% translate "Les membres" %}</a>
+        {% else %}<a class="btn btn-light" href="{% url 'community:signup' %}">{% icon "users" 18 %} {% translate "Rejoindre" %}</a>{% endif %}
+      </li>
+      <li>
+        <span class="step-n">3</span>
+        <h3>{% translate "Engage-toi au bureau" %}</h3>
+        <p>{% translate "Le bureau est élu chaque année en assemblée générale, en début d'année. Toutes les disciplines sont bienvenues." %}</p>
+        <a class="btn btn-light" href="{% url 'core:contact' %}?sujet=rejoindre">{% icon "users" 18 %} {% translate "Nous écrire" %}</a>
+      </li>
+    </ol>
+    <p class="join-support">{% icon "instagram" 18 %} <span>{% translate "Les photos et les annonces sont aussi sur Instagram :" %} <a href="{{ INSTAGRAM_URL }}" rel="noopener">@assojc06</a></span></p>
+    <p class="join-support">{% icon "heart" 18 %} <span>{% translate "Envie d'aider autrement ?" %} <a href="{% url 'core:support' %}">{% translate "Un don de 1 € nous permet d'aller chercher bien plus en subventions." %}</a></span></p>
+  </div>
+</section>
+{% endblock %}

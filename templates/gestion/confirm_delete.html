@@ -1,0 +1,13 @@
+{% extends "gestion/base.html" %}
+{% block title %}Supprimer{% endblock %}
+
+{% block content %}
+<header class="g-head"><h1>Supprimer {{ kind }}&nbsp;?</h1></header>
+<div class="g-panel">
+  <p>« <strong>{{ object.title }}</strong> » sera définitivement supprimé du site. Cette action ne peut pas être annulée.</p>
+  <form class="g-buttons g-buttons-row" method="post">{% csrf_token %}
+    <button class="btn g-btn-danger" type="submit">Oui, supprimer</button>
+    <a class="btn btn-ghost" href="{% url back object.pk %}">Annuler</a>
+  </form>
+</div>
+{% endblock %}

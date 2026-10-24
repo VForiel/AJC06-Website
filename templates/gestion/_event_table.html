@@ -1,0 +1,20 @@
+{% load ajc %}{% if items %}
+<table class="g-table">
+  <thead><tr><th>Date</th><th>Titre</th><th>Type</th><th>Lieu</th><th><span class="sr">Actions</span></th></tr></thead>
+  <tbody>
+    {% for e in items %}
+    <tr>
+      <td class="g-nowrap">{{ e.start_date|date:"d/m/Y" }}</td>
+      <td><a href="{% url 'gestion:event_edit' e.pk %}"><strong>{{ e.title }}</strong></a>{% if not e.is_published %} <span class="g-badge">Non publié</span>{% endif %}{% if e.is_community %} <span class="g-badge" title="Proposé par un membre">Communauté · {{ e.organizer.profile.display_name|default:"compte supprimé" }}</span>{% elif not e.title_en %} <span class="g-badge" title="Pas de version anglaise">FR seul</span>{% endif %}</td>
+      <td>{% for code, emoji, label in e.type_tags %}<span class="tag tag-{{ code }}">{% if emoji %}<span class="tag-emoji" aria-hidden="true">{{ emoji }}</span>{% endif %}{{ label }}</span> {% endfor %}{% if e.on_hold %}<span class="g-badge g-badge-hold">En attente</span>{% endif %}</td>
+      <td class="g-muted">{{ e.venue|truncatechars:32 }}</td>
+      <td class="g-actions">
+        {% if e.is_association %}<a href="{% url 'gestion:dossier' e.pk %}" title="Dossier université (projet prévisionnel, bilan)">{% icon "download" 16 %}<span class="sr">Dossier</span></a>{% endif %}
+        <a href="{% url 'gestion:event_duplicate' e.pk %}" title="Dupliquer (nouvelle date)">{% icon "copy" 16 %}<span class="sr">Dupliquer</span></a>
+        {% if e.is_published or e.on_hold %}<a href="{{ e.get_absolute_url }}" title="Voir sur le site">{% icon "external" 16 %}<span class="sr">Voir</span></a>{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}<p class="g-empty">Aucun événement.</p>{% endif %}

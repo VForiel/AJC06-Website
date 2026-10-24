@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Agenda" %}{% endblock %}
+{% block description %}{% translate "Les prochains événements de l'AJC06 pour les doctorant·es d'Université Côte d'Azur, et les archives depuis 2024." %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Meet-ups, sorties, camps, soirées" %}</p>
+    <h1 class="page-title">{% translate "Agenda" %}</h1>
+    <p class="page-lede">{% translate "Les événements de l'association et les sorties proposées par les membres, ouverts aux doctorant·es d'Université Côte d'Azur. Ajoute l'agenda à ton calendrier pour ne plus en rater un." %}</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{% url 'community:event_new' %}">{% icon "plus" 18 %} {% translate "Proposer une sortie" %}</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  <div class="agenda-tools">
+    <div class="filter-groups">
+      <nav class="filters" aria-label="{% translate "Filtrer par origine" %}">
+        <a class="filter" href="?{% if kind %}type={{ kind }}{% endif %}"{% if not origin %} aria-current="true"{% endif %}>{% translate "Tous" %}</a>
+        <a class="filter" href="?par=asso{% if kind %}&amp;type={{ kind }}{% endif %}"{% if origin == 'asso' %} aria-current="true"{% endif %}>{% translate "Par l'AJC06" %}</a>
+        <a class="filter" href="?par=communaute{% if kind %}&amp;type={{ kind }}{% endif %}"{% if origin == 'communaute' %} aria-current="true"{% endif %}>{% translate "Par les membres" %}</a>
+      </nav>
+      <nav class="filters" aria-label="{% translate "Filtrer par type" %}">
+        <a class="filter" href="?{% if origin %}par={{ origin }}{% endif %}"{% if not kind %} aria-current="true"{% endif %}>{% translate "Tout" %}</a>
+        {% for value, label in kinds %}
+        <a class="filter" href="?type={{ value }}{% if origin %}&amp;par={{ origin }}{% endif %}"{% if kind == value %} aria-current="true"{% endif %}>{{ label }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+    <div class="subscribe">
+      {% url 'events:agenda' as agenda %}
+      <a class="small-btn" href="webcal://{{ request.get_host }}{{ agenda }}">{% icon "calendar" 16 %} {% translate "S'abonner" %}</a>
+      <button type="button" data-copy="{{ SITE_URL }}{{ agenda }}" data-copied="{% translate "Lien copié" %}">{% icon "copy" 16 %} <span data-copy-label>{% translate "Copier le lien iCal" %}</span></button>
+    </div>
+  </div>
+
+  <section aria-labelledby="upcoming-title">
+    <h2 class="sr" id="upcoming-title">{% translate "À venir" %}</h2>
+    {% if upcoming %}
+    <div class="rows">
+      {% for event in upcoming %}{% include "events/_row.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">
+      <h3>{% if kind or origin %}{% translate "Rien d'annoncé dans cette catégorie pour l'instant." %}{% else %}{% translate "Rien d'annoncé pour l'instant." %}{% endif %}</h3>
+      <p>{% translate "Le bureau prépare la suite. Les annonces passent d'abord par la communauté WhatsApp et Instagram ; l'agenda iCal se met à jour tout seul." %}</p>
+      <div class="empty-actions">
+        <a class="btn btn-primary" href="{% url 'community:event_new' %}">{% icon "plus" 18 %} {% translate "Proposer une sortie" %}</a>
+        <a class="btn btn-ghost" href="{{ WHATSAPP_URL }}" rel="noopener">{% icon "whatsapp" 18 %} WhatsApp</a>
+      </div>
+    </div>
+    {% endif %}
+  </section>
+
+  {% if years %}
+  <section id="archives" aria-label="{% translate "Événements passés" %}">
+    {% for year, items in years %}
+    <div class="year">
+      <h2 class="year-title">{{ year }} <small>{% blocktranslate count n=items|length %}{{ n }} événement{% plural %}{{ n }} événements{% endblocktranslate %}</small></h2>
+      <div class="rows">
+        {% for event in items %}{% include "events/_row.html" %}{% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

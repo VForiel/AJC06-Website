@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load ajc %}
+{% block title %}Soutenir l'AJC06{% endblock %}
+{% block description %}Chaque don à l'AJC06 est démultiplié par les subventions publiques et ouvre droit à une réduction d'impôt de 66 %.{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Faire un don</p>
+    <h1 class="page-title">Soutenir l'asso</h1>
+    <p class="page-lede">Chaque don, même modeste, compte : il est ensuite démultiplié par les subventions publiques.</p>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  <div class="equations">
+    <div class="equation">
+      <strong>1 € = beaucoup d'€</strong>
+      <p>Un don d'1 € peut nous permettre d'obtenir 5 €, 10 €, voire 50 € de subventions publiques (selon divers facteurs, mais tu as saisi l'idée). C'est aussi vrai des dons en nature : venir à un événement par tes propres moyens ou donner du matériel dont tu n'as plus besoin.</p>
+    </div>
+    <div class="equation">
+      <strong>1 € = 0,33 € pour toi</strong>
+      <p>L'AJC06 est une association d'intérêt général : tes dons, y compris en nature, ouvrent droit à une réduction d'impôt de 66 % de leur montant.</p>
+    </div>
+  </div>
+
+  <div class="donate-box">
+    <div>
+      <h2>Donner via HelloAsso</h2>
+      <p>HelloAsso fournit aux associations un paiement simple et sécurisé. La plateforme vit des contributions volontaires que les donateurs peuvent ajouter à leur don.</p>
+    </div>
+    <a class="btn btn-primary" href="{{ DONATE_URL }}" rel="noopener">{% icon "heart" 18 %} Faire un don {% icon "external" 16 %}</a>
+  </div>
+
+  <div class="prose">
+    <h2>Comment est géré l'argent&nbsp;?</h2>
+    <p>Les finances de l'association reposent sur trois sources :</p>
+    <ul>
+      <li><strong>Les subventions publiques</strong>, qui financent les événements les plus coûteux dans le cadre d'une convention avec l'organisme financeur.</li>
+      <li><strong>Les dons et cotisations</strong>, qui donnent à l'association des fonds propres et un peu de liberté : une consommation offerte, l'hébergement de ce site…</li>
+      <li><strong>Les ventes de goodies et les frais d'inscription</strong>, qui réduisent le coût des événements.</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

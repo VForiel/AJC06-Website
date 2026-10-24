@@ -1,0 +1,29 @@
+{% extends "community/_auth_base.html" %}
+{% load i18n ajc %}
+{% block title %}{% if by_board %}{% translate "Compte en attente de validation" %}{% else %}{% translate "Confirme ton adresse" %}{% endif %}{% endblock %}
+{% block head %}<meta name="robots" content="noindex">{% endblock %}
+{% block pitch %}
+<p class="kicker">{% translate "Espace membres" %}</p>
+{% if by_board %}
+<h1 class="page-title">{% translate "C'est presque bon" %}</h1>
+<p class="page-lede">{% translate "Ton compte est créé. Un membre du bureau le valide sous peu, en général dans la journée ; tu pourras ensuite te connecter avec ton courriel et ton mot de passe." %}</p>
+{% else %}
+<h1 class="page-title">{% translate "Regarde ta boîte mail" %}</h1>
+<p class="page-lede">{% translate "Nous venons d'envoyer un lien de confirmation. Ouvre-le pour activer ton compte ; pense aux courriers indésirables." %}</p>
+{% endif %}
+{% endblock %}
+{% block card %}
+{% if by_board %}
+<h2>{% translate "En attendant" %}</h2>
+<p>{% translate "Rejoins la communauté WhatsApp de l'AJC06 pour ne rien rater des prochaines sorties." %}</p>
+<p><a class="btn btn-primary" href="{{ WHATSAPP_URL }}" rel="noopener">{% translate "Rejoindre le WhatsApp" %} {% icon "arrow" 18 %}</a></p>
+{% else %}
+<h2>{% translate "Pas reçu ?" %}</h2>
+<form class="form" method="post" action="{% url 'community:confirm_resend' %}" novalidate>
+  {% csrf_token %}
+  <div class="field"><label for="id_email">{% translate "Courriel" %}</label><input type="email" name="email" id="id_email" value="{{ email }}" required></div>
+  <button class="btn btn-ghost" type="submit">{% icon "mail" 18 %} {% translate "Renvoyer le lien" %}</button>
+</form>
+<p class="help">{% translate "Toujours rien ? Un membre du bureau peut aussi valider ton compte." %}</p>
+{% endif %}
+{% endblock %}

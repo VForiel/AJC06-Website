@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static i18n ajc %}
+{% block title %}{% translate "Actu" %}{% endblock %}
+{% block description %}{% translate "Appels à candidatures, prix de thèse, formations et nouvelles de l'AJC06." %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Appels, prix, formations, vie de l'asso" %}</p>
+    <h1 class="page-title">{% translate "Actu" %}</h1>
+    <p class="page-lede">{% translate "Ce qui peut intéresser les doctorant·es et jeunes docteur·es des Alpes-Maritimes." %} <a href="{% url 'blog:rss' %}">{% icon "rss" 16 %} {% translate "Flux RSS" %}</a></p>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  {% if page.object_list %}
+    {% if page.number == 1 %}
+      {% with post=page.object_list.0 %}
+      <article class="card lead-post">
+        <a class="card-link" href="{{ post.get_absolute_url }}">
+          <div class="card-media{% if not post.cover %} card-media-empty{% endif %}">
+            {% if post.cover %}<img src="{{ post.cover.url }}" alt="">{% else %}<img src="{% static 'img/logo-mark.svg' %}" alt="">{% endif %}
+          </div>
+          <div class="card-body">
+            <p class="card-meta"><time datetime="{{ post.published_at|date:'c' }}">{{ post.published_at|date:"j F Y" }}</time> · {% blocktranslate with n=post.reading_minutes %}{{ n }} min de lecture{% endblocktranslate %}</p>
+            <h2 class="card-title">{{ post.title_tr }}</h2>
+            <p class="card-text">{{ post.teaser|truncatechars:240 }}</p>
+            <p class="link-more">{% translate "Lire" %} {% icon "arrow" 18 %}</p>
+          </div>
+        </a>
+      </article>
+      {% endwith %}
+      <div class="cards">
+        {% for post in page.object_list|slice:"1:" %}{% include "blog/_card.html" %}{% endfor %}
+      </div>
+    {% else %}
+      <div class="cards">
+        {% for post in page.object_list %}{% include "blog/_card.html" %}{% endfor %}
+      </div>
+    {% endif %}
+
+    {% if page.paginator.num_pages > 1 %}
+    <nav class="pagination" aria-label="{% translate "Pages" %}">
+      {% for n in page.paginator.page_range %}
+        {% if n == page.number %}<span aria-current="page">{{ n }}</span>{% else %}<a href="?page={{ n }}">{{ n }}</a>{% endif %}
+      {% endfor %}
+    </nav>
+    {% endif %}
+  {% else %}
+    <div class="empty"><h3>{% translate "Pas encore d'article." %}</h3></div>
+  {% endif %}
+</div>
+{% endblock %}

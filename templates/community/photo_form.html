@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Ajouter une photo" %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Photos" %}</p>
+    <h1 class="page-title">{% translate "Ajouter une photo" %}</h1>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  <form class="form community-form" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include "community/_form_errors.html" with file_field=True %}
+    <div class="consent-box">
+      {% icon "users" 22 %}
+      <div>
+        <p><strong>{% translate "Avant de publier" %}</strong></p>
+        <p>{% translate "Toutes les personnes reconnaissables sur la photo doivent avoir donné leur autorisation pour qu'elle soit affichée sur le site. Sans leur accord, ne la publie pas. Une personne identifiée peut retirer son identification ou signaler la photo à tout moment." %}</p>
+      </div>
+    </div>
+    <section class="settings-block">
+      {% include "community/_field.html" with field=form.image %}
+      {% include "community/_field.html" with field=form.caption %}
+      {% include "community/_field.html" with field=form.event %}
+    </section>
+    <section class="settings-block">
+      <h2>{% translate "Qui est sur la photo ?" %}</h2>
+      {% if form.fields.friends.queryset %}
+      <fieldset class="field">
+        <legend>{{ form.friends.label }}</legend>
+        <div class="choices">{% for box in form.friends %}<label>{{ box.tag }} {{ box.choice_label }}</label>{% endfor %}</div>
+      </fieldset>
+      {% endif %}
+      {% include "community/_field.html" with field=form.tagged_handles %}
+    </section>
+    <div class="field consent-field{% if form.consent.errors %} has-error{% endif %}">
+      <label class="check">{{ form.consent }} <span>{{ form.consent.label }}</span></label>
+      {{ form.consent.errors }}
+    </div>
+    <div class="settings-actions"><button class="btn btn-primary" type="submit">{% icon "check" 18 %} {% translate "Publier la photo" %}</button></div>
+  </form>
+</div>
+{% endblock %}

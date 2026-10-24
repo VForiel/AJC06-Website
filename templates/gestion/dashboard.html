@@ -1,0 +1,131 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <h1>Salut {{ user.first_name|default:user.username }}</h1>
+    <p class="g-muted">Que veux-tu publier aujourd'hui&nbsp;?</p>
+  </div>
+</header>
+
+<div class="g-quick">
+  <a class="g-quick-item" href="{% url 'gestion:event_new' %}">
+    <span class="g-quick-icon">{% icon "calendar" 24 %}</span>
+    <strong>Annoncer un événement</strong>
+    <span>Date, lieu, affiche, lien d'inscription</span>
+  </a>
+  <a class="g-quick-item" href="{% url 'gestion:post_new' %}">
+    <span class="g-quick-icon">{% icon "edit" 24 %}</span>
+    <strong>Écrire un article</strong>
+    <span>Appel à candidatures, compte rendu, info utile</span>
+  </a>
+  <a class="g-quick-item" href="{% url 'gestion:inbox' %}">
+    <span class="g-quick-icon">{% icon "mail" 24 %}</span>
+    <strong>{{ counts.inbox }} message{{ counts.inbox|pluralize }} à traiter</strong>
+    <span>Reçus par le formulaire de contact</span>
+  </a>
+  <a class="g-quick-item{% if counts.reports %} g-quick-alert{% endif %}" href="{% url 'gestion:reports' %}">
+    <span class="g-quick-icon">{% icon "users" 24 %}</span>
+    <strong>{{ counts.reports }} signalement{{ counts.reports|pluralize }}</strong>
+    <span>{{ counts.members }} membre{{ counts.members|pluralize }} inscrit·e{{ counts.members|pluralize }}</span>
+  </a>
+</div>
+
+{% if pending_accounts %}
+<section class="g-panel g-panel-alert">
+  <header><h2>Comptes à valider</h2><a href="{% url 'gestion:accounts' %}">Tous</a></header>
+  {% for u in pending_accounts %}
+  <div class="g-line">
+    <span class="g-date">{{ u.date_joined|date:"j" }} {{ u.date_joined|month_short }}</span>
+    <span class="g-line-title">{{ u.profile.display_name }} <span class="g-muted">{{ u.email }}</span></span>
+    <form method="post" action="{% url 'gestion:account_decide' u.pk %}">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button class="btn btn-blue" type="submit" name="decision" value="valider">{% icon "check" 16 %} Valider</button>
+    </form>
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if supports or deadlines %}
+<div class="g-cols">
+  {% if supports %}
+  <section class="g-panel g-panel-alert">
+    <header><h2>Demandes de soutien à étudier</h2><a href="{% url 'gestion:supports' %}">Toutes</a></header>
+    {% for s in supports %}
+    <a class="g-line" href="{% url 'gestion:supports' %}">
+      <span class="g-date">{{ s.event.start_date|date:"j" }} {{ s.event.start_date|month_short }}</span>
+      <span class="g-line-title">{{ s.event.title }}</span>
+      <span class="g-badge">{{ s.amount }} €</span>
+    </a>
+    {% endfor %}
+  </section>
+  {% endif %}
+  {% if deadlines %}
+  <section class="g-panel">
+    <header><h2>Dossiers université</h2></header>
+    {% for d in deadlines %}
+    <a class="g-line" href="{% url 'gestion:dossier' d.event.pk %}">
+      <span class="g-line-title">{{ d.event.title }}</span>
+      <span class="g-badge{% if d.late %} g-badge-late{% endif %}">{{ d.what }}{% if d.due %} avant le {{ d.due|date:"j/m" }}{% endif %}</span>
+    </a>
+    {% endfor %}
+  </section>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="g-cols">
+  <section class="g-panel">
+    <header><h2>Événements à venir</h2><a href="{% url 'gestion:events' %}">Tous ({{ counts.events }})</a></header>
+    {% for e in upcoming %}
+    <a class="g-line" href="{% url 'gestion:event_edit' e.pk %}">
+      <span class="g-date">{{ e.start_date|date:"j" }} {{ e.start_date|month_short }}</span>
+      <span class="g-line-title">{{ e.title }}</span>
+      {% if not e.is_published %}<span class="g-badge">Non publié</span>{% endif %}
+    </a>
+    {% empty %}
+    <p class="g-empty">Aucun événement à venir. <a href="{% url 'gestion:event_new' %}">En annoncer un</a></p>
+    {% endfor %}
+  </section>
+
+  <section class="g-panel">
+    <header><h2>Brouillons et articles programmés</h2><a href="{% url 'gestion:posts' %}">Tous ({{ counts.posts }} en ligne)</a></header>
+    {% for p in drafts %}
+    <a class="g-line" href="{% url 'gestion:post_edit' p.pk %}">
+      <span class="g-line-title">{{ p.title }}</span>
+      <span class="g-badge">{% if p.status == 'draft' %}Brouillon{% else %}Le {{ p.published_at|date:"j/m" }}{% endif %}</span>
+    </a>
+    {% empty %}
+    <p class="g-empty">Rien en attente.</p>
+    {% endfor %}
+  </section>
+
+  <section class="g-panel">
+    <header><h2>Sorties proposées par les membres</h2><a href="{% url 'events:list' %}?par=communaute">Sur le site</a></header>
+    {% for e in community_upcoming %}
+    <a class="g-line" href="{{ e.get_absolute_url }}">
+      <span class="g-date">{{ e.start_date|date:"j" }} {{ e.start_date|month_short }}</span>
+      <span class="g-line-title">{{ e.title }}</span>
+      <span class="g-badge">{{ e.organizer.profile.display_name|default:"?" }}</span>
+    </a>
+    {% empty %}
+    <p class="g-empty">Aucune pour l'instant.</p>
+    {% endfor %}
+  </section>
+
+  <section class="g-panel">
+    <header><h2>Derniers messages</h2><a href="{% url 'gestion:inbox' %}">Boîte de réception</a></header>
+    {% for m in inbox %}
+    <a class="g-line" href="{% url 'gestion:inbox' %}#m{{ m.pk }}">
+      <span class="g-line-title">{{ m.name }} — {{ m.get_subject_display }}</span>
+      <span class="g-date">{{ m.created_at|date:"j/m" }}</span>
+    </a>
+    {% empty %}
+    <p class="g-empty">Boîte vide.</p>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

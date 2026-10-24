@@ -1,0 +1,41 @@
+/* Effets saisonniers et bandeau d'annonce. Les animations sont dans effects.js ; ici le décor statique. */
+
+.effects-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 40; }
+
+/* Bandeau d'annonce du bureau */
+.announce { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding: .6em 56px .6em var(--gutter); font-size: .9375rem; font-weight: 600; text-align: center; }
+.announce-mimosa { background: var(--mimosa); color: var(--mimosa-ink); }
+.announce-azur { background: var(--azur); color: #fff; }
+.announce-alerte { background: #b42318; color: #fff; }
+.announce a { color: inherit; font-weight: 800; }
+.announce-close { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgb(0 0 0 / .08); color: inherit; cursor: pointer; }
+.announce-close:hover { background: rgb(0 0 0 / .16); }
+.announce.is-dismissed { display: none; }
+
+/* 30 ans : pastille à côté du logo et bloc sur l'accueil */
+.birthday-badge { display: none; margin-left: 4px; padding: .1em .5em; border-radius: 999px; background: var(--mimosa); color: var(--mimosa-ink); font-size: .75rem; font-weight: 900; font-stretch: 70%; letter-spacing: .02em; transform: rotate(-6deg); }
+.effect-trente .birthday-badge, .effect-anniversaire .birthday-badge { display: inline-block; }
+.anniversary { display: none; }
+.effect-trente .anniversary, .effect-anniversaire .anniversary { display: block; }
+.anniversary-card { display: grid; grid-template-columns: auto 1fr; gap: clamp(16px, 3vw, 40px); align-items: center; padding: clamp(22px, 3vw, 36px); border-radius: var(--radius); background: var(--mimosa); color: var(--mimosa-ink); }
+.anniversary-age { font-size: clamp(4.5rem, 12vw, 8.5rem); font-weight: 900; font-stretch: 62%; line-height: .82; }
+.anniversary-age small { display: block; font-size: .28em; letter-spacing: .08em; text-transform: uppercase; }
+.anniversary h2 { font-size: clamp(1.75rem, 3.5vw, 2.75rem); }
+.anniversary p { margin-top: 8px; max-width: 46em; }
+@media (max-width: 640px) { .anniversary-card { grid-template-columns: 1fr; } }
+
+/* Pride : liseré arc-en-ciel sous l'en-tête et sur le surlignage du titre */
+.effect-pride .site-header { border-bottom: 0; box-shadow: none; }
+.effect-pride .site-header::after { content: ""; display: block; height: 5px; background: linear-gradient(90deg, #e40303 0 16.6%, #ff8c00 0 33.3%, #ffed00 0 50%, #008026 0 66.6%, #004dff 0 83.3%, #750787 0); }
+.effect-pride .hl { background: linear-gradient(transparent 58%, #e40303 58% 63%, #ff8c00 63% 68%, #ffed00 68% 73%, #008026 73% 78%, #004dff 78% 83%, #750787 83% 92%, transparent 92%); }
+
+/* Halloween : le jaune mimosa vire à la citrouille */
+.effect-halloween { --mimosa: #f28c28; }
+.effect-halloween .brand-name span { color: #f28c28; }
+
+/* Noël et nouvel an : petit liseré sous l'en-tête */
+.effect-noel .site-header::after { content: ""; display: block; height: 4px; background: repeating-linear-gradient(90deg, #b42318 0 18px, #ffffff 18px 26px, #2f6b2f 26px 44px, #ffffff 44px 52px); }
+.effect-nouvel-an .brand-name span { color: #f6c431; }
+
+.effects-toggle { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
+.anniversary { margin-bottom: 24px; }

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% if event %}{% translate "Modifier l'événement" %}{% else %}{% translate "Proposer un événement" %}{% endif %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Proposé par les membres" %}</p>
+    <h1 class="page-title">{% if event %}{% translate "Modifier" %}{% else %}{% translate "Propose une sortie" %}{% endif %}</h1>
+    {% if not event %}<p class="page-lede">{% translate "Afterwork, randonnée, soirée jeux, séance de rédaction à plusieurs… Publie-le : il apparaît dans l'agenda avec la mention « proposé par » et tu vois qui vient." %}</p>{% endif %}
+  </div>
+</header>
+
+<div class="wrap page-body">
+  <form class="form community-form" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include "community/_form_errors.html" with extra=support_form file_field=True %}
+
+    <section class="settings-block">
+      <h2>{% translate "Quoi" %}</h2>
+      {% include "community/_field.html" with field=form.title %}
+      <fieldset class="field{% if form.type_list.errors %} has-error{% endif %}" id="{{ form.type_list.auto_id }}">
+        <legend>{{ form.type_list.label }} <span class="help">{{ form.type_list.help_text }}</span></legend>
+        <div class="choices type-choices">{% for box in form.type_list %}<label>{{ box.tag }} {{ box.choice_label }}</label>{% endfor %}</div>
+        {{ form.type_list.errors }}
+      </fieldset>
+      <div class="other-type">{% include "community/_field.html" with field=form.other_type %}</div>
+      {% include "community/_field.html" with field=form.summary %}
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Quand" %}</h2>
+      <div class="settings-grid settings-grid-4">
+        {% include "community/_field.html" with field=form.start_date %}
+        {% include "community/_field.html" with field=form.start_time %}
+        {% include "community/_field.html" with field=form.end_time %}
+        {% include "community/_field.html" with field=form.end_date %}
+      </div>
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Où" %}</h2>
+      <div class="settings-grid">
+        {% include "community/_field.html" with field=form.venue %}
+        {% include "community/_field.html" with field=form.address %}
+      </div>
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Infos pratiques" %}</h2>
+      <div class="settings-grid">
+        {% include "community/_field.html" with field=form.price %}
+        {% include "community/_field.html" with field=form.capacity %}
+      </div>
+      {% include "community/_field.html" with field=form.registration_url %}
+      {% include "community/_field.html" with field=form.poster %}
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Détails" %}</h2>
+      {% include "community/_field.html" with field=form.body %}
+    </section>
+
+    {% if form.request_support %}
+    <section class="settings-block support-block">
+      <h2>{% translate "Avec le soutien de l'AJC06 ?" %}</h2>
+      <label class="check support-toggle">{{ form.request_support }} <span>{{ form.request_support.label }}</span></label>
+      <div class="support-details">
+        <div class="support-rules">
+          <p><strong>{% translate "Avant de demander :" %}</strong></p>
+          <ul>
+            <li>{% translate "La demande doit être faite au moins un mois avant la date de l'événement : l'asso doit présenter le projet à l'université avant de le financer." %}</li>
+            <li>{% translate "Donne tous les détails : comment y aller, où, le prix par personne et les coûts fixes, et la somme que tu demandes à l'asso." %}</li>
+            <li>{% translate "L'AJC06 peut se charger des réservations, ou te rembourser après l'événement, uniquement sur présentation des factures." %}</li>
+            <li>{% translate "Le soutien dépend des fonds disponibles : la demande doit être approuvée par le bureau. En attendant, ton événement n'est pas publié ; s'il est accepté, il apparaît comme un événement de l'asso." %}</li>
+          </ul>
+        </div>
+        <div class="settings-grid">
+          {% include "community/_field.html" with field=support_form.amount %}
+          {% include "community/_field.html" with field=support_form.price_per_person %}
+        </div>
+        {% include "community/_field.html" with field=support_form.fixed_costs %}
+        {% include "community/_field.html" with field=support_form.access %}
+        {% include "community/_field.html" with field=support_form.budget_details %}
+        <fieldset class="field">
+          <legend>{{ support_form.booking.label|capfirst }}</legend>
+          <div class="choices">{% for radio in support_form.booking %}<label>{{ radio.tag }} {{ radio.choice_label }}</label>{% endfor %}</div>
+        </fieldset>
+      </div>
+    </section>
+    {% elif event.support_request %}
+    <section class="settings-block">
+      <h2>{% translate "Soutien de l'AJC06" %}</h2>
+      <p>{% blocktranslate with amount=event.support_request.amount status=event.support_request.get_status_display %}Demande de {{ amount }} € : {{ status }}.{% endblocktranslate %}</p>
+      {% if event.support_request.decision_note %}<p class="help">{{ event.support_request.decision_note }}</p>{% endif %}
+    </section>
+    {% endif %}
+
+    <p class="help">{% translate "En publiant, tu t'engages à proposer un événement ouvert, bienveillant et non commercial. Le bureau de l'AJC06 peut retirer un événement qui ne respecte pas cet esprit." %}</p>
+    <div class="settings-actions">
+      <button class="btn btn-primary" type="submit">{% icon "check" 18 %} {% if event %}{% translate "Enregistrer" %}{% else %}{% translate "Publier" %}{% endif %}</button>
+      {% if event %}<a class="btn btn-ghost" href="{{ event.get_absolute_url }}">{% translate "Annuler" %}</a>
+      <a class="danger-link" href="{% url 'community:event_delete' event.slug %}">{% translate "Supprimer l'événement" %}</a>{% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}

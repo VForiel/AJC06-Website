@@ -1,0 +1,14 @@
+{% extends "community/_auth_base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Supprimer l'événement" %}{% endblock %}
+{% block pitch %}
+<h1 class="page-title">{% translate "Supprimer ?" %}</h1>
+<p class="page-lede">{% blocktranslate with title=event.title %}« {{ title }} » disparaîtra de l'agenda, et les inscriptions avec.{% endblocktranslate %}</p>
+{% endblock %}
+{% block card %}
+<form class="form" method="post">
+  {% csrf_token %}
+  <button class="btn btn-danger" type="submit">{% translate "Oui, supprimer" %}</button>
+  <a class="auth-switch" href="{{ event.get_absolute_url }}">{% translate "Annuler" %}</a>
+</form>
+{% endblock %}

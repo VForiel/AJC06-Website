@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{{ person.display_name }}{% endblock %}
+{% block description %}{{ person.display_name }}{% if person.discipline %} · {{ person.discipline }}{% endif %} — {% translate "membre de la communauté AJC06" %}{% endblock %}
+{% block head %}{% if person.visibility != 'public' %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
+
+{% block content %}
+<div class="profile-cover accent-{{ person.accent }}" aria-hidden="true"><span>{{ person.initials }}</span></div>
+
+<div class="wrap page-body">
+  <header class="profile-head">
+    {% include "community/_avatar.html" with p=person size="xl" %}
+    <div class="profile-id">
+      <h1 class="profile-name">{{ person.display_name }}</h1>
+      <p class="profile-sub">{% if person.pronouns %}<span>{{ person.pronouns }}</span>{% endif %}<span>{% blocktranslate count n=friend_count %}{{ n }} ami·e{% plural %}{{ n }} ami·es{% endblocktranslate %}</span></p>
+      {% if person.headline %}<p class="profile-headline">{{ person.headline }}</p>{% endif %}
+    </div>
+    <div class="profile-actions">{% include "community/_friend_button.html" %}</div>
+  </header>
+
+  {% if person.discipline or person.doctoral_school or person.lab or person.stage %}
+  <ul class="profile-chips">
+    {% if person.discipline %}<li>{{ person.discipline }}</li>{% endif %}
+    {% if person.doctoral_school %}<li>{{ person.get_doctoral_school_display }}</li>{% endif %}
+    {% if person.lab %}<li>{{ person.lab }}</li>{% endif %}
+    {% if person.stage %}<li>{{ person.get_stage_display }}</li>{% endif %}
+  </ul>
+  {% endif %}
+
+  <div class="profile-layout">
+    <div class="profile-main">
+      {% if person.thesis_title %}
+      <section class="profile-block profile-thesis accent-border-{{ person.accent }}">
+        <h2>{% translate "Sujet de thèse" %}</h2>
+        <p>{{ person.thesis_title }}</p>
+      </section>
+      {% endif %}
+
+      {% if person.bio %}
+      <section class="profile-block">
+        <h2>{% translate "Présentation" %}</h2>
+        <div class="prose">{{ person.bio_html }}</div>
+      </section>
+      {% endif %}
+
+      {% if person.interest_list %}
+      <section class="profile-block">
+        <h2>{% translate "Centres d'intérêt" %}</h2>
+        <ul class="interest-chips">{% for i in person.interest_list %}<li><a href="{% url 'community:members' %}?q={{ i|urlencode }}">{{ i }}</a></li>{% endfor %}</ul>
+      </section>
+      {% endif %}
+
+      {% if going %}
+      <section class="profile-block">
+        <h2>{% translate "Y va bientôt" %}</h2>
+        <div class="rows">{% for event in going %}{% include "events/_row.html" %}{% endfor %}</div>
+      </section>
+      {% endif %}
+
+      {% if photos %}
+      <section class="profile-block">
+        <h2>{% translate "Photos" %}</h2>
+        <div class="photo-strip">{% for p in photos %}<a href="{{ p.get_absolute_url }}"><img src="{{ p.image.url }}" alt="{{ p.caption }}" loading="lazy"></a>{% endfor %}</div>
+      </section>
+      {% endif %}
+
+      {% if organized %}
+      <section class="profile-block">
+        <h2>{% translate "A proposé" %}</h2>
+        <div class="rows">{% for event in organized %}{% include "events/_row.html" with show_year=True %}{% endfor %}</div>
+      </section>
+      {% endif %}
+
+      {% if rel == "self" and not person.bio and not person.thesis_title and not person.interest_list %}
+      <div class="empty">
+        <h3>{% translate "Ta page est encore vide." %}</h3>
+        <p>{% translate "Ajoute ta discipline, ton sujet de thèse et tes centres d'intérêt pour que les autres te trouvent." %}</p>
+        <div class="empty-actions"><a class="btn btn-primary" href="{% url 'community:settings' %}">{% icon "edit" 18 %} {% translate "Compléter mon profil" %}</a></div>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside class="profile-side">
+      {% if show_contacts %}
+      <section class="profile-block">
+        <h2>{% translate "Me contacter" %}</h2>
+        <ul class="profile-links contact-list">
+          {% if person.phone %}<li><a href="tel:{{ person.phone|cut:' ' }}">{% icon "mail" 16 %} {{ person.phone }}</a></li>{% endif %}
+          {% if person.whatsapp or person.phone %}{% if person.whatsapp_link %}<li><a href="{{ person.whatsapp_link }}" rel="noopener nofollow">{% icon "whatsapp" 16 %} WhatsApp{% if person.whatsapp %} · {{ person.whatsapp }}{% endif %}</a></li>{% endif %}{% endif %}
+          {% if person.discord %}<li><span>{% icon "discord" 16 %} {{ person.discord }}</span></li>{% endif %}
+          {% if person.instagram %}<li><a href="https://www.instagram.com/{{ person.instagram|urlencode }}/" rel="noopener nofollow">{% icon "instagram" 16 %} @{{ person.instagram }}</a></li>{% endif %}
+          {% if person.facebook %}<li><a href="{% if 'http' in person.facebook %}{{ person.facebook }}{% else %}https://www.facebook.com/{{ person.facebook|urlencode }}{% endif %}" rel="noopener nofollow">{% icon "facebook" 16 %} Facebook</a></li>{% endif %}
+          {% if person.x %}<li><a href="https://x.com/{{ person.x|urlencode }}" rel="noopener nofollow">{% icon "external" 16 %} X · @{{ person.x }}</a></li>{% endif %}
+          {% if person.other_contact %}<li><span>{% icon "external" 16 %} {{ person.other_contact }}</span></li>{% endif %}
+        </ul>
+        {% if rel == "self" %}<p class="help">{% blocktranslate with who=person.get_contact_visibility_display|lower %}Visible par : {{ who }}.{% endblocktranslate %}</p>{% endif %}
+      </section>
+      {% endif %}
+      {% if person.linkedin or person.website or person.orcid %}
+      <section class="profile-block">
+        <h2>{% translate "Liens" %}</h2>
+        <ul class="profile-links">
+          {% if person.linkedin %}<li><a href="{{ person.linkedin }}" rel="noopener nofollow">{% icon "linkedin" 16 %} LinkedIn</a></li>{% endif %}
+          {% if person.website %}<li><a href="{{ person.website }}" rel="noopener nofollow">{% icon "external" 16 %} {% translate "Site web" %}</a></li>{% endif %}
+          {% if person.orcid %}<li><a href="https://orcid.org/{{ person.orcid }}" rel="noopener nofollow">{% icon "external" 16 %} ORCID</a></li>{% endif %}
+        </ul>
+      </section>
+      {% endif %}
+
+      <section class="profile-block">
+        <h2>{% translate "Amis" %} <small>{{ friend_count }}</small></h2>
+        {% if friends %}
+        <ul class="friend-grid">
+          {% for f in friends %}<li><a href="{{ f.profile.get_absolute_url }}" title="{{ f.profile.display_name }}">{% include "community/_avatar.html" with p=f.profile size="md" %}<span>{{ f.profile.display_name }}</span></a></li>{% endfor %}
+        </ul>
+        {% else %}
+        <p class="muted">{% translate "Pas encore d'amis sur le site." %}</p>
+        {% endif %}
+      </section>
+
+      {% if rel != "self" and rel != "anonymous" %}
+      <p class="report-link"><a href="{% url 'community:report' 'profil' person.handle %}">{% translate "Signaler ce profil" %}</a></p>
+      {% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}

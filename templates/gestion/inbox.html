@@ -1,0 +1,24 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<header class="g-head"><h1>Messages</h1></header>
+
+{% for m in items %}
+<article class="g-panel g-msg{% if m.handled %} is-handled{% endif %}" id="m{{ m.pk }}">
+  <header>
+    <div>
+      <h2>{{ m.name }} <span class="g-badge">{{ m.get_subject_display }}</span></h2>
+      <p class="g-muted"><a href="mailto:{{ m.email }}?subject=Re: votre message à l'AJC06">{{ m.email }}</a> · {{ m.created_at|date:"j F Y à H:i" }}</p>
+    </div>
+    <form method="post" action="{% url 'gestion:inbox_toggle' m.pk %}">{% csrf_token %}
+      <button class="btn {% if m.handled %}btn-ghost{% else %}btn-blue{% endif %}" type="submit">{% if m.handled %}Marquer à traiter{% else %}{% icon "check" 16 %} Traité{% endif %}</button>
+    </form>
+  </header>
+  <p class="g-msg-body">{{ m.message|linebreaksbr }}</p>
+</article>
+{% empty %}
+<p class="g-empty">Aucun message reçu pour l'instant.</p>
+{% endfor %}
+{% endblock %}

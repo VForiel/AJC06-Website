@@ -1,0 +1,19 @@
+<div class="md" data-md>
+  <div class="md-bar" role="toolbar" aria-label="Mise en forme">
+    <button type="button" data-md-action="bold" title="Gras (Ctrl+B)"><strong>G</strong></button>
+    <button type="button" data-md-action="italic" title="Italique (Ctrl+I)"><em>I</em></button>
+    <button type="button" data-md-action="heading" title="Intertitre">Titre</button>
+    <button type="button" data-md-action="list" title="Liste à puces">• Liste</button>
+    <button type="button" data-md-action="link" title="Lien (Ctrl+K)">Lien</button>
+    <button type="button" data-md-action="image" title="Insérer une image">Image</button>
+    <span class="md-spacer"></span>
+    <div class="md-tabs" role="tablist">
+      <button type="button" role="tab" aria-selected="true" data-md-tab="write">Écrire</button>
+      <button type="button" role="tab" aria-selected="false" data-md-tab="preview">Aperçu</button>
+    </div>
+  </div>
+  <textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>{% if widget.value %}{{ widget.value }}{% endif %}</textarea>
+  <div class="md-preview prose" hidden></div>
+  <input class="md-file" type="file" accept="image/*" hidden>
+  <p class="g-help">Mise en forme simple : **gras**, *italique*, ## intertitre, - liste, [texte](https://lien). Les liens collés tels quels sont cliquables.</p>
+</div>

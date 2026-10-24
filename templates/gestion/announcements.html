@@ -1,0 +1,54 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Annonces{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <h1>Bandeau d'annonce</h1>
+    <p class="g-muted">Un message en haut de toutes les pages du site : inscriptions ouvertes, AG, changement de date… Une seule annonce s'affiche à la fois (la plus récente active).</p>
+  </div>
+</header>
+
+{% if current %}
+<div class="announce announce-{{ current.tone }} g-preview"><span>{{ current.message }}</span>{% if current.link_url %}<a href="{{ current.link_url }}">{{ current.link_label|default:"En savoir plus" }}</a>{% endif %}</div>
+<p class="g-help">Affichée en ce moment sur le site.</p>
+{% endif %}
+
+<div class="g-cols">
+  <form class="g-panel g-form-plain" method="post" novalidate>
+    {% csrf_token %}
+    <h2 class="g-panel-title">{% if item %}Modifier l'annonce{% else %}Nouvelle annonce{% endif %}</h2>
+    {% include "gestion/_field.html" with field=form.message %}
+    {% include "gestion/_field.html" with field=form.message_en %}
+    <div class="g-grid g-grid-2">
+      {% include "gestion/_field.html" with field=form.link_url %}
+      {% include "gestion/_field.html" with field=form.link_label %}
+    </div>
+    {% include "gestion/_field.html" with field=form.link_label_en %}
+    {% include "gestion/_field.html" with field=form.tone %}
+    <div class="g-grid g-grid-2">
+      {% include "gestion/_field.html" with field=form.starts_at %}
+      {% include "gestion/_field.html" with field=form.ends_at %}
+    </div>
+    {% include "gestion/_field.html" with field=form.is_active %}
+    <div class="g-buttons g-buttons-row">
+      <button class="btn btn-primary" type="submit">{% icon "check" 18 %} Enregistrer</button>
+      {% if item %}<button class="btn g-btn-danger" type="submit" name="delete" value="1">Supprimer</button>
+      <a class="btn btn-ghost" href="{% url 'gestion:announcements' %}">Nouvelle annonce</a>{% endif %}
+    </div>
+  </form>
+
+  <section class="g-panel">
+    <header><h2>Toutes les annonces</h2></header>
+    {% for a in items %}
+    <a class="g-line" href="{% url 'gestion:announcement_edit' a.pk %}">
+      <span class="g-line-title">{{ a.message }}</span>
+      <span class="g-badge{% if a == current %} g-badge-ok{% endif %}">{% if a == current %}En ligne{% elif a.is_active %}Programmée / expirée{% else %}Inactive{% endif %}</span>
+    </a>
+    {% empty %}
+    <p class="g-empty">Aucune annonce.</p>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

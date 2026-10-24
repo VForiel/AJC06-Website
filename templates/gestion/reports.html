@@ -1,0 +1,40 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Signalements{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <h1>Signalements</h1>
+    <p class="g-muted">Envoyés par les membres sur les sorties proposées et les profils. Masquer un événement le retire de l'agenda sans le supprimer ; un compte se désactive dans l'admin (Utilisateurs › décocher « actif »).</p>
+  </div>
+</header>
+
+{% for r in items %}
+<article class="g-panel g-msg{% if r.handled %} is-handled{% endif %}">
+  <header>
+    <div>
+      <h2>
+        {% if r.event %}Événement : <a href="{{ r.event.get_absolute_url }}">{{ r.event.title }}</a>{% if not r.event.is_published %} <span class="g-badge">masqué</span>{% endif %}
+        {% elif r.profile %}Profil : <a href="{{ r.profile.get_absolute_url }}">{{ r.profile.display_name }}</a>{% endif %}
+      </h2>
+      <p class="g-muted">Par {{ r.reporter.profile.display_name|default:"compte supprimé" }} · {{ r.created_at|date:"j F Y à H:i" }}</p>
+    </div>
+    <div class="g-head-actions">
+      {% if r.event %}
+      <form method="post" action="{% url 'gestion:event_hide' r.event.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}">
+        <button class="btn btn-ghost" type="submit">{% if r.event.is_published %}Masquer l'événement{% else %}Republier{% endif %}</button>
+      </form>
+      {% endif %}
+      {% if r.profile %}<a class="btn btn-ghost" href="{% url 'admin:auth_user_change' r.profile.user_id %}">Compte dans l'admin</a>{% endif %}
+      <form method="post" action="{% url 'gestion:report_toggle' r.pk %}">{% csrf_token %}
+        <button class="btn {% if r.handled %}btn-ghost{% else %}btn-blue{% endif %}" type="submit">{% if r.handled %}Rouvrir{% else %}{% icon "check" 16 %} Traité{% endif %}</button>
+      </form>
+    </div>
+  </header>
+  <p class="g-msg-body">{{ r.reason|linebreaksbr }}</p>
+</article>
+{% empty %}
+<p class="g-empty">Aucun signalement. Tout va bien.</p>
+{% endfor %}
+{% endblock %}

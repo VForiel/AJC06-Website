@@ -1,0 +1,15 @@
+{{ formset.management_form }}
+<table class="g-table g-budget">
+  <thead><tr><th>Sens</th><th>Intitulé</th><th>Montant (€)</th><th><span class="sr">Supprimer</span></th></tr></thead>
+  <tbody>
+    {% for f in formset %}
+    <tr>
+      <td>{{ f.id }}{{ f.side }}</td>
+      <td>{{ f.label }}{{ f.label.errors }}</td>
+      <td>{{ f.amount }}{{ f.amount.errors }}</td>
+      <td class="g-nowrap">{% if f.instance.pk %}<label class="check">{{ f.DELETE }} retirer</label>{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot><tr><td></td><td><strong>Total</strong></td><td colspan="2">Dépenses {{ totals.0 }} € · Recettes {{ totals.1 }} €</td></tr></tfoot>
+</table>

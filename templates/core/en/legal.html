@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Legal notice{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap"><h1 class="page-title">Legal notice</h1></div>
+</header>
+<div class="wrap page-body prose">
+  <h2>Publisher</h2>
+  <p>The website {{ SITE_URL }} is published by the Association des Jeunes Chercheurs des Alpes-Maritimes (AJC06), 28 avenue de Valrose, 06103 Nice, France.<br>
+  Email: <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a></p>
+  <p>Publication director: the association's presidency.</p>
+
+  <h2>Hosting</h2>
+  <p>{{ LEGAL_HOST }}</p>
+
+  <h2>Design</h2>
+  <p>Website designed and built by AJC06 volunteers. Archivo typeface (Omnibus-Type), under the SIL Open Font License.</p>
+
+  <h2>Content</h2>
+  <p>Texts, posters and photos belong to AJC06 or to their authors and may not be reused without permission.</p>
+</div>
+{% endblock %}

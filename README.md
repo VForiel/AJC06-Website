@@ -1,1 +1,188 @@
 # AJC06-Website
+
+Site de l'Association des Jeunes Chercheurs des Alpes-Maritimes (AJC06), en remplacement du WordPress de https://ajc06.com.
+Django 6.1, gabarits et CSS écrits à la main, aucune ressource tierce. Le plan de la refonte est dans [docs/PLAN.md](docs/PLAN.md).
+
+## Lancer en local
+
+```sh
+python -m venv .venv
+.venv/Scripts/pip install -r requirements-dev.txt   # Linux/macOS : .venv/bin/pip
+.venv/Scripts/python manage.py migrate
+.venv/Scripts/python manage.py load_seed            # contenu repris de l'ancien site
+.venv/Scripts/python manage.py createsuperuser
+.venv/Scripts/python manage.py runserver
+```
+
+- Site : http://localhost:8000
+- Espace bureau (édition des événements et articles) : http://localhost:8000/gestion/
+- Admin Django (équipe, ressources, comptes) : http://localhost:8000/admin/
+
+En développement, les courriels du formulaire de contact s'affichent dans la console.
+
+## Publier du contenu
+
+Les membres du bureau ont un compte avec la case « statut équipe » cochée (admin Django → Utilisateurs).
+Dans `/gestion/` :
+
+- **Événement** : titre, type, date (heures vides = toute la journée ; date de fin seulement s'il dure plusieurs jours),
+  lieu, prix, lien HelloAsso, affiche, description. « Dupliquer » reprend tout sauf la date et l'affiche,
+  pratique pour les meet-ups récurrents. Un événement non publié n'apparaît nulle part.
+- **Article** : brouillon ou publié ; une date future programme la publication.
+- La description s'écrit en Markdown, avec barre d'outils, aperçu et insertion d'images.
+  Les images sont redimensionnées (1600 px max) et converties en WebP.
+
+Chaque formulaire a une section repliable **Version anglaise** : si elle reste vide, le site anglais affiche
+le texte français (avec une mention « only available in French »). La liste des événements signale « FR seul ».
+
+L'agenda est aussi exposé en iCal (`/evenements/agenda.ics`) pour s'y abonner depuis un calendrier, et les
+articles en RSS (`/actu/rss/`).
+
+## Espace membres
+
+N'importe qui peut créer un compte (`/compte/inscription/`, connexion par courriel) :
+
+- **profil** personnalisable (`/membres/<nom>/`) : photo, discipline, école doctorale, labo, sujet de thèse, présentation,
+  centres d'intérêt, liens, couleur du profil ; visible par les membres connectés, ou public si la personne le choisit ;
+- **sorties proposées par les membres** (`/evenements/proposer/`) : publiées tout de suite dans l'agenda avec la
+  mention « Proposé par », filtrables (« Par l'AJC06 » / « Par les membres ») ; l'organisateur·rice les modifie ou supprime ;
+- **« J'y vais »** sur tous les événements (complet si le nombre de places est atteint), liste des participant·es pour les
+  membres connectés, « N de tes amis y vont » ;
+- **amis** (demande, acceptation, retrait) et **invitations** d'amis à un événement ;
+- **notifications** sur le site (demandes d'ami, invitations, inscriptions à mes sorties) avec pastille sur l'avatar ;
+- **modération** : « Signaler » sur les sorties et les profils ; le bureau traite les signalements dans
+  `/gestion/signalements/` et peut masquer une sortie ; un compte se désactive dans l'admin ;
+- **garde-fous** : piège à robots et 5 inscriptions par heure et par adresse IP, 5 sorties par jour et par membre ;
+- **RGPD** : suppression du compte par la personne elle-même, politique de confidentialité à jour.
+
+Validation des nouveaux comptes, réglage `ACCOUNT_VALIDATION` :
+
+- `aucune` : compte actif dès l'inscription ;
+- `bureau` : le compte attend qu'un membre du bureau le valide (ou le refuse) dans `/gestion/comptes/`, signalé dans
+  le menu et sur le tableau de bord ; c'est le mode à utiliser sans serveur mail ;
+- `courriel` : un lien (valable trois jours, renvoyable depuis la page de connexion) active le compte ; le bureau peut
+  aussi valider à la main si le message n'arrive pas. À n'activer qu'une fois le SMTP en place.
+
+Le mot de passe oublié et le lien de confirmation envoient un courriel : il faut un SMTP configuré (sinon le lien
+n'apparaît que dans les journaux).
+
+## Événements de l'asso, dossiers université, soutien
+
+- **Types** (plusieurs par événement) : Plein air, Culture & découverte, Visite, Vie de l'asso, Afterwork, Coworking,
+  Carrière & formation, Conférence/workshop/séminaire, Soutenance de thèse, Sport, Autre (texte libre). Réservés au
+  bureau : PhD meet-up, Camp, Rentrée doctorale. Liste dans `events/models.py` (`TYPES`).
+- **Demande de soutien** : en proposant une sortie, un membre peut demander le soutien de l'asso (au moins un mois
+  avant ; somme demandée, accès, prix par personne, coûts fixes, budget, réservations par l'asso ou remboursement sur
+  factures). La sortie reste privée jusqu'à la décision du bureau (`/gestion/soutiens/`). Acceptée, elle devient un
+  événement de l'asso, mis en attente le temps du dossier.
+- **En attente** : un événement en attente n'est visible que du bureau (et de son organisateur·rice).
+- **Dossier université** (`/gestion/evenements/<id>/dossier/`) : projet prévisionnel (à transmettre deux semaines avant)
+  et bilan, au format des documents remis à la DVU (convention UniCA 2026-2028), en PDF avec participant·es (HelloAsso et
+  site), photos, et devis/factures annexés. Génération dans `projets/pdf.py` (fpdf2 + pypdf, polices Archivo statiques
+  dans `static/fonts/pdf/`).
+- **HelloAsso** : `python manage.py sync_helloasso` récupère les billets des événements dont le lien d'inscription pointe
+  vers un formulaire de l'AJC06 (cron horaire en production). Variables `HELLOASSO_CLIENT_ID` et `HELLOASSO_CLIENT_SECRET`.
+- **Photos** (`/photos/`) : tout membre peut en publier, liées ou non à un événement, en identifiant d'autres membres ;
+  l'accord des personnes photographiées est obligatoire, une personne identifiée peut se retirer ou signaler la photo.
+- **Coordonnées** du profil (téléphone, WhatsApp, Discord, Instagram, Facebook, X, autre) : jamais publiques,
+  visibles des amis par défaut.
+
+## Effets saisonniers et annonces
+
+Effets cumulables, calculés selon la date (heure de Paris) dans `core/effects.py`, animés par `static/js/effects.js` :
+30 ans (toute l'année 2026), anniversaire (17-30 avril, création le 24 avril 1996), Pâques (semaine précédente → lundi),
+Pride (juin), Halloween (24 oct. → 1er nov.), Noël (1er-26 déc.), nouvel an (29 déc. → 3 janv.). Le bureau les
+prévisualise depuis `/gestion/effets/` ; les visiteurs peuvent les couper (pied de page). Le bandeau d'annonce se gère
+dans `/gestion/annonces/`.
+
+## Français et anglais
+
+Le site français est à la racine, l'anglais sous `/en/` avec des adresses traduites (`/en/events/`, `/en/team/`,
+`/en/our-missions/`… qui reprennent celles de l'ancien site). L'espace bureau et l'admin restent en français.
+
+- Textes de l'interface : `{% translate %}` dans les gabarits, catalogue `locale/en/LC_MESSAGES/django.po`.
+  Après avoir modifié un texte, lancer `python scripts/i18n.py` (extrait les chaînes, conserve les traductions,
+  compile le `.mo`, sans besoin de GNU gettext) puis compléter les `msgstr` vides ; `--check` échoue s'il en reste.
+- Pages surtout rédactionnelles (missions, soutien, mentions légales, confidentialité) : une version par langue,
+  `templates/core/<page>.html` et `templates/core/en/<page>.html`.
+- Contenus (événements, articles, ressources, équipe) : champs `<champ>_en` facultatifs, repli sur le français.
+
+## Contenu repris de l'ancien site
+
+`seed/` contient tout ce qui a été récupéré d'ajc06.com : `events.json` (38 événements, avec dates exactes tirées
+des exports iCal), `posts.json` (14 articles), `resources/*.md` (fiches réécrites à la main depuis les pages Divi),
+`team.json` (bureaux 2017 → 2026) et les médias en WebP. Les versions anglaises sont dans `seed/translations/`
+(événements, articles sans version anglaise d'origine) et `seed/resources/en/`. `scripts/scrape_wordpress.py` régénère événements,
+articles et médias ; `load_seed` peut être relancé sans créer de doublons.
+
+Les anciennes adresses (`/events/…`, `/evenement/`, `/don/`, articles à la racine, pages `/en/…`) redirigent en 301.
+
+## Sécurité et sauvegardes
+
+- **Blocage des essais de mots de passe** (`core/security.py`, sur toutes les connexions : membres, bureau, admin) :
+  5 échecs en 15 minutes depuis une même adresse IP la bloquent une heure ; tenter les identifiants `admin`,
+  `administrator`, `root`, `wp-admin`… la bloque 24 heures dès le premier essai. Les blocages se voient et se lèvent
+  dans l'admin (« Adresses bloquées »). Derrière un reverse proxy qui pose `X-Forwarded-For`, mettre `TRUST_X_FORWARDED_FOR=True`
+  (jamais sinon : l'en-tête serait falsifiable).
+- **Limites d'envoi** : 5 inscriptions, 5 messages de contact et 5 demandes de mot de passe oublié par heure et par
+  adresse IP (3 par adresse mail pour le mot de passe oublié), 5 renvois de lien de confirmation.
+- **Fichiers téléversés** (`core/media.py`) : publics et mis en cache une semaine, sauf `media/dossiers/` (devis,
+  factures, photos des bilans) réservé au bureau. Images limitées à 12 Mo et 40 mégapixels (`core/images.py`).
+- **Sauvegardes** : `python manage.py backup_site` copie la base à chaud (gzip) chaque jour et archive les médias le
+  dimanche (`--media` pour forcer) dans `BACKUP_DIR` ; 60 jours de base et 8 archives de médias sont conservés.
+  Restauration : arrêter l'application, `gunzip` la copie voulue à la place de `DATABASE_PATH`, extraire l'archive des
+  médias dans le dossier parent de `MEDIA_ROOT`, redémarrer.
+
+## Tests
+
+```sh
+.venv311/Scripts/python manage.py test tests     # Python 3.11, comme en production
+```
+
+## Production : o2switch (beta.ajc06.com)
+
+Hébergement mutualisé de l'asso (`ssh ajc06`), application Python cPanel (Passenger, Python 3.11, d'où Django 5.2 LTS) :
+
+- code dans `~/ajc06-site` (copie du dépôt, sans git), `.env` à côté (droits 600) ;
+- virtualenv `~/virtualenv/ajc06-site/3.11`, point d'entrée `passenger_wsgi.py`. Attention : recréer l'application
+  avec `cloudlinux-selector create` remplace ce fichier par un modèle qui ne marche pas, il faut le recopier ;
+- racine web `~/website` : elle ne contient que le `.htaccess` Passenger (l'ancien WordPress de beta est rangé dans
+  `~/beta-wordpress-archive`) ;
+- base, médias et sauvegardes hors du code : `~/ajc06-data/{db.sqlite3,media,backups}`, journal des crons dans
+  `~/ajc06-data/cron.log` ;
+- crons (installer avec `crontab fichier`, `crontab -` ne marche pas sous CageFS) : `backup_site` à 3 h 30,
+  `sync_helloasso` toutes les heures, et un appel à `http://beta.ajc06.com/robots.txt` toutes les 5 minutes pour
+  garder l'application chargée (sinon le premier visiteur après une pause attend ~2,5 s ; `PassengerMinInstances`
+  est refusé dans le `.htaccess` et casse le site) ;
+- `CACHE_DIR=~/ajc06-data/cache` : cache sur disque partagé entre les processus Passenger (limites d'envoi).
+
+Mise à jour :
+
+```sh
+tar czf ajc06.tgz --exclude=.venv* --exclude=./media --exclude=./backups --exclude=staticfiles \
+    --exclude='db.sqlite3*' --exclude=__pycache__ --exclude=.env --exclude=passenger_wsgi.py .
+scp ajc06.tgz ajc06: && ssh ajc06 'tar xzf ajc06.tgz -C ~/ajc06-site && rm ajc06.tgz && cd ~/ajc06-site \
+    && source ~/virtualenv/ajc06-site/3.11/bin/activate && pip install -q -r requirements.txt \
+    && python manage.py migrate && python manage.py collectstatic --noinput && touch tmp/restart.txt'
+```
+
+Le site principal ajc06.com (`~/public_html`, WordPress) n'est pas concerné.
+
+### Avec Docker (autre hébergeur)
+
+Image Docker (gunicorn, WhiteNoise pour les fichiers statiques, SQLite et médias dans le volume `/data`) :
+
+```sh
+cp .env.example .env        # remplir
+docker compose up -d --build
+docker compose exec web python manage.py load_seed          # première mise en ligne
+docker compose exec web python manage.py createsuperuser
+```
+
+Derrière Caddy, mettre `TRUST_X_FORWARDED_FOR=True` ; exemple de site Caddy :
+
+```caddy
+ajc06.com, www.ajc06.com {
+    reverse_proxy ajc06_web:8000
+}
+```

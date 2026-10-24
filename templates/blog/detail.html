@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{{ post.title_tr }}{% endblock %}
+{% block description %}{{ post.teaser|truncatechars:160 }}{% endblock %}
+{% block og_title %}{{ post.title_tr }}{% endblock %}
+{% block og_description %}{{ post.teaser|truncatechars:200 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_image %}{% if post.cover %}<meta property="og:image" content="{{ SITE_URL }}{{ post.cover.url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block content %}
+{% get_current_language as LANG %}
+<article class="wrap page-body">
+  <header class="page-head post-head">
+    <a class="breadcrumb" href="{% url 'blog:list' %}">{% icon "arrow-left" 16 %} {% translate "Actu" %}</a>
+    {% if not post.is_live %}<p class="past-note">{% translate "Aperçu : cet article n'est pas encore publié." %}</p>{% endif %}
+    <h1 class="post-title">{{ post.title_tr }}</h1>
+    <p class="post-meta"><time datetime="{{ post.published_at|date:'c' }}">{{ post.published_at|date:"j F Y" }}</time> · {% blocktranslate with n=post.reading_minutes %}{{ n }} min de lecture{% endblocktranslate %}</p>
+  </header>
+
+  {% if post.cover %}
+  <figure class="post-cover"><img src="{{ post.cover.url }}" alt=""></figure>
+  {% endif %}
+
+  {% if LANG == 'en' and not post.body_en %}<p class="lang-note">{% translate "Cet article n'existe qu'en français." %}</p>{% endif %}
+  <div class="prose"{% if LANG == 'en' and not post.body_en %} lang="fr"{% endif %}>{{ post.body_html }}</div>
+
+  {% if newer or older %}
+  <nav class="post-nav" aria-label="{% translate "Autres articles" %}">
+    {% if older %}<a href="{{ older.get_absolute_url }}"><small>{% icon "arrow-left" 14 %} {% translate "Plus ancien" %}</small>{{ older.title_tr }}</a>{% endif %}
+    {% if newer %}<a class="next-post" href="{{ newer.get_absolute_url }}"><small>{% translate "Plus récent" %} {% icon "arrow" 14 %}</small>{{ newer.title_tr }}</a>{% endif %}
+  </nav>
+  {% endif %}
+</article>
+{% endblock %}

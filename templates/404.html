@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Page introuvable" %}{% endblock %}
+
+{% block content %}
+<div class="wrap lost">
+  <p class="kicker">{% translate "Erreur 404" %}</p>
+  <h1 class="page-title">{% translate "Perdu ?" %}</h1>
+  <p class="page-lede">{% translate "Cette page n'existe pas, ou plus : le site a fait peau neuve et certaines adresses ont changé." %}</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="{% url 'core:home' %}">{% translate "Retour à l'accueil" %} {% icon "arrow" 18 %}</a>
+    <a class="btn btn-ghost" href="{% url 'events:list' %}">{% icon "calendar" 18 %} {% translate "Agenda" %}</a>
+  </div>
+  {% if upcoming %}
+  <div class="section"><div class="rows">{% for event in upcoming %}{% include "events/_row.html" %}{% endfor %}</div></div>
+  {% endif %}
+</div>
+{% endblock %}

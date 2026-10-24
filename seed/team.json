@@ -1,0 +1,96 @@
+{
+  "_source": "Bureaux 2017-2025 : page /equipe de l'ancien site. Bureau 2026 : communiqué par le bureau (octobre 2026).",
+  "roles_en": {
+    "Président": "President",
+    "Présidente": "President",
+    "Vice-président·es": "Vice-presidents",
+    "Vice-présidentes": "Vice-presidents",
+    "Vice-présidente": "Vice-president",
+    "Secrétaire": "Secretary",
+    "Secrétaires": "Secretaries",
+    "Secrétaire général": "General secretary",
+    "Vice-secrétaire": "Deputy secretary",
+    "Trésorier": "Treasurer",
+    "Trésorière": "Treasurer",
+    "Vice-trésorière": "Deputy treasurer"
+  },
+  "boards": [
+    {"year": 2026, "members": [
+      {"name": "Julien Fauqueux", "role": "Président"},
+      {"name": "Saijal Vats", "role": "Vice-présidente", "about": "Doctorante en sciences de gestion, ED DESPEG", "about_en": "PhD candidate in management science, ED DESPEG", "photo": "equipe/saijal-vats.webp", "linkedin": "https://www.linkedin.com/in/saijal-vats-5b6770168"},
+      {"name": "Bruno Habran", "role": "Secrétaire général"},
+      {"name": "Vincent Foriel", "role": "Trésorier", "about": "Doctorant en astrophysique, ED SFA", "about_en": "PhD candidate in astrophysics, ED SFA", "photo": "equipe/vincent-foriel.webp", "linkedin": "https://www.linkedin.com/in/vincentforiel/"}
+    ]},
+    {"year": 2025, "members": [
+      {"name": "Gwenaëlle Prigent", "role": "Présidente", "about": "Doctorante en sciences de gestion, ED DESPEG", "about_en": "PhD candidate in management science, ED DESPEG", "photo": "equipe/gwenaelle-prigent.webp", "linkedin": "https://www.linkedin.com/in/gwenaelle-prigent/"},
+      {"name": "Saijal Vats", "role": "Vice-présidente", "about": "Doctorante en sciences de gestion, ED DESPEG", "about_en": "PhD candidate in management science, ED DESPEG", "photo": "equipe/saijal-vats.webp", "linkedin": "https://www.linkedin.com/in/saijal-vats-5b6770168"},
+      {"name": "Benjamin Vignau", "role": "Secrétaire", "about": "Docteur en informatique", "about_en": "PhD in computer science", "photo": "equipe/benjamin-vignau.webp"},
+      {"name": "Yacine Ait-Seguer", "role": "Vice-secrétaire", "about": "Doctorant en économie, ED DESPEG", "about_en": "PhD candidate in economics, ED DESPEG"},
+      {"name": "Vincent Foriel", "role": "Trésorier", "about": "Doctorant en astrophysique, ED SFA", "about_en": "PhD candidate in astrophysics, ED SFA", "photo": "equipe/vincent-foriel.webp", "linkedin": "https://www.linkedin.com/in/vincentforiel/"},
+      {"name": "Tina Rajabikhamesi", "role": "Vice-trésorière", "about": "Doctorante en littérature comparée, ED SHAL", "about_en": "PhD candidate in comparative literature, ED SHAL", "photo": "equipe/tina-rajabikhamesi.webp"}
+    ]},
+    {"year": 2024, "members": [
+      {"name": "Gwenaëlle Prigent", "role": "Présidente"},
+      {"name": "Alexandre Ruiz", "role": "Vice-président·es"},
+      {"name": "Kenza Benmoussa", "role": "Vice-président·es"},
+      {"name": "Arnaud Persenda", "role": "Vice-président·es"},
+      {"name": "Yassine Maalaoui", "role": "Vice-président·es"},
+      {"name": "Saijal Vats", "role": "Secrétaire"},
+      {"name": "Sylvain Juanes", "role": "Trésorier"}
+    ]},
+    {"year": 2023, "members": [
+      {"name": "Orëa Garde-Le Bretton", "role": "Présidente"},
+      {"name": "Lucie Monticelli", "role": "Vice-président·es"},
+      {"name": "Julie Lagouarde", "role": "Vice-président·es"},
+      {"name": "Elisa Redman", "role": "Vice-président·es"},
+      {"name": "Alexandre Ruiz", "role": "Vice-président·es"},
+      {"name": "Timothé Gaucher", "role": "Vice-président·es"},
+      {"name": "Kenza Benmoussa", "role": "Vice-président·es"},
+      {"name": "Lisa Guzzi", "role": "Secrétaire"},
+      {"name": "Sylvain Juanes", "role": "Trésorier"}
+    ]},
+    {"year": 2022, "members": [
+      {"name": "Alexandre Ruiz", "role": "Président"},
+      {"name": "Antoine Pasquier", "role": "Vice-président·es"},
+      {"name": "Elisa Redman", "role": "Vice-président·es"},
+      {"name": "Ilona Diele", "role": "Vice-président·es"},
+      {"name": "Arnaud Persenda", "role": "Secrétaire"},
+      {"name": "Laïla Giordano", "role": "Trésorière"}
+    ]},
+    {"year": 2021, "members": [
+      {"name": "Antoine Pasquier", "role": "Président"},
+      {"name": "Mélina Cointe", "role": "Vice-président·es"},
+      {"name": "Salomé Soulé", "role": "Vice-président·es"},
+      {"name": "Melchisedek Joslem Ngambou Djatche", "role": "Vice-président·es"},
+      {"name": "Arnaud Persenda", "role": "Secrétaire"},
+      {"name": "Laïla Giordano", "role": "Trésorière"}
+    ]},
+    {"year": 2020, "members": [
+      {"name": "Antoine Pasquier", "role": "Président"},
+      {"name": "Charlotte Menager", "role": "Vice-président·es"},
+      {"name": "Claire Lasserre", "role": "Vice-président·es"},
+      {"name": "Melchisedek Joslem Ngambou Djatche", "role": "Vice-président·es"},
+      {"name": "Nezli Doumandji", "role": "Secrétaires"},
+      {"name": "Arnaud Persenda", "role": "Secrétaires"},
+      {"name": "Laïla Giordano", "role": "Trésorière"}
+    ]},
+    {"year": 2019, "members": [
+      {"name": "Auréa Cophignon", "role": "Présidente"},
+      {"name": "Claire Lasserre", "role": "Vice-présidentes"},
+      {"name": "Sothearath Seang", "role": "Vice-présidentes"},
+      {"name": "Sarah Toparslan", "role": "Secrétaire"},
+      {"name": "Adrien Russo", "role": "Trésorier"}
+    ]},
+    {"year": 2018, "members": [
+      {"name": "Auréa Cophignon", "role": "Présidente"},
+      {"name": "Kenza Benmoussa", "role": "Secrétaire"},
+      {"name": "Racha Fayad", "role": "Trésorière"}
+    ]},
+    {"year": 2017, "members": [
+      {"name": "Tania Ocana", "role": "Présidente"},
+      {"name": "Laura Cassard", "role": "Secrétaires"},
+      {"name": "Clément Tulloue", "role": "Secrétaires"},
+      {"name": "Léa Drieu", "role": "Trésorière"}
+    ]}
+  ]
+}

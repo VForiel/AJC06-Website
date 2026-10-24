@@ -1,0 +1,49 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Effets saisonniers{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <h1>Effets saisonniers</h1>
+    <p class="g-muted">Ils se déclenchent et s'arrêtent tout seuls selon la date, et se cumulent. Les visiteurs peuvent les couper depuis le pied de page ; ils sont réduits au décor fixe pour qui demande moins d'animations.</p>
+  </div>
+</header>
+
+<section class="g-panel">
+  <header><h2>Aperçu</h2></header>
+  <p class="g-help">L'aperçu ne concerne que ton navigateur (membres du bureau) et reste actif pendant ta navigation, jusqu'à « Revenir au calendrier ».
+    {% if preview is not None %}<b>Aperçu en cours : {{ preview_labels|join:", "|default:"aucun effet" }}.</b>{% endif %}</p>
+  <div class="g-effects">
+    {% for code, label in effects.items %}
+    <a class="btn btn-ghost" href="/?effets={{ code }}" target="_blank" rel="noopener">{{ label }}</a>
+    {% endfor %}
+    <a class="btn btn-ghost" href="/?effets={% for code, label in effects.items %}{{ code }}{% if not forloop.last %},{% endif %}{% endfor %}" target="_blank" rel="noopener">Tout à la fois</a>
+    <a class="btn btn-ghost" href="/?effets=" target="_blank" rel="noopener">Aucun</a>
+    <a class="btn btn-blue" href="/?effets=reset" target="_blank" rel="noopener">Revenir au calendrier</a>
+  </div>
+</section>
+
+<div class="g-cols">
+  <section class="g-panel">
+    <header><h2>Calendrier {{ year }}</h2></header>
+    <table class="g-table">
+      <tbody>
+        {% for code, label, start, end in calendar %}
+        <tr><td><strong>{{ label }}</strong>{% if code in active %} <span class="g-badge g-badge-ok">en ce moment</span>{% endif %}</td><td class="g-nowrap g-muted">{{ start|date:"j M" }} → {{ end|date:"j M Y" }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <section class="g-panel">
+    <header><h2>Calendrier {{ year|add:1 }}</h2></header>
+    <table class="g-table">
+      <tbody>
+        {% for code, label, start, end in next_calendar %}
+        <tr><td><strong>{{ label }}</strong></td><td class="g-nowrap g-muted">{{ start|date:"j M" }} → {{ end|date:"j M Y" }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}

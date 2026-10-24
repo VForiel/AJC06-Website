@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Membres" %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Communauté" %}</p>
+    <h1 class="page-title">{% translate "Les membres" %}</h1>
+    <p class="page-lede">{% translate "Retrouve des doctorant·es de ta discipline, de ton labo ou qui aiment les mêmes choses que toi." %}</p>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  <form class="members-search" method="get" role="search">
+    <input type="search" name="q" value="{{ q }}" placeholder="{% translate "Nom, discipline, labo, centre d'intérêt…" %}" aria-label="{% translate "Rechercher un membre" %}">
+    <select name="ed" aria-label="{% translate "École doctorale" %}">
+      <option value="">{% translate "Toutes les écoles doctorales" %}</option>
+      {% for value, label in schools %}<option value="{{ value }}"{% if school == value %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-blue" type="submit">{% translate "Chercher" %}</button>
+  </form>
+
+  {% if suggestions %}
+  <section class="members-section">
+    <h2 class="members-h">{% translate "Dans ton école doctorale" %}</h2>
+    <div class="people">{% for p in suggestions %}{% include "community/_person.html" %}{% endfor %}</div>
+  </section>
+  {% endif %}
+
+  <section class="members-section">
+    <h2 class="members-h">{% if q or school %}{% blocktranslate count n=people|length %}{{ n }} résultat{% plural %}{{ n }} résultats{% endblocktranslate %}{% else %}{% translate "Tout le monde" %}{% endif %}</h2>
+    {% if people %}
+    <div class="people">{% for p in people %}{% include "community/_person.html" %}{% endfor %}</div>
+    {% else %}
+    <div class="empty"><h3>{% translate "Personne ne correspond pour l'instant." %}</h3></div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

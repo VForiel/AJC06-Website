@@ -1,0 +1,10 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate %}Bonjour {{ name }},
+
+Bienvenue dans la communauté de l'AJC06 ! Pour activer ton compte, ouvre ce lien (valable trois jours) :{% endblocktranslate %}
+
+{{ link }}
+
+{% blocktranslate %}Si tu n'as pas créé de compte sur le site de l'AJC06, ignore simplement ce message.
+
+— L'AJC06{% endblocktranslate %}
+{% endautoescape %}

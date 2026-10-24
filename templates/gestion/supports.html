@@ -1,0 +1,63 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Demandes de soutien{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <h1>Demandes de soutien</h1>
+    <p class="g-muted">Sorties proposées par des membres qui demandent un financement ou des réservations. Acceptée, une sortie devient un événement de l'asso, mis en attente le temps du dossier auprès de l'université.</p>
+  </div>
+</header>
+
+{% for s in pending %}
+<article class="g-panel g-support">
+  <header>
+    <div>
+      <h2><a href="{{ s.event.get_absolute_url }}">{{ s.event.title }}</a></h2>
+      <p class="g-muted">{{ s.event.start_date|date:"l j F Y" }}{% if s.event.venue %} · {{ s.event.venue }}{% endif %} · proposé par {{ s.requester.profile.display_name|default:"compte supprimé" }} le {{ s.created_at|date:"j F" }}</p>
+    </div>
+    <span class="g-amount">{{ s.amount }} €</span>
+  </header>
+  {% with days=s.event.days_until %}{% if days < 30 %}<p class="g-error">Attention : l'événement a lieu dans {{ days }} jours, moins que le mois demandé.</p>{% endif %}{% endwith %}
+  <dl class="g-dl">
+    <div><dt>Comment y aller</dt><dd>{{ s.access|linebreaksbr }}</dd></div>
+    <div><dt>Prix par personne</dt><dd>{{ s.price_per_person }}</dd></div>
+    {% if s.fixed_costs %}<div><dt>Coûts fixes</dt><dd>{{ s.fixed_costs }}</dd></div>{% endif %}
+    <div><dt>Budget détaillé</dt><dd>{{ s.budget_details|linebreaksbr }}</dd></div>
+    <div><dt>Réservations</dt><dd>{{ s.get_booking_display }}</dd></div>
+    {% if s.event.capacity %}<div><dt>Places</dt><dd>{{ s.event.capacity }}</dd></div>{% endif %}
+  </dl>
+  <form class="g-decide" method="post" action="{% url 'gestion:support_decide' s.pk %}">
+    {% csrf_token %}
+    <label for="note-{{ s.pk }}">Message au membre <span class="g-optional">facultatif</span></label>
+    <textarea id="note-{{ s.pk }}" name="note" rows="2" placeholder="Ex. On prend en charge les billets, on te recontacte pour la réservation."></textarea>
+    <div class="g-buttons g-buttons-row">
+      <button class="btn btn-primary" type="submit" name="decision" value="accept">{% icon "check" 18 %} Accepter</button>
+      <button class="btn btn-ghost" type="submit" name="decision" value="refuse">Refuser</button>
+    </div>
+  </form>
+</article>
+{% empty %}
+<p class="g-empty">Aucune demande en attente.</p>
+{% endfor %}
+
+{% if done %}
+<section class="g-panel">
+  <header><h2>Décisions précédentes</h2></header>
+  <table class="g-table">
+    <thead><tr><th>Événement</th><th>Somme</th><th>Décision</th><th>Par</th></tr></thead>
+    <tbody>
+      {% for s in done %}
+      <tr>
+        <td><a href="{% url 'gestion:dossier' s.event.pk %}"><strong>{{ s.event.title }}</strong></a></td>
+        <td>{{ s.amount }} €</td>
+        <td><span class="g-badge{% if s.status == 'acceptee' %} g-badge-ok{% endif %}">{{ s.get_status_display }}</span></td>
+        <td class="g-muted">{{ s.decided_by.profile.display_name|default:"" }} · {{ s.decided_at|date:"j/m/Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}

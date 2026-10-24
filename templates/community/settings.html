@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Mon profil" %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Espace membres" %}</p>
+    <h1 class="page-title">{% translate "Mon profil" %}</h1>
+    <p class="page-lede">{% translate "Ce que tu remplis ici apparaît sur ta page, pour aider les autres doctorant·es à te trouver. Tout est facultatif, sauf ton nom." %}
+      <a href="{{ profile.get_absolute_url }}">{% translate "Voir ma page" %} {% icon "arrow" 16 %}</a></p>
+  </div>
+</header>
+
+<div class="wrap page-body settings">
+  <form class="form settings-form" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include "community/_form_errors.html" with file_field=True %}
+    <section class="settings-block">
+      <h2>{% translate "Qui je suis" %}</h2>
+      <div class="settings-grid">
+        {% include "community/_field.html" with field=form.display_name %}
+        {% include "community/_field.html" with field=form.pronouns %}
+      </div>
+      <div class="avatar-field">
+        {% include "community/_avatar.html" with p=profile size="lg" %}
+        {% include "community/_field.html" with field=form.avatar %}
+      </div>
+      {% include "community/_field.html" with field=form.headline %}
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Ma recherche" %}</h2>
+      <div class="settings-grid">
+        {% include "community/_field.html" with field=form.discipline %}
+        {% include "community/_field.html" with field=form.lab %}
+        {% include "community/_field.html" with field=form.doctoral_school %}
+        {% include "community/_field.html" with field=form.stage %}
+      </div>
+      {% include "community/_field.html" with field=form.thesis_title %}
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "À propos" %}</h2>
+      {% include "community/_field.html" with field=form.bio %}
+      {% include "community/_field.html" with field=form.interests %}
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Liens" %}</h2>
+      <div class="settings-grid">
+        {% include "community/_field.html" with field=form.linkedin %}
+        {% include "community/_field.html" with field=form.website %}
+        {% include "community/_field.html" with field=form.orcid %}
+      </div>
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Coordonnées" %}</h2>
+      <div class="settings-grid">
+        {% include "community/_field.html" with field=form.phone %}
+        {% include "community/_field.html" with field=form.whatsapp %}
+        {% include "community/_field.html" with field=form.discord %}
+        {% include "community/_field.html" with field=form.instagram %}
+        {% include "community/_field.html" with field=form.facebook %}
+        {% include "community/_field.html" with field=form.x %}
+      </div>
+      {% include "community/_field.html" with field=form.other_contact %}
+      <fieldset class="field{% if form.contact_visibility.errors %} has-error{% endif %}" id="{{ form.contact_visibility.auto_id }}">
+        <legend>{{ form.contact_visibility.label|capfirst }}</legend>
+        <div class="choices">{% for radio in form.contact_visibility %}<label>{{ radio.tag }} {{ radio.choice_label }}</label>{% endfor %}</div>
+        {{ form.contact_visibility.errors }}
+      </fieldset>
+      <p class="help">{% translate "Tes coordonnées ne sont jamais publiques : par défaut, seuls tes amis les voient." %}</p>
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Personnalisation" %}</h2>
+      <fieldset class="field{% if form.accent.errors %} has-error{% endif %}" id="{{ form.accent.auto_id }}">
+        <legend>{{ form.accent.label|capfirst }}</legend>
+        <div class="swatches">
+          {% for radio in form.accent %}
+          <label class="swatch">{{ radio.tag }}<span class="swatch-color accent-{{ radio.data.value }}"></span><span>{{ radio.choice_label }}</span></label>
+          {% endfor %}
+        </div>
+        {{ form.accent.errors }}
+      </fieldset>
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Confidentialité" %}</h2>
+      <fieldset class="field{% if form.visibility.errors %} has-error{% endif %}" id="{{ form.visibility.auto_id }}">
+        <legend>{{ form.visibility.label|capfirst }}</legend>
+        <div class="choices">{% for radio in form.visibility %}<label>{{ radio.tag }} {{ radio.choice_label }}</label>{% endfor %}</div>
+        {{ form.visibility.errors }}
+      </fieldset>
+      {% include "community/_field.html" with field=form.show_events %}
+    </section>
+
+    <div class="settings-actions"><button class="btn btn-primary" type="submit" name="save_profile" value="1">{% icon "check" 18 %} {% translate "Enregistrer mon profil" %}</button></div>
+  </form>
+
+  <aside class="settings-side">
+    <form class="settings-block" method="post" novalidate>
+      {% csrf_token %}
+      <h2>{% translate "Mon compte" %}</h2>
+      {% include "community/_field.html" with field=email_form.email %}
+      <button class="btn btn-ghost" type="submit" name="save_email" value="1">{% translate "Changer d'adresse" %}</button>
+    </form>
+    <div class="settings-block">
+      <ul class="settings-links">
+        <li><a href="{% url 'community:password_change' %}">{% translate "Changer de mot de passe" %}</a></li>
+        <li><a href="{% url 'community:friends' %}">{% translate "Mes amis" %}</a></li>
+        <li><a class="danger-link" href="{% url 'community:delete_account' %}">{% translate "Supprimer mon compte" %}</a></li>
+      </ul>
+    </div>
+  </aside>
+</div>
+{% endblock %}

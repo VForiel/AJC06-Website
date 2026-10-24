@@ -1,0 +1,58 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}{% if post %}{{ post.title }}{% else %}Nouvel article{% endif %}{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <a class="breadcrumb" href="{% url 'gestion:posts' %}">{% icon "arrow-left" 16 %} Articles</a>
+    <h1>{% if post %}{{ post.title }}{% else %}Nouvel article{% endif %}</h1>
+  </div>
+</header>
+
+<form class="g-form" method="post" enctype="multipart/form-data" novalidate data-urls='{"preview": "{% url 'gestion:preview' %}", "upload": "{% url 'gestion:upload' %}"}'>
+  {% csrf_token %}
+  {% if form.errors %}<p class="g-error">Quelques champs sont à corriger, ils sont signalés en rouge.</p>{% endif %}
+
+  <div class="g-form-main">
+    <fieldset class="g-fieldset">
+      {% include "gestion/_field.html" with field=form.title wide=True %}
+      {% include "gestion/_field.html" with field=form.excerpt wide=True %}
+      {% include "gestion/_field.html" with field=form.body wide=True %}
+    </fieldset>
+
+    <details class="g-fieldset g-english"{% if post.title_en or form.title_en.errors %} open{% endif %}>
+      <summary>Version anglaise <span class="g-optional">facultatif : sans traduction, le site anglais affiche le français</span></summary>
+      {% include "gestion/_field.html" with field=form.title_en wide=True %}
+      {% include "gestion/_field.html" with field=form.excerpt_en wide=True %}
+      {% include "gestion/_field.html" with field=form.body_en wide=True %}
+    </details>
+  </div>
+
+  <aside class="g-form-side">
+    <div class="g-panel g-sticky">
+      {% include "gestion/_field.html" with field=form.status %}
+      {% include "gestion/_field.html" with field=form.published_at %}
+      <div class="g-buttons">
+        <button class="btn btn-primary" type="submit">{% icon "check" 18 %} Enregistrer</button>
+        <button class="btn btn-ghost" type="submit" name="continue" value="1">Enregistrer et rester ici</button>
+      </div>
+      {% if post %}
+      <ul class="g-links">
+        <li><a href="{{ post.get_absolute_url }}">{% icon "external" 16 %} {% if post.is_live %}Voir sur le site{% else %}Aperçu{% endif %}</a></li>
+        <li><a class="g-danger" href="{% url 'gestion:post_delete' post.pk %}">Supprimer</a></li>
+      </ul>
+      {% endif %}
+    </div>
+
+    <div class="g-panel">
+      <h2 class="g-panel-title">Image de couverture</h2>
+      <div class="g-poster g-poster-wide" data-poster-preview>
+        {% if post.cover %}<img src="{{ post.cover.url }}" alt="">{% else %}<span>Facultative. Affichée en tête d'article et dans les listes.</span>{% endif %}
+      </div>
+      {{ form.cover }}
+      {{ form.cover.errors }}
+    </div>
+  </aside>
+</form>
+{% endblock %}

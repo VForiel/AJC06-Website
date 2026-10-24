@@ -1,0 +1,17 @@
+# Production sur VPS1 : le reverse proxy Caddy partagé (~/reverse-proxy) joint ce conteneur par le réseau « proxy ».
+services:
+  web:
+    build: .
+    container_name: ajc06_web
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - data:/data
+    networks: [proxy]
+
+volumes:
+  data:
+
+networks:
+  proxy:
+    external: true

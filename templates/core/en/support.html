@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load ajc %}
+{% block title %}Support AJC06{% endblock %}
+{% block description %}Every donation to AJC06 is multiplied by public grants and gives French taxpayers a 66% tax reduction.{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Make a donation</p>
+    <h1 class="page-title">Support us</h1>
+    <p class="page-lede">Every donation, however small, counts: it is then multiplied by public grants.</p>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  <div class="equations">
+    <div class="equation">
+      <strong>€1 = lots of €</strong>
+      <p>A €1 donation can help us obtain €5, €10 or even €50 in public grants (it depends on several factors, but you get the idea). The same goes for donations in kind: getting to one of our events by your own means, or giving us equipment you no longer need.</p>
+    </div>
+    <div class="equation">
+      <strong>€1 = €0.33 for you</strong>
+      <p>AJC06 is recognised as an association of general interest: if you pay income tax in France, your donations, including in kind, give you a tax reduction of 66% of their amount.</p>
+    </div>
+  </div>
+
+  <div class="donate-box">
+    <div>
+      <h2>Donate via HelloAsso</h2>
+      <p>HelloAsso provides associations with simple, secure payments. The platform lives on the voluntary tips donors can add to their donation.</p>
+    </div>
+    <a class="btn btn-primary" href="{{ DONATE_URL }}" rel="noopener">{% icon "heart" 18 %} Donate {% icon "external" 16 %}</a>
+  </div>
+
+  <div class="prose">
+    <h2>How is the money managed?</h2>
+    <p>The association is funded from three sources:</p>
+    <ul>
+      <li><strong>Public grants</strong>, which fund the most expensive events under an agreement with the funding body.</li>
+      <li><strong>Donations and membership fees</strong>, which give the association its own funds and a little freedom: a free drink, hosting this website…</li>
+      <li><strong>Merchandise sales and event fees</strong>, which lower the cost of our events.</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

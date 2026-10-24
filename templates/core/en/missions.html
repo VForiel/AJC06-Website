@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load ajc %}
+{% block title %}Our missions{% endblock %}
+{% block description %}Supporting, guiding and representing PhD candidates and early-career researchers in the Alpes-Maritimes: the four missions of AJC06.{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Why AJC06 exists</p>
+    <h1 class="page-title">Our missions</h1>
+    <p class="page-lede">AJC06 supports, guides and promotes PhD candidates and early-career researchers in the region through events, initiatives and partnerships, for their personal, academic and professional growth.</p>
+  </div>
+</header>
+
+<div class="wrap page-body">
+  <section class="mission">
+    <div><span class="mission-n">01</span><p class="kicker">Science and culture</p><h2>Bringing doctoral life at Université Côte d'Azur to life</h2></div>
+    <ul>
+      <li>Social events: concerts, hikes, PhD nights out</li>
+      <li>Taking part in the Fête de la science</li>
+      <li>Supporting PhD student associations at Université Côte d'Azur</li>
+    </ul>
+  </section>
+  <section class="mission">
+    <div><span class="mission-n">02</span><p class="kicker">Communication</p><h2>Sharing information between PhD candidates</h2></div>
+    <ul>
+      <li>Announcements and chat on the <a href="{{ WHATSAPP_URL }}" rel="noopener">WhatsApp community</a>, news on <a href="{{ INSTAGRAM_URL }}" rel="noopener">Instagram</a>, LinkedIn and this website</li>
+      <li>Useful links gathered in the <a href="{% url 'core:resources' %}">Resources</a> section</li>
+    </ul>
+  </section>
+  <section class="mission">
+    <div><span class="mission-n">03</span><p class="kicker">Careers</p><h2>Promoting research training and preparing life after the PhD</h2></div>
+    <ul>
+      <li>Career workshops: entrepreneurship, industry, academia…</li>
+      <li>Member of the BioTechno network, which promotes doctoral training and works on the employability of young life-science graduates</li>
+      <li>Member of the Scientific and Steering Council of OTECCA (Observatoire de la transition écologique et citoyenne Côte d'Azur)</li>
+    </ul>
+  </section>
+  <section class="mission">
+    <div><span class="mission-n">04</span><p class="kicker">Representation</p><h2>Representing and defending early-career researchers in the Alpes-Maritimes</h2></div>
+    <ul>
+      <li>Dialogue with Université Côte d'Azur and student unions</li>
+      <li>Local and national advocacy for better working conditions for early-career researchers</li>
+      <li>Practical guide to <a href="{% url 'core:resource' 'les-droits-des-doctorantes' %}">PhD candidates' rights</a></li>
+    </ul>
+  </section>
+
+  <div class="donate-box">
+    <div>
+      <h2>An idea, a project, a problem?</h2>
+      <p>The board is made up of volunteer PhD candidates. Write to us: we'll share it, help out, or build the project with you.</p>
+    </div>
+    <a class="btn btn-blue" href="{% url 'core:contact' %}">{% icon "mail" 18 %} Write to us</a>
+  </div>
+</div>
+{% endblock %}

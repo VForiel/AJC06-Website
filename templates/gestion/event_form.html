@@ -1,0 +1,100 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}{% if event %}{{ event.title }}{% else %}Nouvel événement{% endif %}{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <a class="breadcrumb" href="{% url 'gestion:events' %}">{% icon "arrow-left" 16 %} Événements</a>
+    <h1>{% if event %}{{ event.title }}{% elif duplicate %}Copie d'un événement{% else %}Nouvel événement{% endif %}</h1>
+    {% if duplicate %}<p class="g-muted">Tout est repris sauf la date et l'affiche. L'événement reste non publié tant que tu ne coches pas « publié ».</p>{% endif %}
+  </div>
+</header>
+
+<form class="g-form" method="post" enctype="multipart/form-data" novalidate data-urls='{"preview": "{% url 'gestion:preview' %}", "upload": "{% url 'gestion:upload' %}"}'>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="g-error">{{ form.non_field_errors }}</div>{% endif %}
+  {% if form.errors %}<p class="g-error">Quelques champs sont à corriger, ils sont signalés en rouge.</p>{% endif %}
+
+  <div class="g-form-main">
+    <fieldset class="g-fieldset">
+      <legend>L'essentiel</legend>
+      {% include "gestion/_field.html" with field=form.title wide=True %}
+      {% include "gestion/_field.html" with field=form.type_list %}
+        {% include "gestion/_field.html" with field=form.other_type %}
+    </fieldset>
+
+    <fieldset class="g-fieldset">
+      <legend>Quand</legend>
+      <div class="g-grid">
+        {% include "gestion/_field.html" with field=form.start_date %}
+        {% include "gestion/_field.html" with field=form.start_time %}
+        {% include "gestion/_field.html" with field=form.end_time %}
+        {% include "gestion/_field.html" with field=form.end_date %}
+      </div>
+    </fieldset>
+
+    <fieldset class="g-fieldset">
+      <legend>Où</legend>
+      <div class="g-grid g-grid-2">
+        {% include "gestion/_field.html" with field=form.venue %}
+        {% include "gestion/_field.html" with field=form.address %}
+      </div>
+    </fieldset>
+
+    <fieldset class="g-fieldset">
+      <legend>Infos pratiques</legend>
+      <div class="g-grid g-grid-2">
+        {% include "gestion/_field.html" with field=form.price %}
+        {% include "gestion/_field.html" with field=form.capacity %}
+        {% include "gestion/_field.html" with field=form.registration_url %}
+      </div>
+    </fieldset>
+
+    <fieldset class="g-fieldset">
+      <legend>Description</legend>
+      {% include "gestion/_field.html" with field=form.summary wide=True %}
+      {% include "gestion/_field.html" with field=form.body wide=True %}
+    </fieldset>
+
+    <details class="g-fieldset g-english"{% if event.title_en or form.title_en.errors %} open{% endif %}>
+      <summary>Version anglaise <span class="g-optional">facultatif : sans traduction, le site anglais affiche le français</span></summary>
+      {% include "gestion/_field.html" with field=form.title_en wide=True %}
+      <div class="g-grid g-grid-2">
+        {% include "gestion/_field.html" with field=form.price_en %}
+        {% include "gestion/_field.html" with field=form.summary_en %}
+      </div>
+      {% include "gestion/_field.html" with field=form.body_en wide=True %}
+    </details>
+  </div>
+
+  <aside class="g-form-side">
+    <div class="g-panel g-sticky">
+      {% include "gestion/_field.html" with field=form.is_published %}
+      {% include "gestion/_field.html" with field=form.on_hold %}
+      <div class="g-buttons">
+        <button class="btn btn-primary" type="submit">{% icon "check" 18 %} Enregistrer</button>
+        <button class="btn btn-ghost" type="submit" name="continue" value="1">Enregistrer et rester ici</button>
+      </div>
+      {% if event %}
+      <ul class="g-links">
+        {% if event.is_published %}<li><a href="{{ event.get_absolute_url }}">{% icon "external" 16 %} Voir sur le site</a></li>{% endif %}
+        <li><a href="{% url 'gestion:event_duplicate' event.pk %}">{% icon "copy" 16 %} Dupliquer pour une autre date</a></li>
+        {% if event.is_association %}<li><a href="{% url 'gestion:dossier' event.pk %}">{% icon "download" 16 %} Dossier université (PDF)</a></li>{% endif %}
+        {% if event.registration_url %}<li><form method="post" action="{% url 'gestion:helloasso_sync' event.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="g-link-button" type="submit">{% icon "ticket" 16 %} Inscrit·es HelloAsso{% if event.helloasso_count is not None %} ({{ event.helloasso_count }}){% endif %}</button></form></li>{% endif %}
+        <li><a class="g-danger" href="{% url 'gestion:event_delete' event.pk %}">Supprimer</a></li>
+      </ul>
+      {% endif %}
+    </div>
+
+    <div class="g-panel">
+      <h2 class="g-panel-title">Affiche</h2>
+      <div class="g-poster" data-poster-preview>
+        {% if event.poster %}<img src="{{ event.poster.url }}" alt="">{% else %}<span>Format carré ou A4. Convertie automatiquement pour le web.</span>{% endif %}
+      </div>
+      {{ form.poster }}
+      {{ form.poster.errors }}
+    </div>
+  </aside>
+</form>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Privacy{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <h1 class="page-title">Privacy</h1>
+    <p class="page-lede">Short version: no ads, no analytics, no third-party cookies. We only keep what you write to us and what you put on your profile, and you can delete it all yourself.</p>
+  </div>
+</header>
+<div class="wrap page-body prose">
+  <h2>Data controller</h2>
+  <p>The Association des Jeunes Chercheurs des Alpes-Maritimes (AJC06), 28 avenue de Valrose, 06103 Nice, France, represented by its presidency. Contact: <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</p>
+
+  <h2>What we collect</h2>
+  <p>You can browse the whole site without giving us anything. Without an account, the only personal data processed is what you type into the <a href="{% url 'core:contact' %}">contact form</a>: name, email address, subject and message. It is used only to reply to you and is never sold or passed on to third parties.</p>
+  <p>Event registrations and donations go through HelloAsso, which applies its own privacy policy.</p>
+
+  <h2>Member account</h2>
+  <p>If you create an account, we keep your display name and email address (to log in), and whatever you choose to add to your profile: photo, discipline, doctoral school, laboratory, thesis topic, bio, interests, links. We also keep your friendships, the events you propose or say you are going to, and your notifications.</p>
+  <ul>
+    <li><strong>Who sees your profile:</strong> by default, only logged-in members. You can make it public in your settings. Your email address is never shown.</li>
+    <li><strong>Who sees that you're going:</strong> logged-in members can see who is going to an event; you can hide this list on your own profile.</li>
+    <li><strong>Purpose:</strong> building the PhD community (legal basis: your consent, given when you sign up).</li>
+    <li><strong>Retention:</strong> as long as your account exists. You can delete it at any time from your settings; everything is then erased, except the events you proposed, which stay online without your name.</li>
+    <li><strong>Moderation:</strong> the AJC06 board can read reports and hide an event or deactivate an account that goes against the spirit of the community.</li>
+  </ul>
+
+  <h2>Retention</h2>
+  <p>Contact messages are kept while we handle your request, and for 24 months at most.</p>
+
+  <h2>Cookies</h2>
+  <p>The site sets no analytics, advertising or social-media cookies, hence no cookie banner. The only cookies are technical ones, exempt from consent: the forms' security token and the session of logged-in members. Your light or dark theme choice is stored in your browser and never sent to us.</p>
+
+  <h2>Your rights</h2>
+  <p>Under the GDPR and the French Data Protection Act, you can access your data, have it corrected or erased, object to its processing or ask for its portability by writing to <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>. We reply within one month at most.</p>
+  <p>If you think we are not keeping these commitments, you can lodge a complaint with the CNIL, the French data protection authority: <a href="https://www.cnil.fr/fr/plaintes" rel="noopener">cnil.fr/fr/plaintes</a>.</p>
+</div>
+{% endblock %}

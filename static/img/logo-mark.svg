@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 8 210 204" role="img" aria-label="AJC06">
+  <g fill="none" stroke-linecap="round" stroke-width="19">
+    <path d="M36 36 L104 110 L36 184" stroke="#1460A6"/>
+    <path d="M120 36 L188 110 L120 184" stroke="#3894C0"/>
+  </g>
+  <g fill="#1460A6"><circle cx="36" cy="36" r="23"/><circle cx="104" cy="110" r="26"/><circle cx="36" cy="184" r="23"/></g>
+  <g fill="#3894C0"><circle cx="120" cy="36" r="23"/><circle cx="188" cy="110" r="26"/><circle cx="120" cy="184" r="23"/></g>
+</svg>

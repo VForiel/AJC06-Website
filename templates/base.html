@@ -1,0 +1,166 @@
+{% load static i18n ajc %}<!doctype html>
+{% get_current_language as LANG %}
+<html lang="{{ LANG }}" class="{% for e in effects %}effect-{{ e }} {% endfor %}" data-effects="{{ effects|join:' ' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}AJC06{% endblock %}{% block title_suffix %} · {% translate "Jeunes chercheur·es des Alpes-Maritimes" %}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{% translate "L'association des doctorant·es et jeunes docteur·es d'Université Côte d'Azur : sorties, soirées, camps, entraide et défense des droits des jeunes chercheur·es." %}{% endblock %}">
+  <meta name="color-scheme" content="light dark">
+  <meta property="og:site_name" content="AJC06">
+  <meta property="og:locale" content="{% if LANG == 'en' %}en_GB{% else %}fr_FR{% endif %}">
+  <meta property="og:title" content="{% block og_title %}{% translate "AJC06 — Association des Jeunes Chercheurs des Alpes-Maritimes" %}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{% translate "Sorties, soirées, camps et entraide pour les doctorant·es d'Université Côte d'Azur." %}{% endblock %}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:url" content="{{ SITE_URL }}{{ request.path }}">
+  {% block og_image %}<meta property="og:image" content="{{ SITE_URL }}{% static 'img/og-default.png' %}">{% endblock %}
+  <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}">
+  <link rel="alternate" hreflang="fr" href="{{ SITE_URL }}{% lang_url 'fr' %}">
+  <link rel="alternate" hreflang="en" href="{{ SITE_URL }}{% lang_url 'en' %}">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="preload" href="{% static 'fonts/archivo-latin-wdth-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <link rel="stylesheet" href="{% static 'css/community.css' %}">
+  <link rel="stylesheet" href="{% static 'css/effects.css' %}">
+  <link rel="alternate" type="application/rss+xml" title="{% translate "Actualités de l'AJC06" %}" href="{% url 'blog:rss' %}">
+  <script nonce="{{ csp_nonce }}">try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+  <script src="{% static 'js/site.js' %}" defer></script>
+  <script src="{% static 'js/effects.js' %}" defer></script>
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip" href="#contenu">{% translate "Aller au contenu" %}</a>
+
+  {% if announcement %}
+  <div class="announce announce-{{ announcement.tone }}" data-announce="{{ announcement.pk }}-{{ announcement.created_at|date:'U' }}" role="region" aria-label="{% translate "Annonce" %}">
+    <span>{{ announcement.message_tr }}</span>
+    {% if announcement.link_url %}<a href="{{ announcement.link_url }}">{{ announcement.link_label_tr|default:_("En savoir plus") }} {% icon "arrow" 14 %}</a>{% endif %}
+    <button class="announce-close" type="button" data-announce-close aria-label="{% translate "Masquer l'annonce" %}">{% icon "close" 16 %}</button>
+  </div>
+  {% endif %}
+
+  {% if next_event and request.resolver_match.url_name != 'home' %}
+  <a class="strip" href="{{ next_event.get_absolute_url }}">
+    <span class="strip-label">{% translate "Prochain rendez-vous" %}</span>
+    <span class="strip-title">{{ next_event.title_tr }}</span>
+    <span class="strip-date">{{ next_event.start_date|day_short }}</span>
+    {% icon "arrow" 16 %}
+  </a>
+  {% endif %}
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="{% url 'core:home' %}" aria-label="{% translate "AJC06, accueil" %}">
+        <img src="{% static 'img/logo-mark.svg' %}" alt="" width="40" height="39">
+        <span class="brand-name">AJC<span>06</span></span>
+        <span class="birthday-badge" title="{% translate "L'AJC06 a été créée le 24 avril 1996" %}">{% blocktranslate with n=asso_age %}{{ n }} ans{% endblocktranslate %}</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">
+        <span class="when-closed">{% icon "menu" 22 %}</span><span class="when-open">{% icon "close" 22 %}</span>
+        <span class="sr">{% translate "Menu" %}</span>
+      </button>
+      <nav id="nav" class="nav" aria-label="{% translate "Navigation principale" %}">
+        {% with name=request.resolver_match.namespace page=request.resolver_match.url_name %}
+        <a href="{% url 'events:list' %}"{% if name == 'events' %} aria-current="page"{% endif %}>{% translate "Agenda" %}</a>
+        <a href="{% url 'blog:list' %}"{% if name == 'blog' %} aria-current="page"{% endif %}>{% translate "Actu" %}</a>
+        <a href="{% url 'core:missions' %}"{% if page == 'missions' %} aria-current="page"{% endif %}>{% translate "Missions" %}</a>
+        <a href="{% url 'core:team' %}"{% if page == 'team' %} aria-current="page"{% endif %}>{% translate "Équipe" %}</a>
+        <a href="{% url 'core:resources' %}"{% if page == 'resources' or page == 'resource' %} aria-current="page"{% endif %}>{% translate "Ressources" %}</a>
+        {% endwith %}
+        {% if user.is_authenticated %}
+        <a class="nav-cta" href="{% url 'community:event_new' %}">{% translate "Proposer une sortie" %}</a>
+        {% else %}
+        <a class="nav-cta" href="{% url 'core:home' %}#participer">{% translate "Participer" %}</a>
+        {% endif %}
+        <div class="nav-tools">
+          {% if LANG == 'en' %}
+          <a class="lang-switch" href="{% lang_url 'fr' %}" hreflang="fr" lang="fr" title="Version française">FR</a>
+          {% else %}
+          <a class="lang-switch" href="{% lang_url 'en' %}" hreflang="en" lang="en" title="English version">EN</a>
+          {% endif %}
+          <button class="theme-toggle" type="button" aria-label="{% translate "Changer de thème" %}" title="{% translate "Thème clair / sombre" %}">
+            <span class="when-light">{% icon "moon" 18 %}</span><span class="when-dark">{% icon "sun" 18 %}</span>
+          </button>
+          {% if user.is_authenticated and my_profile %}
+          <details class="account">
+            <summary aria-label="{% translate "Mon compte" %}">
+              {% include "community/_avatar.html" with p=my_profile size="sm" %}
+              <span class="account-label">{% translate "Mon compte" %}</span>
+              {% if unread_count %}<span class="badge" aria-label="{% blocktranslate count n=unread_count %}{{ n }} notification non lue{% plural %}{{ n }} notifications non lues{% endblocktranslate %}">{{ unread_count }}</span>{% endif %}
+            </summary>
+            <div class="account-menu">
+              <p class="account-name">{{ my_profile.display_name }}</p>
+              <a href="{{ my_profile.get_absolute_url }}">{% translate "Mon profil" %}</a>
+              <a href="{% url 'community:notifications' %}">{% translate "Notifications" %}{% if unread_count %} <span class="badge badge-inline">{{ unread_count }}</span>{% endif %}</a>
+              <a href="{% url 'community:friends' %}">{% translate "Mes amis" %}{% if pending_friends %} <span class="badge badge-inline">{{ pending_friends }}</span>{% endif %}</a>
+              <a href="{% url 'community:members' %}">{% translate "Les membres" %}</a>
+              <a href="{% url 'community:photos' %}">{% translate "Photos" %}</a>
+              <a href="{% url 'community:settings' %}">{% translate "Réglages" %}</a>
+              {% if user.is_staff %}<a href="{% url 'gestion:dashboard' %}">{% translate "Espace bureau" %}</a>{% endif %}
+              <form method="post" action="{% url 'community:logout' %}">{% csrf_token %}<button type="submit">{% translate "Se déconnecter" %}</button></form>
+            </div>
+          </details>
+          {% else %}
+          <a class="login-link" href="{% url 'community:login' %}{% if request.path != '/' %}?next={{ request.path|urlencode }}{% endif %}">{% translate "Se connecter" %}</a>
+          {% endif %}
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  {% if messages %}
+  <div class="wrap flash" role="status">
+    {% for message in messages %}<p class="flash-item flash-{{ message.level_tag }}">{% if message.level_tag == "success" or message.level_tag == "info" %}{% icon "check" 18 %} {% endif %}{{ message }}</p>{% endfor %}
+  </div>
+  {% endif %}
+
+  <main id="contenu">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-pitch">
+          <p class="footer-kicker">{% translate "Une question, une idée de sortie, envie de s'impliquer ?" %}</p>
+          <a class="footer-mail" href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>
+          <ul class="socials">
+            {% for name, url in SOCIALS %}
+            <li><a href="{{ url }}" rel="noopener">{% icon name|lower 20 %}<span>{{ name }}</span></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <h2>{% translate "L'asso" %}</h2>
+            <ul>
+              <li><a href="{% url 'core:missions' %}">{% translate "Missions" %}</a></li>
+              <li><a href="{% url 'core:team' %}">{% translate "Équipe et anciens bureaux" %}</a></li>
+              <li><a href="{% url 'core:support' %}">{% translate "Soutenir l'AJC06" %}</a></li>
+              <li><a href="{% url 'core:contact' %}">{% translate "Contact" %}</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>{% translate "Suivre" %}</h2>
+            <ul>
+              <li><a href="{% url 'events:list' %}">{% translate "Agenda" %}</a></li>
+              <li><a href="{% url 'events:agenda' %}">{% translate "Agenda au format iCal" %}</a></li>
+              <li><a href="{% url 'blog:list' %}">{% translate "Actualités" %}</a></li>
+              <li><a href="{% url 'community:photos' %}">{% translate "Photos" %}</a></li>
+              <li><a href="{% url 'blog:rss' %}">{% translate "Flux RSS" %}</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>{% translate "Adresse" %}</h2>
+            <address>Association des Jeunes Chercheurs<br>des Alpes-Maritimes<br>28 avenue de Valrose<br>06103 Nice</address>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© {% now "Y" %} AJC06 · {% translate "association loi 1901 d'intérêt général" %}{% if effects %} · <button class="effects-toggle" type="button" data-effects-toggle data-on="{% translate "Remettre les effets" %}" data-off="{% translate "Couper les effets" %}">{% translate "Couper les effets" %}</button>{% endif %}</p>
+        <p><a href="{% url 'core:legal' %}">{% translate "Mentions légales" %}</a> · <a href="{% url 'core:privacy' %}">{% translate "Confidentialité" %}</a> · <a href="/gestion/">{% translate "Espace bureau" %}</a></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

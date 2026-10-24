@@ -1,0 +1,2364 @@
+# Traduction anglaise du site de l'AJC06. Générée et compilée par scripts/i18n.py.
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: blog/views.py
+msgid "AJC06 — actualités"
+msgstr "AJC06 — news"
+
+#: blog/views.py
+msgid "Les actualités de l'Association des Jeunes Chercheurs des Alpes-Maritimes."
+msgstr "News from the Association of Young Researchers of the Alpes-Maritimes."
+
+#: community/confirmation.py
+msgid "AJC06 : confirme ton adresse"
+msgstr "AJC06: confirm your address"
+
+#: community/confirmation.py
+msgid "AJC06 : ton compte est validé"
+msgstr "AJC06: your account is approved"
+
+#: community/forms.py
+msgid "Accroche"
+msgstr "Tagline"
+
+#: community/forms.py
+msgid "Adresse"
+msgstr "Address"
+
+#: community/forms.py
+msgid "Au moins 8 caractères, pas uniquement des chiffres."
+msgstr "At least 8 characters, not only digits."
+
+#: community/forms.py
+msgid "Aucun (photo libre)"
+msgstr "None (standalone photo)"
+
+#: community/forms.py
+msgid "Autres membres présents"
+msgstr "Other members in the photo"
+
+#: community/forms.py
+msgid "Ce compte est désactivé."
+msgstr "This account is deactivated."
+
+#: community/forms.py
+msgid "Choisis au moins un type."
+msgstr "Pick at least one type."
+
+#: community/forms.py
+msgid "Courriel"
+msgstr "Email"
+
+#: community/forms.py
+msgid "Courriel ou mot de passe incorrect."
+msgstr "Wrong email or password."
+
+#: community/forms.py
+msgid "Date"
+msgstr "Date"
+
+#: community/forms.py
+msgid "Date de fin"
+msgstr "End date"
+
+#: community/forms.py
+msgid "Description"
+msgstr "Description"
+
+#: community/forms.py
+msgid "Ex. Gratuit, chacun paie sa conso…"
+msgstr "E.g. Free, everyone pays for their own drinks…"
+
+#: community/forms.py
+msgid "Ex. Parking du col de Braus, bar Le Movida…"
+msgstr "E.g. Col de Braus car park, Le Movida bar…"
+
+#: community/forms.py
+msgid "Facultatif : billetterie, groupe WhatsApp, itinéraire…"
+msgstr "Optional: tickets, WhatsApp group, directions…"
+
+#: community/forms.py
+msgid "Format attendu : 0000-0000-0000-0000."
+msgstr "Expected format: 0000-0000-0000-0000."
+
+#: community/forms.py
+msgid "Heure de début"
+msgstr "Start time"
+
+#: community/forms.py
+msgid "Heure de fin"
+msgstr "End time"
+
+#: community/forms.py
+msgid "Identifiant ou lien ORCID"
+msgstr "ORCID iD or link"
+
+#: community/forms.py
+msgid "Image"
+msgstr "Image"
+
+#: community/forms.py
+msgid "Indique aussi l'heure de début (ou laisse les deux vides pour toute la journée)."
+msgstr "Add a start time too (or leave both empty for an all-day event)."
+
+#: community/forms.py
+msgid "Indique la somme demandée."
+msgstr "Enter the amount you are asking for."
+
+#: community/forms.py
+msgid "J'accepte que mes informations de profil soient visibles par les membres, selon les réglages que je choisis."
+msgstr "I agree that my profile information is visible to members, according to the settings I choose."
+
+#: community/forms.py
+msgid "Je demande le soutien de l'AJC06 (financement ou réservations)"
+msgstr "I'm asking AJC06 for support (funding or bookings)"
+
+#: community/forms.py
+msgid "La date de fin est avant la date de début."
+msgstr "The end date is before the start date."
+
+#: community/forms.py
+msgid "La date est déjà passée."
+msgstr "This date has already passed."
+
+#: community/forms.py
+msgid "Leurs adresses de profil, séparées par des virgules (ex. lea-moreau, karim-benali). Ils seront prévenus."
+msgstr "Their profile addresses, separated by commas (e.g. lea-moreau, karim-benali). They will be notified."
+
+#: community/forms.py
+msgid "Lien utile"
+msgstr "Useful link"
+
+#: community/forms.py
+msgid "Lieu"
+msgstr "Place"
+
+#: community/forms.py
+msgid "Location de paddles : 10 × 25 € = 250 €\nGoûter : 40 €\nParticipation des doctorant·es : 5 € × 10 = 50 € (recette)"
+msgstr "Paddleboard hire: 10 × €25 = €250\nSnacks: €40\nParticipants' contribution: €5 × 10 = €50 (income)"
+
+#: community/forms.py
+msgid "Mot de passe"
+msgstr "Password"
+
+#: community/forms.py
+msgid "Mot de passe incorrect."
+msgstr "Wrong password."
+
+#: community/forms.py
+msgid "Plusieurs choix possibles"
+msgstr "Several choices possible"
+
+#: community/forms.py
+msgid "Prix"
+msgstr "Price"
+
+#: community/forms.py
+msgid "Profil inconnu : %(list)s"
+msgstr "Unknown profile: %(list)s"
+
+#: community/forms.py
+msgid "Programme, niveau, matériel à prévoir, point de rendez-vous… Mise en forme Markdown possible."
+msgstr "Programme, level, what to bring, meeting point… Markdown formatting is supported."
+
+#: community/forms.py
+msgid "Précise le type."
+msgstr "Specify the type."
+
+#: community/forms.py
+msgid "Prénom et nom"
+msgstr "First and last name"
+
+#: community/forms.py
+msgid "Qu'est-ce qui ne va pas ?"
+msgstr "What's wrong?"
+
+#: community/forms.py
+msgid "Quelques lignes sur toi, ta recherche, ce que tu aimes. Mise en forme Markdown possible."
+msgstr "A few lines about you, your research, what you enjoy. Markdown formatting is supported."
+
+#: community/forms.py
+msgid "Seulement si ça dure plusieurs jours"
+msgstr "Only if it lasts several days"
+
+#: community/forms.py
+msgid "Tes amis présents sur la photo"
+msgstr "Your friends in the photo"
+
+#: community/forms.py
+msgid "Titre"
+msgstr "Title"
+
+#: community/forms.py
+msgid "Ton compte n'est pas encore validé : ouvre le lien reçu par courriel, ou attends la validation par le bureau."
+msgstr "Your account isn't approved yet: open the link you received by email, or wait for the board to approve it."
+
+#: community/forms.py
+msgid "Ton mot de passe, pour confirmer"
+msgstr "Your password, to confirm"
+
+#: community/forms.py
+msgid "Toutes les personnes reconnaissables sur cette photo m'ont donné leur accord pour qu'elle soit publiée sur le site."
+msgstr "Everyone recognisable in this photo has agreed to it being published on the website."
+
+#: community/forms.py
+msgid "Type"
+msgstr "Type"
+
+#: community/forms.py
+msgid "Un compte existe déjà avec cette adresse."
+msgstr "An account already exists with this address."
+
+#: community/forms.py
+msgid "Une demande de soutien doit être faite au moins un mois avant l'événement."
+msgstr "A support request must be made at least one month before the event."
+
+#: community/forms.py
+msgid "Une phrase qui donne envie."
+msgstr "One sentence that makes people want to come."
+
+#: community/forms.py
+msgid "Vide = toute la journée"
+msgstr "Empty = all day"
+
+#: community/models.py
+msgid "1re année de thèse"
+msgstr "1st year of PhD"
+
+#: community/models.py
+msgid "2e année de thèse"
+msgstr "2nd year of PhD"
+
+#: community/models.py
+msgid "3e année de thèse"
+msgstr "3rd year of PhD"
+
+#: community/models.py
+msgid "4e année ou plus"
+msgstr "4th year or more"
+
+#: community/models.py
+msgid "Autre / hors UniCA"
+msgstr "Other / outside UniCA"
+
+#: community/models.py
+msgid "Azur"
+msgstr "Azure"
+
+#: community/models.py
+msgid "Corail"
+msgstr "Coral"
+
+#: community/models.py
+msgid "Docteur·e"
+msgstr "Doctor"
+
+#: community/models.py
+msgid "Identifiant"
+msgstr "Username"
+
+#: community/models.py
+msgid "Identifiant ou lien du profil"
+msgstr "Username or profile link"
+
+#: community/models.py
+msgid "Identifiant, sans @"
+msgstr "Username, without @"
+
+#: community/models.py
+msgid "Lavande"
+msgstr "Lavender"
+
+#: community/models.py
+msgid "Mastodon, Bluesky, Signal… avec le nom du réseau"
+msgstr "Mastodon, Bluesky, Signal… with the network's name"
+
+#: community/models.py
+msgid "Membres connectés uniquement"
+msgstr "Logged-in members only"
+
+#: community/models.py
+msgid "Mes amis uniquement"
+msgstr "My friends only"
+
+#: community/models.py
+msgid "Mimosa"
+msgstr "Mimosa"
+
+#: community/models.py
+msgid "Nuit"
+msgstr "Night"
+
+#: community/models.py
+msgid "Numéro, si différent du téléphone"
+msgstr "Number, if different from your phone"
+
+#: community/models.py
+msgid "Olivier"
+msgstr "Olive"
+
+#: community/models.py
+msgid "Personne"
+msgstr "Nobody"
+
+#: community/models.py
+msgid "Post-doc"
+msgstr "Postdoc"
+
+#: community/models.py
+msgid "Séparés par des virgules : randonnée, jeux de société, plongée…"
+msgstr "Separated by commas: hiking, board games, diving…"
+
+#: community/models.py
+msgid "Tous les membres connectés"
+msgstr "All logged-in members"
+
+#: community/models.py
+msgid "Tout le monde"
+msgstr "Everyone"
+
+#: community/models.py
+msgid "Une ligne : « En pleine rédaction », « Cherche des partenaires d'escalade »…"
+msgstr "One line: \"Writing up\", \"Looking for climbing partners\"…"
+
+#: community/models.py
+msgid "adresse du profil"
+msgstr "profile address"
+
+#: community/models.py
+msgid "afficher les événements auxquels je participe"
+msgstr "show the events I'm going to"
+
+#: community/models.py
+msgid "autorisation des personnes photographiées"
+msgstr "consent of the people photographed"
+
+#: community/models.py
+msgid "autre"
+msgstr "other"
+
+#: community/models.py
+msgid "centres d'intérêt"
+msgstr "interests"
+
+#: community/models.py
+msgid "couleur du profil"
+msgstr "profile colour"
+
+#: community/models.py
+msgid "discipline"
+msgstr "discipline"
+
+#: community/models.py
+msgid "en ce moment"
+msgstr "right now"
+
+#: community/models.py
+msgid "laboratoire"
+msgstr "laboratory"
+
+#: community/models.py
+msgid "légende"
+msgstr "caption"
+
+#: community/models.py
+msgid "nom affiché"
+msgstr "display name"
+
+#: community/models.py
+msgid "où j'en suis"
+msgstr "where I am"
+
+#: community/models.py
+msgid "personnes identifiées"
+msgstr "people tagged"
+
+#: community/models.py
+msgid "photo"
+msgstr "photo"
+
+#: community/models.py
+msgid "pronoms"
+msgstr "pronouns"
+
+#: community/models.py
+msgid "présentation"
+msgstr "about me"
+
+#: community/models.py
+msgid "qui peut voir mes coordonnées"
+msgstr "who can see my contact details"
+
+#: community/models.py
+msgid "qui peut voir mon profil"
+msgstr "who can see my profile"
+
+#: community/models.py
+msgid "site web"
+msgstr "website"
+
+#: community/models.py
+msgid "sujet de thèse"
+msgstr "thesis topic"
+
+#: community/models.py
+msgid "téléphone"
+msgstr "phone"
+
+#: community/models.py
+msgid "école doctorale"
+msgstr "doctoral school"
+
+#: community/models.py
+msgid "événement"
+msgstr "event"
+
+#: community/urls.py
+msgid "amis/"
+msgstr "friends/"
+
+#: community/urls.py
+msgid "compte/"
+msgstr "account/"
+
+#: community/urls.py
+msgid "compte/confirmer/<uidb64>/<token>/"
+msgstr "account/confirm/<uidb64>/<token>/"
+
+#: community/urls.py
+msgid "compte/confirmer/renvoyer/"
+msgstr "account/confirm/resend/"
+
+#: community/urls.py
+msgid "compte/connexion/"
+msgstr "account/login/"
+
+#: community/urls.py
+msgid "compte/deconnexion/"
+msgstr "account/logout/"
+
+#: community/urls.py
+msgid "compte/inscription/"
+msgstr "account/signup/"
+
+#: community/urls.py
+msgid "compte/mot-de-passe/"
+msgstr "account/password/"
+
+#: community/urls.py
+msgid "compte/mot-de-passe/<uidb64>/<token>/"
+msgstr "account/password/<uidb64>/<token>/"
+
+#: community/urls.py
+msgid "compte/mot-de-passe/changer/"
+msgstr "account/password/change/"
+
+#: community/urls.py
+msgid "compte/mot-de-passe/envoye/"
+msgstr "account/password/sent/"
+
+#: community/urls.py
+msgid "compte/reglages/"
+msgstr "account/settings/"
+
+#: community/urls.py
+msgid "compte/supprimer/"
+msgstr "account/delete/"
+
+#: community/urls.py
+msgid "evenements/<slug:slug>/inviter/"
+msgstr "events/<slug:slug>/invite/"
+
+#: community/urls.py
+msgid "evenements/<slug:slug>/modifier/"
+msgstr "events/<slug:slug>/edit/"
+
+#: community/urls.py
+msgid "evenements/<slug:slug>/participer/"
+msgstr "events/<slug:slug>/attend/"
+
+#: community/urls.py
+msgid "evenements/<slug:slug>/publier/"
+msgstr "events/<slug:slug>/publish/"
+
+#: community/urls.py
+msgid "evenements/<slug:slug>/supprimer/"
+msgstr "events/<slug:slug>/delete/"
+
+#: community/urls.py
+msgid "evenements/proposer/"
+msgstr "events/propose/"
+
+#: community/urls.py
+msgid "membres/"
+msgstr "members/"
+
+#: community/urls.py
+msgid "membres/<slug:handle>/"
+msgstr "members/<slug:handle>/"
+
+#: community/urls.py
+msgid "membres/<slug:handle>/ami/<str:action>/"
+msgstr "members/<slug:handle>/friend/<str:action>/"
+
+#: community/urls.py
+msgid "photos/<int:pk>/me-retirer/"
+msgstr "photos/<int:pk>/untag-me/"
+
+#: community/urls.py
+msgid "photos/<int:pk>/supprimer/"
+msgstr "photos/<int:pk>/delete/"
+
+#: community/urls.py
+msgid "photos/ajouter/"
+msgstr "photos/add/"
+
+#: community/urls.py
+msgid "signaler/<str:kind>/<slug:key>/"
+msgstr "report/<str:kind>/<slug:key>/"
+
+#: community/views.py
+msgid "%(n)s invitations envoyées."
+msgstr "%(n)s invitations sent."
+
+#: community/views.py
+msgid "Adresse confirmée, bienvenue ! Complète ton profil pour que les autres doctorant·es te trouvent."
+msgstr "Address confirmed, welcome! Fill in your profile so other PhD candidates can find you."
+
+#: community/views.py
+msgid "Adresse mise à jour."
+msgstr "Address updated."
+
+#: community/views.py
+msgid "Beaucoup de photos aujourd'hui : réessaie demain."
+msgstr "Lots of photos today: try again tomorrow."
+
+#: community/views.py
+msgid "Bienvenue ! Complète ton profil pour que les autres doctorant·es te trouvent."
+msgstr "Welcome! Fill in your profile so other PhD candidates can find you."
+
+#: community/views.py
+msgid "C'est en ligne ! Invite tes amis depuis la page de l'événement."
+msgstr "It's live! Invite your friends from the event page."
+
+#: community/views.py
+msgid "Ce lien de confirmation n'est plus valable. Connecte-toi, ou demande un nouveau lien."
+msgstr "This confirmation link is no longer valid. Log in, or ask for a new link."
+
+#: community/views.py
+msgid "Cet événement est passé."
+msgstr "This event is over."
+
+#: community/views.py
+msgid "Demande envoyée au bureau. Tu recevras une notification dès qu'il aura répondu ; d'ici là, l'événement n'est visible que par toi."
+msgstr "Request sent to the board. You'll get a notification as soon as they reply; until then, only you can see the event."
+
+#: community/views.py
+msgid "Demande envoyée."
+msgstr "Request sent."
+
+#: community/views.py
+msgid "Désolé, c'est complet."
+msgstr "Sorry, it's full."
+
+#: community/views.py
+msgid "Invitation envoyée."
+msgstr "Invitation sent."
+
+#: community/views.py
+msgid "Merci, le bureau va regarder ça."
+msgstr "Thanks, the board will look into it."
+
+#: community/views.py
+msgid "Photo publiée. Merci !"
+msgstr "Photo published. Thank you!"
+
+#: community/views.py
+msgid "Photo supprimée."
+msgstr "Photo deleted."
+
+#: community/views.py
+msgid "Profil enregistré, sauf ces champs, laissés tels quels : %(fields)s."
+msgstr "Profile saved, except these fields, left unchanged: %(fields)s."
+
+#: community/views.py
+msgid "Profil enregistré."
+msgstr "Profile saved."
+
+#: community/views.py
+msgid "Si un compte en attente existe avec cette adresse, un nouveau lien vient d'être envoyé."
+msgstr "If a pending account exists with this address, a new link has just been sent."
+
+#: community/views.py
+msgid "Ton compte et tes données ont été supprimés."
+msgstr "Your account and your data have been deleted."
+
+#: community/views.py
+msgid "Trop d'inscriptions depuis cette connexion, réessaie plus tard."
+msgstr "Too many sign-ups from this connection, please try again later."
+
+#: community/views.py
+msgid "Tu as déjà proposé beaucoup d'événements aujourd'hui, réessaie demain."
+msgstr "You've already proposed a lot of events today, try again tomorrow."
+
+#: community/views.py
+msgid "Tu n'es plus identifié·e sur cette photo. Si tu veux qu'elle soit retirée, signale-la."
+msgstr "You are no longer tagged in this photo. If you want it removed, report it."
+
+#: community/views.py
+msgid "Vous êtes maintenant amis."
+msgstr "You are now friends."
+
+#: community/views.py
+msgid "Événement mis à jour."
+msgstr "Event updated."
+
+#: community/views.py
+msgid "Événement supprimé."
+msgstr "Event deleted."
+
+#: config/urls.py
+msgid "actu/"
+msgstr "news/"
+
+#: config/urls.py
+msgid "evenements/"
+msgstr "events/"
+
+#: core/effects.py
+msgid "30 ans de l'AJC06"
+msgstr "AJC06's 30th anniversary"
+
+#: core/effects.py
+msgid "Anniversaire de l'AJC06"
+msgstr "AJC06's birthday"
+
+#: core/effects.py
+msgid "Halloween"
+msgstr "Halloween"
+
+#: core/effects.py
+msgid "Mois des fiertés"
+msgstr "Pride Month"
+
+#: core/effects.py
+msgid "Nouvel an"
+msgstr "New Year"
+
+#: core/effects.py
+msgid "Noël"
+msgstr "Christmas"
+
+#: core/effects.py
+msgid "Pâques"
+msgstr "Easter"
+
+#: core/forms.py
+msgid "C'est à propos de"
+msgstr "What is it about?"
+
+#: core/forms.py
+msgid "J'accepte que l'AJC06 utilise ces informations pour me répondre, et pour rien d'autre."
+msgstr "I agree that AJC06 may use this information to reply to me, and for nothing else."
+
+#: core/forms.py
+msgid "Laisser vide"
+msgstr "Leave empty"
+
+#: core/forms.py
+msgid "Ton courriel"
+msgstr "Your email"
+
+#: core/forms.py
+msgid "Ton message"
+msgstr "Your message"
+
+#: core/forms.py
+msgid "Ton nom"
+msgstr "Your name"
+
+#: core/images.py
+msgid "Image illisible ou trop grande. Essaie en JPEG ou PNG."
+msgstr "Unreadable or oversized image. Try a JPEG or PNG."
+
+#: core/images.py
+msgid "Image trop grande (40 mégapixels maximum)."
+msgstr "Image too large (40 megapixels maximum)."
+
+#: core/images.py
+msgid "Image trop lourde (12 Mo maximum)."
+msgstr "Image too heavy (12 MB maximum)."
+
+#: core/models.py
+msgid "Après la thèse"
+msgstr "After the PhD"
+
+#: core/models.py
+msgid "Autre chose"
+msgstr "Something else"
+
+#: core/models.py
+msgid "Pendant la thèse"
+msgstr "During the PhD"
+
+#: core/models.py
+msgid "Proposer un partenariat ou un événement"
+msgstr "Suggest a partnership or an event"
+
+#: core/models.py
+msgid "Rejoindre l'équipe"
+msgstr "Join the team"
+
+#: core/models.py
+msgid "Une question"
+msgstr "A question"
+
+#: core/models.py
+msgid "À Université Côte d'Azur"
+msgstr "At Université Côte d'Azur"
+
+#: core/templatetags/ajc.py
+msgid "Dans %(n)s jour"
+msgid_plural "Dans %(n)s jours"
+msgstr[0] "In %(n)s day"
+msgstr[1] "In %(n)s days"
+
+#: core/templatetags/ajc.py
+msgid "Aujourd'hui"
+msgstr "Today"
+
+#: core/templatetags/ajc.py
+msgid "Demain"
+msgstr "Tomorrow"
+
+#: core/templatetags/ajc.py
+msgid "Dès %(heure)s"
+msgstr "From %(heure)s"
+
+#: core/templatetags/ajc.py
+msgid "En ce moment"
+msgstr "Happening now"
+
+#: core/templatetags/ajc.py
+msgid "Plusieurs jours"
+msgstr "Several days"
+
+#: core/templatetags/ajc.py
+msgid "Toute la journée"
+msgstr "All day"
+
+#: core/urls.py
+msgid "confidentialite/"
+msgstr "privacy-policy/"
+
+#: core/urls.py
+msgid "equipe/"
+msgstr "team/"
+
+#: core/urls.py
+msgid "mentions-legales/"
+msgstr "legal-notice/"
+
+#: core/urls.py
+msgid "missions/"
+msgstr "our-missions/"
+
+#: core/urls.py
+msgid "ressources/"
+msgstr "resources/"
+
+#: core/urls.py
+msgid "ressources/<slug:slug>/"
+msgstr "resources/<slug:slug>/"
+
+#: core/urls.py
+msgid "soutenir/"
+msgstr "support/"
+
+#: core/views.py
+msgid "Message envoyé. On te répond dès que possible, en général sous quelques jours."
+msgstr "Message sent. We'll get back to you as soon as we can, usually within a few days."
+
+#: core/views.py
+msgid "Trop de messages envoyés depuis cette connexion, réessaie dans une heure."
+msgstr "Too many messages sent from this connection, try again in an hour."
+
+#: events/ical.py
+msgid "Inscription : %(url)s"
+msgstr "Registration: %(url)s"
+
+#: events/models.py
+msgid "Afterwork"
+msgstr "Afterwork"
+
+#: events/models.py
+msgid "Autre"
+msgstr "Other"
+
+#: events/models.py
+msgid "Camp"
+msgstr "Camp"
+
+#: events/models.py
+msgid "Carrière & formation"
+msgstr "Careers & training"
+
+#: events/models.py
+msgid "Conférence, workshop, séminaire"
+msgstr "Conference, workshop, seminar"
+
+#: events/models.py
+msgid "Coworking"
+msgstr "Coworking"
+
+#: events/models.py
+msgid "Culture & découverte"
+msgstr "Culture & discovery"
+
+#: events/models.py
+msgid "PhD meet-up"
+msgstr "PhD meet-up"
+
+#: events/models.py
+msgid "Plein air"
+msgstr "Outdoors"
+
+#: events/models.py
+msgid "Rentrée doctorale"
+msgstr "PhD welcome"
+
+#: events/models.py
+msgid "Si « Autre » est coché"
+msgstr "If \"Other\" is ticked"
+
+#: events/models.py
+msgid "Soutenance de thèse"
+msgstr "Thesis defence"
+
+#: events/models.py
+msgid "Sport"
+msgstr "Sport"
+
+#: events/models.py
+msgid "Vide = sans limite"
+msgstr "Empty = no limit"
+
+#: events/models.py
+msgid "Vie de l'asso"
+msgstr "Association life"
+
+#: events/models.py
+msgid "Visite"
+msgstr "Visit"
+
+#: events/models.py
+msgid "autre type"
+msgstr "other type"
+
+#: events/models.py
+msgid "nombre de places"
+msgstr "number of places"
+
+#: projets/models.py
+msgid "Ex. 35 € (jeu + pizza + boisson)"
+msgstr "E.g. €35 (game + pizza + drink)"
+
+#: projets/models.py
+msgid "Ex. location de salle 150 €, guide 200 €"
+msgstr "E.g. room hire €150, guide €200"
+
+#: projets/models.py
+msgid "J'avance les frais, remboursés sur factures"
+msgstr "I pay upfront and get reimbursed on invoices"
+
+#: projets/models.py
+msgid "L'AJC06 se charge des réservations"
+msgstr "AJC06 handles the bookings"
+
+#: projets/models.py
+msgid "Transport, point de rendez-vous, covoiturage…"
+msgstr "Transport, meeting point, car-sharing…"
+
+#: projets/models.py
+msgid "Une ligne par poste : intitulé, montant. Recettes prévues (participation…)."
+msgstr "One line per item: label, amount. Expected income (contributions…)."
+
+#: projets/models.py
+msgid "comment y aller"
+msgstr "how to get there"
+
+#: projets/models.py
+msgid "coûts fixes"
+msgstr "fixed costs"
+
+#: projets/models.py
+msgid "détail du budget"
+msgstr "budget details"
+
+#: projets/models.py
+msgid "prix par personne"
+msgstr "price per person"
+
+#: projets/models.py
+msgid "réservations"
+msgstr "bookings"
+
+#: projets/models.py
+msgid "somme demandée à l'asso (€)"
+msgstr "amount requested from the association (€)"
+
+#: templates/404.html
+msgid "Agenda"
+msgstr "Events"
+
+#: templates/404.html
+msgid "Cette page n'existe pas, ou plus : le site a fait peau neuve et certaines adresses ont changé."
+msgstr "This page doesn't exist, or no longer does: the site has been rebuilt and some addresses have changed."
+
+#: templates/404.html
+msgid "Erreur 404"
+msgstr "Error 404"
+
+#: templates/404.html
+msgid "Page introuvable"
+msgstr "Page not found"
+
+#: templates/404.html
+msgid "Perdu ?"
+msgstr "Lost?"
+
+#: templates/404.html
+msgid "Retour à l'accueil"
+msgstr "Back to the home page"
+
+#: templates/base.html
+msgid "%(n)s ans"
+msgstr "%(n)s years"
+
+#: templates/base.html
+msgid "%(n)s notification non lue"
+msgid_plural "%(n)s notifications non lues"
+msgstr[0] "%(n)s unread notification"
+msgstr[1] "%(n)s unread notifications"
+
+#: templates/base.html
+msgid "AJC06 — Association des Jeunes Chercheurs des Alpes-Maritimes"
+msgstr "AJC06 — Association of Young Researchers of the Alpes-Maritimes"
+
+#: templates/base.html
+msgid "AJC06, accueil"
+msgstr "AJC06, home"
+
+#: templates/base.html
+msgid "Actu"
+msgstr "News"
+
+#: templates/base.html
+msgid "Actualités"
+msgstr "News"
+
+#: templates/base.html
+msgid "Actualités de l'AJC06"
+msgstr "AJC06 news"
+
+#: templates/base.html
+msgid "Agenda au format iCal"
+msgstr "Calendar feed (iCal)"
+
+#: templates/base.html
+msgid "Aller au contenu"
+msgstr "Skip to content"
+
+#: templates/base.html
+msgid "Annonce"
+msgstr "Announcement"
+
+#: templates/base.html
+msgid "Changer de thème"
+msgstr "Switch theme"
+
+#: templates/base.html
+msgid "Confidentialité"
+msgstr "Privacy"
+
+#: templates/base.html
+msgid "Contact"
+msgstr "Contact"
+
+#: templates/base.html
+msgid "Couper les effets"
+msgstr "Turn off effects"
+
+#: templates/base.html
+msgid "En savoir plus"
+msgstr "Find out more"
+
+#: templates/base.html
+msgid "Espace bureau"
+msgstr "Board area"
+
+#: templates/base.html
+msgid "Flux RSS"
+msgstr "RSS feed"
+
+#: templates/base.html
+msgid "Jeunes chercheur·es des Alpes-Maritimes"
+msgstr "Young researchers of the Alpes-Maritimes"
+
+#: templates/base.html
+msgid "L'AJC06 a été créée le 24 avril 1996"
+msgstr "AJC06 was founded on 24 April 1996"
+
+#: templates/base.html
+msgid "L'asso"
+msgstr "The association"
+
+#: templates/base.html
+msgid "L'association des doctorant·es et jeunes docteur·es d'Université Côte d'Azur : sorties, soirées, camps, entraide et défense des droits des jeunes chercheur·es."
+msgstr "The association of PhD candidates and early-career researchers at Université Côte d'Azur: outings, nights out, camps, mutual support and advocacy for young researchers' rights."
+
+#: templates/base.html
+msgid "Les membres"
+msgstr "Members"
+
+#: templates/base.html
+msgid "Masquer l'annonce"
+msgstr "Hide announcement"
+
+#: templates/base.html
+msgid "Mentions légales"
+msgstr "Legal notice"
+
+#: templates/base.html
+msgid "Menu"
+msgstr "Menu"
+
+#: templates/base.html
+msgid "Mes amis"
+msgstr "My friends"
+
+#: templates/base.html
+msgid "Missions"
+msgstr "Missions"
+
+#: templates/base.html
+msgid "Mon compte"
+msgstr "My account"
+
+#: templates/base.html
+msgid "Mon profil"
+msgstr "My profile"
+
+#: templates/base.html
+msgid "Navigation principale"
+msgstr "Main navigation"
+
+#: templates/base.html
+msgid "Notifications"
+msgstr "Notifications"
+
+#: templates/base.html
+msgid "Participer"
+msgstr "Get involved"
+
+#: templates/base.html
+msgid "Photos"
+msgstr "Photos"
+
+#: templates/base.html
+msgid "Prochain rendez-vous"
+msgstr "Next event"
+
+#: templates/base.html
+msgid "Proposer une sortie"
+msgstr "Propose an outing"
+
+#: templates/base.html
+msgid "Remettre les effets"
+msgstr "Turn effects back on"
+
+#: templates/base.html
+msgid "Ressources"
+msgstr "Resources"
+
+#: templates/base.html
+msgid "Réglages"
+msgstr "Settings"
+
+#: templates/base.html
+msgid "Se connecter"
+msgstr "Log in"
+
+#: templates/base.html
+msgid "Se déconnecter"
+msgstr "Log out"
+
+#: templates/base.html
+msgid "Sorties, soirées, camps et entraide pour les doctorant·es d'Université Côte d'Azur."
+msgstr "Outings, nights out, camps and mutual support for PhD candidates at Université Côte d'Azur."
+
+#: templates/base.html
+msgid "Soutenir l'AJC06"
+msgstr "Support AJC06"
+
+#: templates/base.html
+msgid "Suivre"
+msgstr "Follow"
+
+#: templates/base.html
+msgid "Thème clair / sombre"
+msgstr "Light / dark theme"
+
+#: templates/base.html
+msgid "Une question, une idée de sortie, envie de s'impliquer ?"
+msgstr "A question, an idea for an outing, want to get involved?"
+
+#: templates/base.html
+msgid "association loi 1901 d'intérêt général"
+msgstr "non-profit association of general interest"
+
+#: templates/base.html
+msgid "Équipe"
+msgstr "Team"
+
+#: templates/base.html
+msgid "Équipe et anciens bureaux"
+msgstr "Team and past boards"
+
+#: templates/blog/_card.html
+msgid "%(n)s min"
+msgstr "%(n)s min"
+
+#: templates/blog/detail.html
+msgid "%(n)s min de lecture"
+msgstr "%(n)s min read"
+
+#: templates/blog/detail.html
+msgid "Aperçu : cet article n'est pas encore publié."
+msgstr "Preview: this post is not published yet."
+
+#: templates/blog/detail.html
+msgid "Autres articles"
+msgstr "Other posts"
+
+#: templates/blog/detail.html
+msgid "Cet article n'existe qu'en français."
+msgstr "This post is only available in French."
+
+#: templates/blog/detail.html
+msgid "Plus ancien"
+msgstr "Older"
+
+#: templates/blog/detail.html
+msgid "Plus récent"
+msgstr "Newer"
+
+#: templates/blog/list.html
+msgid "Appels à candidatures, prix de thèse, formations et nouvelles de l'AJC06."
+msgstr "Calls for applications, thesis awards, training and news from AJC06."
+
+#: templates/blog/list.html
+msgid "Appels, prix, formations, vie de l'asso"
+msgstr "Calls, awards, training, association life"
+
+#: templates/blog/list.html
+msgid "Ce qui peut intéresser les doctorant·es et jeunes docteur·es des Alpes-Maritimes."
+msgstr "Things that matter to PhD candidates and early-career researchers in the Alpes-Maritimes."
+
+#: templates/blog/list.html
+msgid "Lire"
+msgstr "Read"
+
+#: templates/blog/list.html
+msgid "Pages"
+msgstr "Pages"
+
+#: templates/blog/list.html
+msgid "Pas encore d'article."
+msgstr "No posts yet."
+
+#: templates/community/_form_errors.html
+msgid "Rien n'a été enregistré : corrige les champs ci-dessous, puis enregistre à nouveau."
+msgstr "Nothing was saved: fix the fields below, then save again."
+
+#: templates/community/_form_errors.html
+msgid "Si tu avais choisi une photo, sélectionne-la de nouveau : le navigateur ne la garde pas."
+msgstr "If you had picked a photo, select it again: the browser doesn't keep it."
+
+#: templates/community/_friend_button.html
+msgid "Accepter la demande"
+msgstr "Accept request"
+
+#: templates/community/_friend_button.html
+msgid "Ajouter en ami"
+msgstr "Add as friend"
+
+#: templates/community/_friend_button.html
+msgid "Amis"
+msgstr "Friends"
+
+#: templates/community/_friend_button.html
+msgid "Annuler la demande"
+msgstr "Cancel request"
+
+#: templates/community/_friend_button.html
+msgid "Demande envoyée"
+msgstr "Request sent"
+
+#: templates/community/_friend_button.html
+msgid "Modifier mon profil"
+msgstr "Edit my profile"
+
+#: templates/community/_friend_button.html
+msgid "Retirer des amis"
+msgstr "Remove from friends"
+
+#: templates/community/_friend_button.html
+msgid "Se connecter pour l'ajouter"
+msgstr "Log in to add them"
+
+#: templates/community/approved_email.txt
+msgid "Bonjour %(name)s,\n\nTon compte sur le site de l'AJC06 vient d'être validé par le bureau. Tu peux te connecter avec ton courriel et ton mot de passe :"
+msgstr "Hello %(name)s,\n\nYour account on the AJC06 website has just been approved by the board. You can log in with your email and password:"
+
+#: templates/community/approved_email.txt
+msgid "À bientôt à une prochaine sortie !\n\n— L'AJC06"
+msgstr "See you at a next outing!\n\n— AJC06"
+
+#: templates/community/confirm_email.txt
+msgid "Bonjour %(name)s,\n\nBienvenue dans la communauté de l'AJC06 ! Pour activer ton compte, ouvre ce lien (valable trois jours) :"
+msgstr "Hello %(name)s,\n\nWelcome to the AJC06 community! To activate your account, open this link (valid for three days):"
+
+#: templates/community/confirm_email.txt
+msgid "Si tu n'as pas créé de compte sur le site de l'AJC06, ignore simplement ce message.\n\n— L'AJC06"
+msgstr "If you didn't create an account on the AJC06 website, just ignore this message.\n\n— AJC06"
+
+#: templates/community/confirm_sent.html
+msgid "C'est presque bon"
+msgstr "Almost there"
+
+#: templates/community/confirm_sent.html
+msgid "Compte en attente de validation"
+msgstr "Account awaiting approval"
+
+#: templates/community/confirm_sent.html
+msgid "Confirme ton adresse"
+msgstr "Confirm your address"
+
+#: templates/community/confirm_sent.html
+msgid "En attendant"
+msgstr "In the meantime"
+
+#: templates/community/confirm_sent.html
+msgid "Espace membres"
+msgstr "Members' area"
+
+#: templates/community/confirm_sent.html
+msgid "Nous venons d'envoyer un lien de confirmation. Ouvre-le pour activer ton compte ; pense aux courriers indésirables."
+msgstr "We've just sent you a confirmation link. Open it to activate your account; check your spam folder too."
+
+#: templates/community/confirm_sent.html
+msgid "Pas reçu ?"
+msgstr "Didn't get it?"
+
+#: templates/community/confirm_sent.html
+msgid "Regarde ta boîte mail"
+msgstr "Check your inbox"
+
+#: templates/community/confirm_sent.html
+msgid "Rejoindre le WhatsApp"
+msgstr "Join the WhatsApp"
+
+#: templates/community/confirm_sent.html
+msgid "Rejoins la communauté WhatsApp de l'AJC06 pour ne rien rater des prochaines sorties."
+msgstr "Join the AJC06 WhatsApp community so you don't miss the next outings."
+
+#: templates/community/confirm_sent.html
+msgid "Renvoyer le lien"
+msgstr "Resend the link"
+
+#: templates/community/confirm_sent.html
+msgid "Ton compte est créé. Un membre du bureau le valide sous peu, en général dans la journée ; tu pourras ensuite te connecter avec ton courriel et ton mot de passe."
+msgstr "Your account has been created. A board member will approve it shortly, usually within the day; you'll then be able to log in with your email and password."
+
+#: templates/community/confirm_sent.html
+msgid "Toujours rien ? Un membre du bureau peut aussi valider ton compte."
+msgstr "Still nothing? A board member can also approve your account."
+
+#: templates/community/delete_account.html
+msgid "Annuler"
+msgstr "Cancel"
+
+#: templates/community/delete_account.html
+msgid "Supprimer définitivement"
+msgstr "Delete permanently"
+
+#: templates/community/delete_account.html
+msgid "Supprimer mon compte"
+msgstr "Delete my account"
+
+#: templates/community/delete_account.html
+msgid "Ton profil, tes amitiés, tes participations et tes notifications seront effacés définitivement. Les événements que tu as proposés restent en ligne, sans ton nom."
+msgstr "Your profile, friendships, participations and notifications will be permanently erased. The events you proposed stay online, without your name."
+
+#: templates/community/event_delete.html
+msgid "Oui, supprimer"
+msgstr "Yes, delete"
+
+#: templates/community/event_delete.html
+msgid "Supprimer ?"
+msgstr "Delete?"
+
+#: templates/community/event_delete.html
+msgid "Supprimer l'événement"
+msgstr "Delete the event"
+
+#: templates/community/event_delete.html
+msgid "« %(title)s » disparaîtra de l'agenda, et les inscriptions avec."
+msgstr "\"%(title)s\" will disappear from the calendar, along with who signed up."
+
+#: templates/community/event_form.html
+msgid "Afterwork, randonnée, soirée jeux, séance de rédaction à plusieurs… Publie-le : il apparaît dans l'agenda avec la mention « proposé par » et tu vois qui vient."
+msgstr "Afterwork, hike, games night, group writing session… Publish it: it appears in the calendar with your name, and you can see who's coming."
+
+#: templates/community/event_form.html
+msgid "Avant de demander :"
+msgstr "Before you ask:"
+
+#: templates/community/event_form.html
+msgid "Avec le soutien de l'AJC06 ?"
+msgstr "With AJC06's support?"
+
+#: templates/community/event_form.html
+msgid "Demande de %(amount)s € : %(status)s."
+msgstr "Request for €%(amount)s: %(status)s."
+
+#: templates/community/event_form.html
+msgid "Donne tous les détails : comment y aller, où, le prix par personne et les coûts fixes, et la somme que tu demandes à l'asso."
+msgstr "Give all the details: how to get there, where, the price per person and fixed costs, and the amount you are asking the association for."
+
+#: templates/community/event_form.html
+msgid "Détails"
+msgstr "Details"
+
+#: templates/community/event_form.html
+msgid "En publiant, tu t'engages à proposer un événement ouvert, bienveillant et non commercial. Le bureau de l'AJC06 peut retirer un événement qui ne respecte pas cet esprit."
+msgstr "By publishing, you commit to an open, friendly, non-commercial event. The AJC06 board may remove any event that goes against this spirit."
+
+#: templates/community/event_form.html
+msgid "Enregistrer"
+msgstr "Save"
+
+#: templates/community/event_form.html
+msgid "Infos pratiques"
+msgstr "Practical information"
+
+#: templates/community/event_form.html
+msgid "L'AJC06 peut se charger des réservations, ou te rembourser après l'événement, uniquement sur présentation des factures."
+msgstr "AJC06 can handle the bookings, or reimburse you after the event, only on presentation of invoices."
+
+#: templates/community/event_form.html
+msgid "La demande doit être faite au moins un mois avant la date de l'événement : l'asso doit présenter le projet à l'université avant de le financer."
+msgstr "The request must be made at least one month before the event: the association has to present the project to the university before funding it."
+
+#: templates/community/event_form.html
+msgid "Le soutien dépend des fonds disponibles : la demande doit être approuvée par le bureau. En attendant, ton événement n'est pas publié ; s'il est accepté, il apparaît comme un événement de l'asso."
+msgstr "Support depends on available funds: the request must be approved by the board. Meanwhile, your event is not published; if accepted, it appears as an association event."
+
+#: templates/community/event_form.html
+msgid "Modifier"
+msgstr "Edit"
+
+#: templates/community/event_form.html
+msgid "Modifier l'événement"
+msgstr "Edit the event"
+
+#: templates/community/event_form.html
+msgid "Où"
+msgstr "Where"
+
+#: templates/community/event_form.html
+msgid "Propose une sortie"
+msgstr "Propose an outing"
+
+#: templates/community/event_form.html
+msgid "Proposer un événement"
+msgstr "Propose an event"
+
+#: templates/community/event_form.html
+msgid "Proposé par les membres"
+msgstr "Proposed by members"
+
+#: templates/community/event_form.html
+msgid "Publier"
+msgstr "Publish"
+
+#: templates/community/event_form.html
+msgid "Quand"
+msgstr "When"
+
+#: templates/community/event_form.html
+msgid "Quoi"
+msgstr "What"
+
+#: templates/community/event_form.html
+msgid "Soutien de l'AJC06"
+msgstr "AJC06 support"
+
+#: templates/community/friends.html
+msgid "%(n)s ami·e"
+msgid_plural "%(n)s ami·es"
+msgstr[0] "%(n)s friend"
+msgstr[1] "%(n)s friends"
+
+#: templates/community/friends.html
+msgid "Accepter"
+msgstr "Accept"
+
+#: templates/community/friends.html
+msgid "Communauté"
+msgstr "Community"
+
+#: templates/community/friends.html
+msgid "Demandes envoyées"
+msgstr "Requests sent"
+
+#: templates/community/friends.html
+msgid "Demandes reçues"
+msgstr "Requests received"
+
+#: templates/community/friends.html
+msgid "Pas encore d'amis."
+msgstr "No friends yet."
+
+#: templates/community/friends.html
+msgid "Refuser"
+msgstr "Decline"
+
+#: templates/community/friends.html
+msgid "Tes amis voient les événements auxquels tu vas, et tu peux les inviter à ceux qui te tentent."
+msgstr "Your friends can see the events you're going to, and you can invite them to the ones you fancy."
+
+#: templates/community/friends.html
+msgid "Trouver des membres"
+msgstr "Find members"
+
+#: templates/community/friends.html
+msgid "Va voir l'annuaire, ou les participant·es d'un événement qui te tente."
+msgstr "Browse the directory, or the people going to an event you fancy."
+
+#: templates/community/friends.html
+msgid "Voir les membres"
+msgstr "See the members"
+
+#: templates/community/login.html
+msgid "Compte pas encore confirmé ?"
+msgstr "Account not confirmed yet?"
+
+#: templates/community/login.html
+msgid "Connecte-toi pour proposer une sortie, voir qui vient et retrouver tes amis."
+msgstr "Log in to propose an outing, see who's coming and find your friends."
+
+#: templates/community/login.html
+msgid "Mot de passe oublié ?"
+msgstr "Forgot your password?"
+
+#: templates/community/login.html
+msgid "Pas encore de compte ?"
+msgstr "No account yet?"
+
+#: templates/community/login.html
+msgid "Re-bonjour"
+msgstr "Welcome back"
+
+#: templates/community/login.html
+msgid "Rejoindre la communauté"
+msgstr "Join the community"
+
+#: templates/community/login.html
+msgid "Renvoyer le lien de confirmation"
+msgstr "Resend the confirmation link"
+
+#: templates/community/members.html
+msgid "%(n)s résultat"
+msgid_plural "%(n)s résultats"
+msgstr[0] "%(n)s result"
+msgstr[1] "%(n)s results"
+
+#: templates/community/members.html
+msgid "Chercher"
+msgstr "Search"
+
+#: templates/community/members.html
+msgid "Dans ton école doctorale"
+msgstr "In your doctoral school"
+
+#: templates/community/members.html
+msgid "Membres"
+msgstr "Members"
+
+#: templates/community/members.html
+msgid "Nom, discipline, labo, centre d'intérêt…"
+msgstr "Name, discipline, lab, interest…"
+
+#: templates/community/members.html
+msgid "Personne ne correspond pour l'instant."
+msgstr "Nobody matches yet."
+
+#: templates/community/members.html
+msgid "Rechercher un membre"
+msgstr "Search for a member"
+
+#: templates/community/members.html
+msgid "Retrouve des doctorant·es de ta discipline, de ton labo ou qui aiment les mêmes choses que toi."
+msgstr "Find PhD candidates from your discipline, your lab, or who enjoy the same things as you."
+
+#: templates/community/members.html
+msgid "Toutes les écoles doctorales"
+msgstr "All doctoral schools"
+
+#: templates/community/members.html
+msgid "École doctorale"
+msgstr "Doctoral school"
+
+#: templates/community/notifications.html
+msgid "<strong>%(name)s</strong> a accepté ta demande d'ami·e."
+msgstr "<strong>%(name)s</strong> accepted your friend request."
+
+#: templates/community/notifications.html
+msgid "<strong>%(name)s</strong> demande le soutien de l'asso pour « %(title)s »."
+msgstr "<strong>%(name)s</strong> is asking for the association's support for \"%(title)s\"."
+
+#: templates/community/notifications.html
+msgid "<strong>%(name)s</strong> t'a identifié·e sur une photo."
+msgstr "<strong>%(name)s</strong> tagged you in a photo."
+
+#: templates/community/notifications.html
+msgid "<strong>%(name)s</strong> t'invite à « %(title)s »."
+msgstr "<strong>%(name)s</strong> invites you to \"%(title)s\"."
+
+#: templates/community/notifications.html
+msgid "<strong>%(name)s</strong> veut t'ajouter en ami·e."
+msgstr "<strong>%(name)s</strong> wants to be your friend."
+
+#: templates/community/notifications.html
+msgid "<strong>%(name)s</strong> vient à ton événement « %(title)s »."
+msgstr "<strong>%(name)s</strong> is coming to your event \"%(title)s\"."
+
+#: templates/community/notifications.html
+msgid "Le bureau a répondu à ta demande de soutien pour « %(title)s »."
+msgstr "The board has answered your support request for \"%(title)s\"."
+
+#: templates/community/notifications.html
+msgid "Les demandes d'ami, les invitations et les inscriptions à tes événements apparaîtront ici."
+msgstr "Friend requests, invitations and sign-ups to your events will appear here."
+
+#: templates/community/notifications.html
+msgid "Rien de neuf pour l'instant."
+msgstr "Nothing new for now."
+
+#: templates/community/notifications.html
+msgid "Répondre"
+msgstr "Respond"
+
+#: templates/community/notifications.html
+msgid "Voir"
+msgstr "View"
+
+#: templates/community/password_change.html
+msgid "Changer de mot de passe"
+msgstr "Change password"
+
+#: templates/community/password_change.html
+msgid "Encore une fois"
+msgstr "Once more"
+
+#: templates/community/password_change.html
+msgid "Mot de passe actuel"
+msgstr "Current password"
+
+#: templates/community/password_change.html
+msgid "Nouveau mot de passe"
+msgstr "New password"
+
+#: templates/community/password_reset.html
+msgid "Envoyer le lien"
+msgstr "Send the link"
+
+#: templates/community/password_reset.html
+msgid "Indique ton adresse : nous t'envoyons un lien pour en choisir un nouveau."
+msgstr "Enter your address: we'll send you a link to choose a new one."
+
+#: templates/community/password_reset.html
+msgid "Mot de passe oublié"
+msgstr "Forgotten password"
+
+#: templates/community/password_reset_confirm.html
+msgid "Ce lien n'est plus valable. Demande-en un nouveau."
+msgstr "This link is no longer valid. Ask for a new one."
+
+#: templates/community/password_reset_done.html
+msgid "Si un compte existe avec cette adresse, tu vas recevoir un lien pour choisir un nouveau mot de passe. Pense aux indésirables."
+msgstr "If an account exists with this address, you'll receive a link to choose a new password. Check your spam folder too."
+
+#: templates/community/password_reset_email.txt
+msgid "Bonjour,\n\nTu as demandé à changer ton mot de passe sur le site de l'AJC06. Pour en choisir un nouveau, ouvre ce lien :"
+msgstr "Hello,\n\nYou asked to change your password on the AJC06 website. To choose a new one, open this link:"
+
+#: templates/community/password_reset_email.txt
+msgid "Si ce n'est pas toi, ignore simplement ce message.\n\n— L'AJC06"
+msgstr "If this wasn't you, just ignore this message.\n\n— AJC06"
+
+#: templates/community/password_reset_subject.txt
+msgid "AJC06 : changer ton mot de passe"
+msgstr "AJC06: change your password"
+
+#: templates/community/photo.html
+msgid "Connecte-toi pour voir qui est sur la photo."
+msgstr "Log in to see who's in the photo."
+
+#: templates/community/photo.html
+msgid "Partagée par %(name)s"
+msgstr "Shared by %(name)s"
+
+#: templates/community/photo.html
+msgid "Photo"
+msgstr "Photo"
+
+#: templates/community/photo.html
+msgid "Retirer mon identification"
+msgstr "Remove my tag"
+
+#: templates/community/photo.html
+msgid "Signaler cette photo"
+msgstr "Report this photo"
+
+#: templates/community/photo.html
+msgid "Supprimer la photo"
+msgstr "Delete the photo"
+
+#: templates/community/photo_form.html
+msgid "Ajouter une photo"
+msgstr "Add a photo"
+
+#: templates/community/photo_form.html
+msgid "Avant de publier"
+msgstr "Before publishing"
+
+#: templates/community/photo_form.html
+msgid "Publier la photo"
+msgstr "Publish the photo"
+
+#: templates/community/photo_form.html
+msgid "Qui est sur la photo ?"
+msgstr "Who's in the photo?"
+
+#: templates/community/photo_form.html
+msgid "Toutes les personnes reconnaissables sur la photo doivent avoir donné leur autorisation pour qu'elle soit affichée sur le site. Sans leur accord, ne la publie pas. Une personne identifiée peut retirer son identification ou signaler la photo à tout moment."
+msgstr "Everyone recognisable in the photo must have agreed to it being shown on the website. Without their consent, don't publish it. A tagged person can remove their tag or report the photo at any time."
+
+#: templates/community/photos.html
+msgid "Les photos des événements et sorties de l'AJC06, partagées par les membres."
+msgstr "Photos of AJC06 events and outings, shared by members."
+
+#: templates/community/photos.html
+msgid "Les souvenirs des événements et des sorties, partagés par les membres."
+msgstr "Memories of events and outings, shared by members."
+
+#: templates/community/photos.html
+msgid "Partage la première, d'un événement ou d'une sortie entre doctorant·es."
+msgstr "Share the first one, from an event or an outing with other PhD candidates."
+
+#: templates/community/photos.html
+msgid "Pas encore de photo."
+msgstr "No photos yet."
+
+#: templates/community/profile.html
+msgid "A proposé"
+msgstr "Has proposed"
+
+#: templates/community/profile.html
+msgid "Ajoute ta discipline, ton sujet de thèse et tes centres d'intérêt pour que les autres te trouvent."
+msgstr "Add your discipline, thesis topic and interests so others can find you."
+
+#: templates/community/profile.html
+msgid "Centres d'intérêt"
+msgstr "Interests"
+
+#: templates/community/profile.html
+msgid "Compléter mon profil"
+msgstr "Complete my profile"
+
+#: templates/community/profile.html
+msgid "Liens"
+msgstr "Links"
+
+#: templates/community/profile.html
+msgid "Me contacter"
+msgstr "Contact me"
+
+#: templates/community/profile.html
+msgid "Pas encore d'amis sur le site."
+msgstr "No friends on the site yet."
+
+#: templates/community/profile.html
+msgid "Présentation"
+msgstr "About"
+
+#: templates/community/profile.html
+msgid "Signaler ce profil"
+msgstr "Report this profile"
+
+#: templates/community/profile.html
+msgid "Site web"
+msgstr "Website"
+
+#: templates/community/profile.html
+msgid "Sujet de thèse"
+msgstr "Thesis topic"
+
+#: templates/community/profile.html
+msgid "Ta page est encore vide."
+msgstr "Your page is still empty."
+
+#: templates/community/profile.html
+msgid "Visible par : %(who)s."
+msgstr "Visible to: %(who)s."
+
+#: templates/community/profile.html
+msgid "Y va bientôt"
+msgstr "Going soon"
+
+#: templates/community/profile.html
+msgid "membre de la communauté AJC06"
+msgstr "member of the AJC06 community"
+
+#: templates/community/profile_private.html
+msgid "Ce profil n'est visible que par les membres connectés."
+msgstr "This profile is only visible to logged-in members."
+
+#: templates/community/profile_private.html
+msgid "Profil réservé aux membres"
+msgstr "Members-only profile"
+
+#: templates/community/report.html
+msgid "Envoyer"
+msgstr "Send"
+
+#: templates/community/report.html
+msgid "Signaler"
+msgstr "Report"
+
+#: templates/community/report.html
+msgid "Tu signales « %(name)s ». Le bureau de l'AJC06 lira ton message ; la personne concernée ne saura pas qui l'a envoyé."
+msgstr "You are reporting \"%(name)s\". The AJC06 board will read your message; the person concerned won't know who sent it."
+
+#: templates/community/settings.html
+msgid "Ce que tu remplis ici apparaît sur ta page, pour aider les autres doctorant·es à te trouver. Tout est facultatif, sauf ton nom."
+msgstr "What you fill in here appears on your page, to help other PhD candidates find you. Everything is optional except your name."
+
+#: templates/community/settings.html
+msgid "Changer d'adresse"
+msgstr "Change address"
+
+#: templates/community/settings.html
+msgid "Coordonnées"
+msgstr "Contact details"
+
+#: templates/community/settings.html
+msgid "Enregistrer mon profil"
+msgstr "Save my profile"
+
+#: templates/community/settings.html
+msgid "Ma recherche"
+msgstr "My research"
+
+#: templates/community/settings.html
+msgid "Personnalisation"
+msgstr "Customisation"
+
+#: templates/community/settings.html
+msgid "Qui je suis"
+msgstr "Who I am"
+
+#: templates/community/settings.html
+msgid "Tes coordonnées ne sont jamais publiques : par défaut, seuls tes amis les voient."
+msgstr "Your contact details are never public: by default, only your friends can see them."
+
+#: templates/community/settings.html
+msgid "Voir ma page"
+msgstr "See my page"
+
+#: templates/community/settings.html
+msgid "À propos"
+msgstr "About"
+
+#: templates/community/signup.html
+msgid "C'est parti"
+msgstr "Let's go"
+
+#: templates/community/signup.html
+msgid "Crée ton compte pour proposer des sorties, retrouver d'autres doctorant·es et voir qui vient aux événements."
+msgstr "Create your account to propose outings, find other PhD candidates and see who's coming to events."
+
+#: templates/community/signup.html
+msgid "Créer mon compte"
+msgstr "Create my account"
+
+#: templates/community/signup.html
+msgid "Déjà membre ?"
+msgstr "Already a member?"
+
+#: templates/community/signup.html
+msgid "Indique que tu y vas, invite tes amis et vois lesquels seront là."
+msgstr "Say you're going, invite your friends and see which of them will be there."
+
+#: templates/community/signup.html
+msgid "Par discipline, école doctorale ou centres d'intérêt, et ajoute-les en amis."
+msgstr "By discipline, doctoral school or interests, and add them as friends."
+
+#: templates/community/signup.html
+msgid "Propose tes propres sorties"
+msgstr "Propose your own outings"
+
+#: templates/community/signup.html
+msgid "Rejoins la communauté"
+msgstr "Join the community"
+
+#: templates/community/signup.html
+msgid "Retrouve les autres doctorant·es"
+msgstr "Find other PhD candidates"
+
+#: templates/community/signup.html
+msgid "Un afterwork, une rando, une soirée jeux : publie-la, les autres doctorant·es s'inscrivent en un clic."
+msgstr "An afterwork, a hike, a games night: publish it, and other PhD candidates join in one click."
+
+#: templates/community/signup.html
+msgid "Vois qui vient"
+msgstr "See who's coming"
+
+#: templates/core/contact.html
+msgid "Détails dans la <a href=\"%(url)s\">politique de confidentialité</a>."
+msgstr "Details in the <a href=\"%(url)s\">privacy policy</a>."
+
+#: templates/core/contact.html
+msgid "Le plus rapide"
+msgstr "The quickest way"
+
+#: templates/core/contact.html
+msgid "Par courriel"
+msgstr "By email"
+
+#: templates/core/contact.html
+msgid "Par courrier"
+msgstr "By post"
+
+#: templates/core/contact.html
+msgid "Pour une question rapide, écris-nous directement sur la communauté WhatsApp ou sur Instagram."
+msgstr "For a quick question, message us directly on the WhatsApp community or on Instagram."
+
+#: templates/core/contact.html
+msgid "Une question, l'envie de rejoindre l'association, besoin d'un conseil ou d'un coup de main : on est là pour ça."
+msgstr "A question, want to join the association, need advice or a hand: that's what we're here for."
+
+#: templates/core/contact.html
+msgid "Écrire à l'AJC06 : une question, une envie de rejoindre le bureau, une idée d'événement ou de partenariat."
+msgstr "Write to AJC06: a question, joining the board, an idea for an event or a partnership."
+
+#: templates/core/contact.html
+msgid "Écris-nous"
+msgstr "Write to us"
+
+#: templates/core/home.html
+msgid "Affiche : %(title)s"
+msgstr "Poster: %(title)s"
+
+#: templates/core/home.html
+msgid "Appels à candidatures, prix de thèse, formations, webinaires : on relaie ce qui compte sur la communauté WhatsApp, Instagram et le site."
+msgstr "Calls for applications, thesis awards, training, webinars: we share what matters on the WhatsApp community, Instagram and this website."
+
+#: templates/core/home.html
+msgid "Association des Jeunes Chercheurs des Alpes-Maritimes"
+msgstr "Association of Young Researchers of the Alpes-Maritimes"
+
+#: templates/core/home.html
+msgid "Ateliers sur la poursuite de carrière (entreprise, entrepreneuriat, académique) et participation au réseau BioTechno."
+msgstr "Career workshops (industry, entrepreneurship, academia) and membership of the BioTechno network."
+
+#: templates/core/home.html
+msgid "Au programme"
+msgstr "Coming up"
+
+#: templates/core/home.html
+msgid "Aucune sortie proposée pour l'instant."
+msgstr "No outings proposed yet."
+
+#: templates/core/home.html
+msgid "Bientôt"
+msgstr "Soon"
+
+#: templates/core/home.html
+msgid "C'est là que passent les annonces et les discussions entre doctorant·es. Tu préfères Discord ? Le serveur existe aussi."
+msgstr "That's where announcements and chats between PhD candidates happen. Prefer Discord? There's a server too."
+
+#: templates/core/home.html
+msgid "Ce que fait l'asso"
+msgstr "What we do"
+
+#: templates/core/home.html
+msgid "Ce que tu as manqué"
+msgstr "What you missed"
+
+#: templates/core/home.html
+msgid "Comment on participe ?"
+msgstr "How do I join in?"
+
+#: templates/core/home.html
+msgid "Crée ton compte"
+msgstr "Create your account"
+
+#: templates/core/home.html
+msgid "Depuis sa création le 24 avril 1996, l'association rassemble les doctorant·es des Alpes-Maritimes : des générations de jeunes chercheuses et chercheurs qui se retrouvent, s'entraident et défendent leurs conditions de travail."
+msgstr "Since it was founded on 24 April 1996, the association has brought together PhD candidates in the Alpes-Maritimes: generations of young researchers who meet, support each other and stand up for their working conditions."
+
+#: templates/core/home.html
+msgid "Doctorant·es et jeunes docteur·es · Alpes-Maritimes"
+msgstr "PhD candidates and early-career researchers · Alpes-Maritimes"
+
+#: templates/core/home.html
+msgid "En attendant, les annonces passent par la communauté WhatsApp et Instagram."
+msgstr "Meanwhile, announcements go out on the WhatsApp community and Instagram."
+
+#: templates/core/home.html
+msgid "Engage-toi au bureau"
+msgstr "Join the board"
+
+#: templates/core/home.html
+msgid "Envie d'aider autrement ?"
+msgstr "Want to help in another way?"
+
+#: templates/core/home.html
+msgid "Faire circuler l'info"
+msgstr "Spreading the word"
+
+#: templates/core/home.html
+msgid "Faire vivre la vie doctorale"
+msgstr "Bringing PhD life to life"
+
+#: templates/core/home.html
+msgid "L'AJC06 en chiffres"
+msgstr "AJC06 in numbers"
+
+#: templates/core/home.html
+msgid "L'AJC06 fête ses %(n)s ans"
+msgstr "AJC06 turns %(n)s"
+
+#: templates/core/home.html
+msgid "Lance la première : crée ton compte, propose une date et un lieu, et les autres s'inscrivent en un clic."
+msgstr "Start the first one: create your account, pick a date and a place, and others join in one click."
+
+#: templates/core/home.html
+msgid "Le bureau est élu chaque année en assemblée générale, en début d'année. Toutes les disciplines sont bienvenues."
+msgstr "The board is elected every year at the general assembly, early in the year. Every discipline is welcome."
+
+#: templates/core/home.html
+msgid "Le prochain événement se prépare."
+msgstr "The next event is in the works."
+
+#: templates/core/home.html
+msgid "Les %(n)s événements passés"
+msgstr "All %(n)s past events"
+
+#: templates/core/home.html
+msgid "Les photos et les annonces sont aussi sur Instagram :"
+msgstr "Photos and announcements are also on Instagram:"
+
+#: templates/core/home.html
+msgid "Les événements sont ouverts aux doctorant·es d'Université Côte d'Azur, et souvent aux post-docs et jeunes docteur·es. Trois façons de commencer :"
+msgstr "Events are open to PhD candidates at Université Côte d'Azur, and often to postdocs and early-career researchers. Three ways to start:"
+
+#: templates/core/home.html
+msgid "Meet-ups, randonnées, soirées, camps d'été et d'hiver, Fête de la science : de quoi rencontrer d'autres doctorant·es, toutes disciplines confondues."
+msgstr "Meet-ups, hikes, nights out, summer and winter camps, the Fête de la science: plenty of ways to meet PhD candidates from every discipline."
+
+#: templates/core/home.html
+msgid "Nos missions"
+msgstr "Our missions"
+
+#: templates/core/home.html
+msgid "Nous écrire"
+msgstr "Write to us"
+
+#: templates/core/home.html
+msgid "Par des doctorant·es, pour des doctorant·es."
+msgstr "By PhD candidates, for PhD candidates."
+
+#: templates/core/home.html
+msgid "Pour dire que tu viens, voir qui sera là, ajouter d'autres doctorant·es en amis et proposer tes propres sorties."
+msgstr "To say you're coming, see who'll be there, add other PhD candidates as friends and propose your own outings."
+
+#: templates/core/home.html
+msgid "Proposé par les doctorant·es"
+msgstr "Proposed by PhD candidates"
+
+#: templates/core/home.html
+msgid "Préparer l'après-thèse"
+msgstr "Preparing life after the PhD"
+
+#: templates/core/home.html
+msgid "Rejoindre"
+msgstr "Join"
+
+#: templates/core/home.html
+msgid "Rejoindre la communauté WhatsApp"
+msgstr "Join the WhatsApp community"
+
+#: templates/core/home.html
+msgid "Rejoins la communauté WhatsApp"
+msgstr "Join the WhatsApp community"
+
+#: templates/core/home.html
+msgid "Représenter les jeunes chercheur·es"
+msgstr "Representing young researchers"
+
+#: templates/core/home.html
+msgid "S'inscrire"
+msgstr "Register"
+
+#: templates/core/home.html
+msgid "Sors du <span class=\"hl\">labo</span>."
+msgstr "Get out of the <span class=\"hl\">lab</span>."
+
+#: templates/core/home.html
+msgid "Sorties en mer et en montagne, soirées, visites, camps d'un week-end, coups de main pour la suite : l'AJC06 rassemble les jeunes chercheuses et chercheurs d'Université Côte d'Azur."
+msgstr "Days out at sea and in the mountains, nights out, visits, weekend camps, a hand with what comes next: AJC06 brings together the young researchers of Université Côte d'Azur."
+
+#: templates/core/home.html
+msgid "Tout l'agenda"
+msgstr "All events"
+
+#: templates/core/home.html
+msgid "Toutes les actus"
+msgstr "All news"
+
+#: templates/core/home.html
+msgid "Toutes les sorties des membres"
+msgstr "All members' outings"
+
+#: templates/core/home.html
+msgid "Un afterwork, une rando, une soirée jeux : n'importe quel membre peut lancer une sortie et inviter les autres."
+msgstr "An afterwork, a hike, a games night: any member can start an outing and invite the others."
+
+#: templates/core/home.html
+msgid "Un don de 1 € nous permet d'aller chercher bien plus en subventions."
+msgstr "A €1 donation helps us raise much more in grants."
+
+#: templates/core/home.html
+msgid "Voir l'agenda"
+msgstr "See the events"
+
+#: templates/core/home.html
+msgid "ans"
+msgstr "years"
+
+#: templates/core/home.html
+msgid "doctorant·es bénévoles élu·es au bureau depuis %(since)s"
+msgstr "volunteer PhD candidates elected to the board since %(since)s"
+
+#: templates/core/home.html
+msgid "lieux explorés, des îles de Lérins aux pistes d'Auron"
+msgstr "places explored, from the Lérins islands to the slopes of Auron"
+
+#: templates/core/home.html
+msgid "Échanges avec Université Côte d'Azur et les syndicats, plaidoyer local et national pour de meilleures conditions de travail."
+msgstr "Dialogue with Université Côte d'Azur and the unions, local and national advocacy for better working conditions."
+
+#: templates/core/home.html
+msgid "événements organisés depuis %(since)s"
+msgstr "events organised since %(since)s"
+
+#: templates/core/resource.html
+msgid "Toutes les ressources"
+msgstr "All resources"
+
+#: templates/core/resource.html
+msgid "Une info périmée ou un lien cassé&nbsp;? <a href=\"%(url)s\">Dis-le nous</a>."
+msgstr "Outdated info or a broken link? <a href=\"%(url)s\">Let us know</a>."
+
+#: templates/core/resource.html
+msgid "À lire aussi"
+msgstr "See also"
+
+#: templates/core/resources.html
+msgid "Ailleurs"
+msgstr "Elsewhere"
+
+#: templates/core/resources.html
+msgid "Fiches pratiques"
+msgstr "Practical guides"
+
+#: templates/core/resources.html
+msgid "Financer sa thèse, connaître ses droits, trouver un emploi après le doctorat : les fiches pratiques de l'AJC06."
+msgstr "Funding your PhD, knowing your rights, finding a job afterwards: AJC06's practical guides."
+
+#: templates/core/resources.html
+msgid "Les liens et informations utiles que nous avons rassemblés pour le doctorat à Université Côte d'Azur, pendant la thèse et après."
+msgstr "The useful links and information we have gathered for doing a PhD at Université Côte d'Azur, during the PhD and after."
+
+#: templates/core/resources.html
+msgid "Ministère de l'Enseignement supérieur et de la Recherche"
+msgstr "French Ministry of Higher Education and Research"
+
+#: templates/core/resources.html
+msgid "Réglementation du doctorat, contrats doctoraux, actualités nationales."
+msgstr "PhD regulations, doctoral contracts, national news (in French)."
+
+#: templates/core/team.html
+msgid "Des doctorant·es bénévoles"
+msgstr "Volunteer PhD candidates"
+
+#: templates/core/team.html
+msgid "Il est élu chaque année en assemblée générale. Pas besoin d'expérience associative : juste l'envie de faire bouger la vie doctorale."
+msgstr "It is elected every year at the general assembly. No experience needed: just the wish to liven up PhD life."
+
+#: templates/core/team.html
+msgid "Le bureau %(year)s"
+msgstr "The %(year)s board"
+
+#: templates/core/team.html
+msgid "Le bureau de l'AJC06 et ses anciens bureaux depuis 2017."
+msgstr "The AJC06 board and its past boards since 2017."
+
+#: templates/core/team.html
+msgid "Le prochain bureau, c'est peut-être toi."
+msgstr "The next board could include you."
+
+#: templates/core/team.html
+msgid "Les bureaux précédents"
+msgstr "Past boards"
+
+#: templates/core/team.html
+msgid "Portrait de %(name)s"
+msgstr "Portrait of %(name)s"
+
+#: templates/core/team.html
+msgid "Une équipe qui connaît les défis du doctorat parce qu'elle les vit. Notre objectif : un environnement où l'entraide, la compréhension mutuelle et le partage d'expériences rendent le chemin vers le doctorat plus riche."
+msgstr "A team that knows the challenges of a PhD because it lives them. Our goal: a community where mutual support, understanding and shared experience make the road to a doctorate richer."
+
+#: templates/events/_row.html
+msgid "Proposé par %(name)s"
+msgstr "Proposed by %(name)s"
+
+#: templates/events/_row.html
+msgid "Soutenu par l'AJC06"
+msgstr "Supported by AJC06"
+
+#: templates/events/detail.html
+msgid "%(n)s inscrit·es pour l'instant"
+msgstr "%(n)s signed up so far"
+
+#: templates/events/detail.html
+msgid "%(n)s de tes amis y va"
+msgid_plural "%(n)s de tes amis y vont"
+msgstr[0] "%(n)s of your friends is going"
+msgstr[1] "%(n)s of your friends are going"
+
+#: templates/events/detail.html
+msgid "%(n)s inscription sur HelloAsso"
+msgid_plural "%(n)s inscriptions sur HelloAsso"
+msgstr[0] "%(n)s registration on HelloAsso"
+msgstr[1] "%(n)s registrations on HelloAsso"
+
+#: templates/events/detail.html
+msgid "%(n)s membre y va"
+msgid_plural "%(n)s membres y vont"
+msgstr[0] "%(n)s member is going"
+msgstr[1] "%(n)s members are going"
+
+#: templates/events/detail.html
+msgid "%(n)s place"
+msgid_plural "%(n)s places"
+msgstr[0] "%(n)s place"
+msgstr[1] "%(n)s places"
+
+#: templates/events/detail.html
+msgid "Ajouter à mon agenda"
+msgstr "Add to my calendar"
+
+#: templates/events/detail.html
+msgid "Avec le soutien de l'AJC06"
+msgstr "With AJC06's support"
+
+#: templates/events/detail.html
+msgid "Cet événement est passé. Pour ne pas rater le prochain, <a href=\"%(wa)s\" rel=\"noopener\">rejoins la communauté WhatsApp</a> ou <a href=\"%(agenda)s\">regarde l'agenda</a>."
+msgstr "This event is over. Not to miss the next one, <a href=\"%(wa)s\" rel=\"noopener\">join the WhatsApp community</a> or <a href=\"%(agenda)s\">check the events</a>."
+
+#: templates/events/detail.html
+msgid "Cette description n'existe qu'en français."
+msgstr "This description is only available in French."
+
+#: templates/events/detail.html
+msgid "Complet"
+msgstr "Full"
+
+#: templates/events/detail.html
+msgid "Connecte-toi pour voir qui y va."
+msgstr "Log in to see who's going."
+
+#: templates/events/detail.html
+msgid "Dans le même esprit"
+msgstr "In the same spirit"
+
+#: templates/events/detail.html
+msgid "Demande de soutien en cours d'examen par le bureau : cet événement n'est visible que par toi et le bureau pour l'instant."
+msgstr "Support request under review by the board: for now, only you and the board can see this event."
+
+#: templates/events/detail.html
+msgid "En attente : cet événement n'est pas encore visible sur le site."
+msgstr "On hold: this event is not yet visible on the website."
+
+#: templates/events/detail.html
+msgid "Envoyer les invitations"
+msgstr "Send invitations"
+
+#: templates/events/detail.html
+msgid "Inviter des amis"
+msgstr "Invite friends"
+
+#: templates/events/detail.html
+msgid "J'y vais"
+msgstr "I'm going"
+
+#: templates/events/detail.html
+msgid "Le bureau n'a pas pu soutenir cet événement."
+msgstr "The board could not support this event."
+
+#: templates/events/detail.html
+msgid "Non publié : cet événement n'est pas visible sur le site."
+msgstr "Unpublished: this event is not visible on the website."
+
+#: templates/events/detail.html
+msgid "Pas encore de photo de cet événement."
+msgstr "No photos of this event yet."
+
+#: templates/events/detail.html
+msgid "Proposé par"
+msgstr "Proposed by"
+
+#: templates/events/detail.html
+msgid "Proposé par un membre"
+msgstr "Proposed by a member"
+
+#: templates/events/detail.html
+msgid "Publier quand même, sans le soutien de l'asso"
+msgstr "Publish anyway, without the association's support"
+
+#: templates/events/detail.html
+msgid "Se connecter pour dire que tu y vas"
+msgstr "Log in to say you're going"
+
+#: templates/events/detail.html
+msgid "Signaler cet événement"
+msgstr "Report this event"
+
+#: templates/events/detail.html
+msgid "Supprimer"
+msgstr "Delete"
+
+#: templates/events/detail.html
+msgid "Voir sur Google Maps"
+msgstr "View on Google Maps"
+
+#: templates/events/detail.html
+msgid "annuler"
+msgstr "cancel"
+
+#: templates/events/detail.html
+msgid "mis à jour il y a %(when)s"
+msgstr "updated %(when)s ago"
+
+#: templates/events/detail.html
+msgid "« J'y vais » sert à prévenir les autres membres : l'inscription officielle se fait toujours via le bouton « S'inscrire »."
+msgstr "\"I'm going\" lets other members know: official registration still goes through the \"Register\" button."
+
+#: templates/events/detail.html
+msgid "Également au programme"
+msgstr "Also coming up"
+
+#: templates/events/list.html
+msgid "%(n)s événement"
+msgid_plural "%(n)s événements"
+msgstr[0] "%(n)s event"
+msgstr[1] "%(n)s events"
+
+#: templates/events/list.html
+msgid "Copier le lien iCal"
+msgstr "Copy the iCal link"
+
+#: templates/events/list.html
+msgid "Filtrer par origine"
+msgstr "Filter by organiser"
+
+#: templates/events/list.html
+msgid "Filtrer par type"
+msgstr "Filter by type"
+
+#: templates/events/list.html
+msgid "Le bureau prépare la suite. Les annonces passent d'abord par la communauté WhatsApp et Instagram ; l'agenda iCal se met à jour tout seul."
+msgstr "The board is preparing what comes next. Announcements go out first on the WhatsApp community and Instagram; the iCal feed updates by itself."
+
+#: templates/events/list.html
+msgid "Les prochains événements de l'AJC06 pour les doctorant·es d'Université Côte d'Azur, et les archives depuis 2024."
+msgstr "Upcoming AJC06 events for PhD candidates at Université Côte d'Azur, and the archive since 2024."
+
+#: templates/events/list.html
+msgid "Les événements de l'association et les sorties proposées par les membres, ouverts aux doctorant·es d'Université Côte d'Azur. Ajoute l'agenda à ton calendrier pour ne plus en rater un."
+msgstr "The association's events and the outings proposed by members, open to PhD candidates at Université Côte d'Azur. Add the calendar to yours so you never miss one."
+
+#: templates/events/list.html
+msgid "Lien copié"
+msgstr "Link copied"
+
+#: templates/events/list.html
+msgid "Meet-ups, sorties, camps, soirées"
+msgstr "Meet-ups, outings, camps, nights out"
+
+#: templates/events/list.html
+msgid "Par l'AJC06"
+msgstr "By AJC06"
+
+#: templates/events/list.html
+msgid "Par les membres"
+msgstr "By members"
+
+#: templates/events/list.html
+msgid "Rien d'annoncé dans cette catégorie pour l'instant."
+msgstr "Nothing announced in this category yet."
+
+#: templates/events/list.html
+msgid "Rien d'annoncé pour l'instant."
+msgstr "Nothing announced yet."
+
+#: templates/events/list.html
+msgid "S'abonner"
+msgstr "Subscribe"
+
+#: templates/events/list.html
+msgid "Tous"
+msgstr "All"
+
+#: templates/events/list.html
+msgid "Tout"
+msgstr "All"
+
+#: templates/events/list.html
+msgid "À venir"
+msgstr "Upcoming"
+
+#: templates/events/list.html
+msgid "Événements passés"
+msgstr "Past events"
