@@ -1,1 +1,1 @@
-{% if p.avatar %}<img class="avatar avatar-{{ size|default:'md' }}" src="{{ p.avatar.url }}" alt="" loading="lazy">{% else %}<span class="avatar avatar-{{ size|default:'md' }} accent-{{ p.accent }}" aria-hidden="true">{{ p.initials }}</span>{% endif %}
+{% load ajc %}{% if p.avatar %}<img class="avatar avatar-{{ size|default:'md' }}" src="{{ p.avatar|thumb:272 }}" alt="" loading="lazy">{% else %}<span class="avatar avatar-{{ size|default:'md' }} accent-{{ p.accent }}" aria-hidden="true">{{ p.initials }}</span>{% endif %}

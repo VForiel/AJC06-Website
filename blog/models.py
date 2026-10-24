@@ -78,4 +78,5 @@ class Post(models.Model):
 
     @property
     def reading_minutes(self):
-        return max(1, round(len(markdown.plain(self.body_tr).split()) / 220))
+        # Mots du texte source : assez précis pour une estimation, sans convertir tout le Markdown à chaque liste.
+        return max(1, round(len(self.body_tr.split()) / 220))

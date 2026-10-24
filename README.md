@@ -68,8 +68,8 @@ n'apparaît que dans les journaux).
 
 ## Événements de l'asso, dossiers université, soutien
 
-- **Types** (plusieurs par événement) : Plein air, Culture & découverte, Visite, Vie de l'asso, Afterwork, Coworking,
-  Carrière & formation, Conférence/workshop/séminaire, Soutenance de thèse, Sport, Autre (texte libre). Réservés au
+- **Types** (plusieurs par événement) : Plein air, Culture & découverte, Visite, Vie de l'asso, Afterwork, Soirée à thème, Coworking,
+  Carrière & formation, Conférence/workshop/séminaire, Médiation scientifique (Pint of Science, Fête de la science, MT180…), Soutenance de thèse, Sport, Autre (texte libre). Réservés au
   bureau : PhD meet-up, Camp, Rentrée doctorale. Liste dans `events/models.py` (`TYPES`).
 - **Demande de soutien** : en proposant une sortie, un membre peut demander le soutien de l'asso (au moins un mois
   avant ; somme demandée, accès, prix par personne, coûts fixes, budget, réservations par l'asso ou remboursement sur
@@ -128,6 +128,8 @@ Les anciennes adresses (`/events/…`, `/evenement/`, `/don/`, articles à la ra
   adresse IP (3 par adresse mail pour le mot de passe oublié), 5 renvois de lien de confirmation.
 - **Fichiers téléversés** (`core/media.py`) : publics et mis en cache une semaine, sauf `media/dossiers/` (devis,
   factures, photos des bilans) réservé au bureau. Images limitées à 12 Mo et 40 mégapixels (`core/images.py`).
+  Les listes affichent des miniatures (`{{ image|thumb:192 }}`), créées au premier affichage dans `media/thumbs/`
+  (exclues des sauvegardes, on peut supprimer le dossier sans risque).
 - **Sauvegardes** : `python manage.py backup_site` copie la base à chaud (gzip) chaque jour et archive les médias le
   dimanche (`--media` pour forcer) dans `BACKUP_DIR` ; 60 jours de base et 8 archives de médias sont conservés.
   Restauration : arrêter l'application, `gunzip` la copie voulue à la place de `DATABASE_PATH`, extraire l'archive des

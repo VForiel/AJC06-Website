@@ -24,6 +24,8 @@
   <link rel="stylesheet" href="{% static 'css/effects.css' %}">
   <link rel="alternate" type="application/rss+xml" title="{% translate "Actualités de l'AJC06" %}" href="{% url 'blog:rss' %}">
   <script nonce="{{ csp_nonce }}">try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+  {# Précharge une page dès que le pointeur s'attarde sur son lien (Chrome, Edge) : la navigation paraît immédiate. #}
+  <script type="speculationrules" nonce="{{ csp_nonce }}">{"prefetch": [{"where": {"and": [{"href_matches": "/*"}, {"not": {"href_matches": ["/gestion/*", "/admin/*", "/compte/*", "/en/account/*", "/media/*", "/notifications/*", "/en/notifications/*", "/*.ics", "/*/rss/"]}}]}, "eagerness": "moderate"}]}</script>
   <script src="{% static 'js/site.js' %}" defer></script>
   <script src="{% static 'js/effects.js' %}" defer></script>
   {% block head %}{% endblock %}

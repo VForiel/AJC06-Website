@@ -1,8 +1,10 @@
 """Normalisation des images téléversées : orientation, taille maximale, WebP."""
 
 import io
+import os
 from pathlib import Path
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
@@ -48,3 +50,35 @@ def normalize_field(instance, field_name, max_side=MAX_SIDE):
         field.file.seek(0)
         webp = to_webp(field.file, max_side)
         field.save(webp.name, webp, save=False)
+
+
+def thumbnail_url(field, size):
+    """URL d'une copie réduite (plus petit côté = size px, WebP), créée au premier affichage dans media/thumbs/.
+
+    Les listes affichent les affiches en vignettes : sans cela, chaque vignette de 96 px coûte une image de 1600 px.
+    En cas d'erreur (fichier absent, illisible), renvoie l'image d'origine.
+    """
+    if not field:
+        return ""
+    name = field.name
+    if name.startswith("dossiers/"):
+        return field.url
+    root = Path(settings.MEDIA_ROOT)
+    source = root / name
+    rel = f"thumbs/{size}/{Path(name).with_suffix('.webp').as_posix()}"
+    target = root / rel
+    try:
+        mtime = source.stat().st_mtime
+        if not target.exists() or target.stat().st_mtime < mtime:
+            img = Image.open(source)
+            img = img.convert("RGBA" if img.mode in ("RGBA", "LA", "P") else "RGB")
+            scale = size / min(img.size)
+            if scale < 1:
+                img = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            tmp = target.with_name(f"{target.name}.{os.getpid()}.tmp")
+            img.save(tmp, "WEBP", quality=80, method=4)
+            os.replace(tmp, target)  # écriture atomique : plusieurs processus Passenger peuvent servir la page
+    except (OSError, Image.DecompressionBombError):
+        return field.url
+    return f"{settings.MEDIA_URL}{rel}?v={int(mtime)}"

@@ -820,6 +820,10 @@ msgid "Culture & découverte"
 msgstr "Culture & discovery"
 
 #: events/models.py
+msgid "Médiation scientifique"
+msgstr "Science outreach"
+
+#: events/models.py
 msgid "PhD meet-up"
 msgstr "PhD meet-up"
 
@@ -834,6 +838,10 @@ msgstr "PhD welcome"
 #: events/models.py
 msgid "Si « Autre » est coché"
 msgstr "If \"Other\" is ticked"
+
+#: events/models.py
+msgid "Soirée à thème"
+msgstr "Themed evening"
 
 #: events/models.py
 msgid "Soutenance de thèse"

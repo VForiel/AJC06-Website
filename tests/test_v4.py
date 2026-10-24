@@ -237,7 +237,10 @@ class PhotoTests(TestCase):
         self.assertTrue(photo.image.name.endswith(".webp"))
         self.assertEqual(list(photo.tagged.all()), [self.bob])
         self.assertTrue(Notification.objects.filter(recipient=self.bob, verb="photo_tag").exists())
-        self.assertContains(self.client.get(self.event.get_absolute_url()), photo.image.url)
+        # La page de l'événement affiche une miniature, créée au premier affichage, et non l'image d'origine.
+        thumb = f"/media/thumbs/320/{photo.image.name}"
+        self.assertContains(self.client.get(self.event.get_absolute_url()), thumb)
+        self.assertEqual(self.client.get(thumb).status_code, 200)
         self.client.logout()
         public = self.client.get(photo.get_absolute_url())
         self.assertNotContains(public, "Bob Martin")  # les noms ne sont visibles que des membres

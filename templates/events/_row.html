@@ -11,7 +11,7 @@
       {% if event.is_community and event.organizer %}<p class="row-by">{% blocktranslate with name=event.organizer.profile.display_name %}Proposé par {{ name }}{% endblocktranslate %}</p>{% endif %}
       <p class="row-where">{% if event.venue %}{{ event.venue }} · {% endif %}{{ event|hours }}{% if event.price_tr %} · {{ event.price_tr|truncatechars:40 }}{% endif %}</p>
     </div>
-    {% if event.poster %}<img class="row-poster" src="{{ event.poster.url }}" alt="" loading="lazy" width="96" height="96">{% endif %}
+    {% if event.poster %}<img class="row-poster" src="{{ event.poster|thumb:192 }}" alt="" loading="lazy" width="96" height="96">{% endif %}
     <span class="row-go">{% icon "arrow" 22 %}</span>
   </a>
 </article>

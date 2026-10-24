@@ -18,7 +18,7 @@
   <div class="wall photo-wall">
     {% for p in page.object_list %}
     <a class="wall-item" href="{{ p.get_absolute_url }}">
-      <img src="{{ p.image.url }}" alt="{{ p.caption }}" loading="lazy">
+      <img src="{{ p.image|thumb:480 }}" alt="{{ p.caption }}" loading="lazy">
       <span class="wall-caption">{% if p.event %}<span>{{ p.event.title_tr }}</span>{% endif %}{{ p.caption }}</span>
     </a>
     {% endfor %}

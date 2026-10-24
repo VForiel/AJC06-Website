@@ -236,7 +236,7 @@ fieldset.field legend { font-weight: 700; padding: 0; }
 
 /* Couleurs des nouveaux types */
 .tag-rentree, .tag-meetup { background: var(--azur-soft); color: var(--azur); }
-.tag-afterwork, .tag-coworking { background: #fdf0c4; color: #6b4e00; }
+.tag-afterwork, .tag-soiree, .tag-coworking { background: #fdf0c4; color: #6b4e00; }
 .tag-sport { background: #e3efd9; color: #2f5d1c; }
-.tag-conference, .tag-soutenance { background: #e8e4f4; color: #4a3a7a; }
+.tag-conference, .tag-mediation, .tag-soutenance { background: #e8e4f4; color: #4a3a7a; }
 .tag-autre { background: var(--paper-2); color: var(--ink-2); }

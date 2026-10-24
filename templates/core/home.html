@@ -26,7 +26,7 @@
     <div class="hero-board" aria-hidden="true">
       {% for event in wall|slice:":3" %}
       <a class="pin pin-{{ forloop.counter }}" href="{{ event.get_absolute_url }}" tabindex="-1">
-        <img src="{{ event.poster.url }}" alt="" width="320" height="320"{% if forloop.first %} fetchpriority="high"{% endif %}>
+        <img src="{{ event.poster|thumb:640 }}" alt="" width="320" height="320"{% if forloop.first %} fetchpriority="high"{% endif %}>
       </a>
       {% endfor %}
     </div>
@@ -160,7 +160,7 @@
     <div class="wall">
       {% for event in wall %}
       <a class="wall-item" href="{{ event.get_absolute_url }}">
-        <img src="{{ event.poster.url }}" alt="{% blocktranslate with title=event.title_tr %}Affiche : {{ title }}{% endblocktranslate %}" loading="lazy">
+        <img src="{{ event.poster|thumb:400 }}" alt="{% blocktranslate with title=event.title_tr %}Affiche : {{ title }}{% endblocktranslate %}" loading="lazy">
         <span class="wall-caption"><span>{{ event.start_date|date:"j" }} {{ event.start_date|month_short }} {{ event.start_date|date:"Y" }}</span>{{ event.title_tr }}</span>
       </a>
       {% endfor %}

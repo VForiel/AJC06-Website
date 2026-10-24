@@ -23,6 +23,11 @@ KEEP_DB_DAYS = 60
 KEEP_MEDIA = 8
 
 
+
+def skip_thumbs(info):
+    """Les miniatures (media/thumbs/) se recréent d'elles-mêmes : inutile de les archiver."""
+    return None if info.name.startswith("media/thumbs") else info
+
 class Command(BaseCommand):
     help = "Sauvegarde la base et les fichiers téléversés dans BACKUP_DIR."
 
@@ -54,7 +59,7 @@ class Command(BaseCommand):
             name = target / f"media-{stamp}.tar.gz"
             with tarfile.open(name, "w:gz") as tar:
                 if media.exists():
-                    tar.add(media, arcname="media")
+                    tar.add(media, arcname="media", filter=skip_thumbs)
             self.stdout.write(f"Médias : {name.name}")
             archives = sorted(target.glob("media-*.tar.gz"))
 

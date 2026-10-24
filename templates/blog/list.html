@@ -19,7 +19,7 @@
       <article class="card lead-post">
         <a class="card-link" href="{{ post.get_absolute_url }}">
           <div class="card-media{% if not post.cover %} card-media-empty{% endif %}">
-            {% if post.cover %}<img src="{{ post.cover.url }}" alt="">{% else %}<img src="{% static 'img/logo-mark.svg' %}" alt="">{% endif %}
+            {% if post.cover %}<img src="{{ post.cover|thumb:800 }}" alt="">{% else %}<img src="{% static 'img/logo-mark.svg' %}" alt="">{% endif %}
           </div>
           <div class="card-body">
             <p class="card-meta"><time datetime="{{ post.published_at|date:'c' }}">{{ post.published_at|date:"j F Y" }}</time> · {% blocktranslate with n=post.reading_minutes %}{{ n }} min de lecture{% endblocktranslate %}</p>

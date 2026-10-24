@@ -25,9 +25,11 @@ TYPES = [
     ("visite", _("Visite"), False),
     ("asso", _("Vie de l'asso"), False),
     ("afterwork", _("Afterwork"), False),
+    ("soiree", _("Soirée à thème"), False),
     ("coworking", _("Coworking"), False),
     ("carriere", _("Carrière & formation"), False),
     ("conference", _("Conférence, workshop, séminaire"), False),
+    ("mediation", _("Médiation scientifique"), False),
     ("soutenance", _("Soutenance de thèse"), False),
     ("sport", _("Sport"), False),
     ("autre", _("Autre"), False),
@@ -37,8 +39,8 @@ STAFF_TYPES = {code for code, _label, staff in TYPES if staff}
 # Émojis affichés devant le libellé sur le site (pas dans les PDF : la police n'en a pas). « Autre » n'en a pas.
 TYPE_EMOJIS = {
     "meetup": "🤝", "camp": "⛺", "rentree": "🎒", "plein-air": "🥾", "culture": "🎭", "visite": "🏛️",
-    "asso": "📣", "afterwork": "🍻", "coworking": "💻", "carriere": "💼", "conference": "🎤", "soutenance": "🎓",
-    "sport": "🏃",
+    "asso": "📣", "afterwork": "🍻", "soiree": "🎉", "coworking": "💻", "carriere": "💼", "conference": "🎤", "mediation": "🔬",
+    "soutenance": "🎓", "sport": "🏃",
 }
 
 

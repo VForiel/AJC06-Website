@@ -60,7 +60,7 @@
       {% if photos %}
       <section class="profile-block">
         <h2>{% translate "Photos" %}</h2>
-        <div class="photo-strip">{% for p in photos %}<a href="{{ p.get_absolute_url }}"><img src="{{ p.image.url }}" alt="{{ p.caption }}" loading="lazy"></a>{% endfor %}</div>
+        <div class="photo-strip">{% for p in photos %}<a href="{{ p.get_absolute_url }}"><img src="{{ p.image|thumb:320 }}" alt="{{ p.caption }}" loading="lazy"></a>{% endfor %}</div>
       </section>
       {% endif %}
 

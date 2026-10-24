@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from core.i18n import is_english
+from core.images import thumbnail_url
 
 register = template.Library()
 
@@ -131,3 +132,9 @@ def pending_accounts_count():
     from community.confirmation import pending
 
     return pending().count()
+
+
+@register.filter
+def thumb(image, size=480):
+    """{{ event.poster|thumb:192 }} : URL d'une copie réduite pour les listes et vignettes."""
+    return thumbnail_url(image, int(size))

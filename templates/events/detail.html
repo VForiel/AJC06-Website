@@ -147,7 +147,7 @@
           {% if user.is_authenticated %}<a class="btn btn-ghost" href="{% url 'community:photo_new' %}?evenement={{ event.slug }}">{% icon "plus" 18 %} {% translate "Ajouter une photo" %}</a>{% endif %}
         </header>
         {% if photos %}
-        <div class="photo-strip">{% for p in photos %}<a href="{{ p.get_absolute_url }}"><img src="{{ p.image.url }}" alt="{{ p.caption }}" loading="lazy"></a>{% endfor %}</div>
+        <div class="photo-strip">{% for p in photos %}<a href="{{ p.get_absolute_url }}"><img src="{{ p.image|thumb:320 }}" alt="{{ p.caption }}" loading="lazy"></a>{% endfor %}</div>
         {% else %}
         <p class="help">{% translate "Pas encore de photo de cet événement." %}</p>
         {% endif %}
