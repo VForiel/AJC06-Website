@@ -1,6 +1,6 @@
 """Validation des nouveaux comptes.
 
-Trois modes (réglage ACCOUNT_VALIDATION) :
+Trois modes (réglage « validation des nouveaux comptes » de /gestion/reglages/) :
 - « aucune » : le compte est actif tout de suite ;
 - « courriel » : un lien signé (usage unique, 3 jours) est envoyé ; le bureau peut aussi valider à la main ;
 - « bureau » : le compte attend qu'un membre du bureau le valide dans /gestion/comptes/ (sans serveur mail).
@@ -39,10 +39,10 @@ MODES = ("aucune", "courriel", "bureau")
 
 
 def mode():
-    value = getattr(settings, "ACCOUNT_VALIDATION", "")
-    if value in MODES:
-        return value
-    return "courriel" if getattr(settings, "ACCOUNT_EMAIL_CONFIRMATION", False) else "aucune"  # ancien réglage
+    from siteconfig.models import SiteConfig
+
+    value = SiteConfig.get().account_validation
+    return value if value in MODES else "aucune"
 
 
 def required():

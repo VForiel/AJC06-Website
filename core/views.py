@@ -10,6 +10,7 @@ from django.views.decorators.http import require_GET
 
 from blog.models import Post
 from events.models import Event
+from siteconfig.models import SiteConfig
 
 from .forms import ContactForm
 from .i18n import is_english
@@ -80,8 +81,8 @@ def contact(request):
                 send_mail(
                     f"[Site AJC06] {msg.get_subject_display()} — {msg.name}",
                     f"{msg.message}\n\n— {msg.name} <{msg.email}>",
-                    settings.DEFAULT_FROM_EMAIL,
-                    [settings.CONTACT_EMAIL],
+                    None,
+                    [SiteConfig.get().contact_email],
                     fail_silently=False,
                 )
             except Exception:  # le message reste lisible dans /gestion/

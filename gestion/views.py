@@ -1,8 +1,11 @@
+import smtplib
 from functools import wraps
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import redirect_to_login
+from django.core.mail import EmailMessage
+from django.db import transaction
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
@@ -27,6 +30,9 @@ from projets.models import Attachment, BudgetLine, SupportRequest
 from core import markdown
 from core.models import ContactMessage, Upload
 from events.models import Event
+from siteconfig.forms import SiteConfigForm, TestEmailForm, snapshot
+from siteconfig.mail import backend_for
+from siteconfig.models import ConfigChange, SiteConfig
 
 from .forms import EventForm, PostForm, UploadForm
 
@@ -420,3 +426,68 @@ def effects_page(request):
         "preview": request.session.get("effects_preview"),
         "preview_labels": [str(effects.EFFECTS[c]) for c in request.session.get("effects_preview") or []],
     })
+
+
+# Réglages du site (à la place du .env) ------------------------------------
+
+
+def superuser_required(view):
+    """Réglages techniques (serveur mail, HelloAsso) : réservés aux superutilisateurs."""
+
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path(), reverse("gestion:login"))
+        if not (request.user.is_active and request.user.is_superuser):
+            raise PermissionDenied
+        return view(request, *args, **kwargs)
+
+    return wrapper
+
+
+@superuser_required
+def site_settings(request):
+    config = SiteConfig.get()
+    before = snapshot(config)
+    form = SiteConfigForm(request.POST or None, instance=config)
+    if request.method == "POST" and form.is_valid():
+        with transaction.atomic():
+            form.save()
+            changed = form.changed_labels(before)
+            if changed:
+                ConfigChange.objects.create(user=request.user, fields=", ".join(changed))
+        messages.success(request, "Réglages enregistrés." if changed else "Aucun changement.")
+        return redirect("gestion:settings")
+    return render(request, "gestion/settings.html", {
+        "form": form,
+        "config": config,
+        "test_form": TestEmailForm(initial={"to": request.user.email}),
+        "changes": ConfigChange.objects.select_related("user")[:10],
+    })
+
+
+@superuser_required
+@require_POST
+def test_email(request):
+    form = TestEmailForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, "Adresse de test invalide.")
+        return redirect("gestion:settings")
+    config = SiteConfig.get()
+    if not config.smtp_ready:
+        messages.warning(request, "Aucun serveur SMTP réglé : le courriel n'est parti que dans les journaux du site.")
+    message = EmailMessage(
+        "AJC06 : courriel de test",
+        "Ce message confirme que le site sait envoyer des courriels avec les réglages actuels.\n\n— ajc06.com",
+        config.from_email,
+        [form.cleaned_data["to"]],
+        connection=backend_for(config),
+    )
+    try:
+        message.send()
+    except (smtplib.SMTPException, OSError) as exc:
+        messages.error(request, f"Échec de l'envoi : {exc.__class__.__name__} — {exc}")
+    else:
+        if config.smtp_ready:
+            messages.success(request, f"Courriel de test envoyé à {form.cleaned_data['to']}. Vérifie aussi les indésirables.")
+    return redirect("gestion:settings")

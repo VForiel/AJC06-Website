@@ -1,7 +1,8 @@
 """Réglages du site de l'AJC06.
 
-Tout ce qui change entre le poste de développement et la production passe par des variables d'environnement
-(voir .env.example).
+L'infrastructure passe par des variables d'environnement (voir .env.example). Le courriel, la validation des comptes,
+HelloAsso et l'hébergeur des mentions légales se règlent dans /gestion/reglages/ (app siteconfig) : les variables
+correspondantes ci-dessous ne servent plus que de valeurs de départ, lues une seule fois à la création des réglages.
 """
 
 import os
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
     "gestion",
     "community",
     "projets",
+    "siteconfig",
 ]
 
 MIDDLEWARE = [
@@ -155,30 +157,28 @@ LOGIN_REDIRECT_URL = "community:me"
 AUTHENTICATION_BACKENDS = ["community.auth.EmailBackend", "django.contrib.auth.backends.ModelBackend"]
 LOGOUT_REDIRECT_URL = "core:home"
 
-# Courriel : console en développement, SMTP en production.
-EMAIL_BACKEND = os.environ.get(
-    "EMAIL_BACKEND",
-    "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend",
-)
+# Courriel : serveur lu dans les réglages du site à chaque envoi (siteconfig.mail) ; console tant qu'il n'est pas réglé.
+EMAIL_BACKEND = "siteconfig.mail.ConfigEmailBackend"
+EMAIL_TIMEOUT = 20
+# Valeurs de départ des réglages (anciennes variables du .env, voir siteconfig.models.initial_values).
+ENV_EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "")
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-# Port 465 : EMAIL_USE_SSL=True (Django refuse SSL et TLS ensemble) ; port 587 : STARTTLS par défaut.
 EMAIL_USE_SSL = env_bool("EMAIL_USE_SSL", False)
 EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", not EMAIL_USE_SSL)
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "AJC06 <no-reply@ajc06.com>")
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "contact@ajc06.com")
-# Inscription : le compte n'est actif qu'après ouverture du lien envoyé par courriel (nécessite un SMTP qui marche).
 ACCOUNT_EMAIL_CONFIRMATION = env_bool("ACCOUNT_EMAIL_CONFIRMATION", False)
-# « aucune », « courriel » ou « bureau » (validation à la main dans /gestion/comptes/) ; vide : ACCOUNT_EMAIL_CONFIRMATION décide.
 ACCOUNT_VALIDATION = os.environ.get("ACCOUNT_VALIDATION", "")
-# HelloAsso (API v5) : synchronisation du nombre d'inscrit·es aux événements.
 HELLOASSO_CLIENT_ID = os.environ.get("HELLOASSO_CLIENT_ID", "")
 HELLOASSO_CLIENT_SECRET = os.environ.get("HELLOASSO_CLIENT_SECRET", "")
 HELLOASSO_ORGANIZATION = os.environ.get("HELLOASSO_ORGANIZATION", "association-des-jeunes-chercheurs-des-alpes-mariti")
+# Chiffre les secrets des réglages (mot de passe SMTP, client_secret HelloAsso) ; à défaut, clé dérivée de SECRET_KEY.
+CONFIG_ENCRYPTION_KEY = os.environ.get("CONFIG_ENCRYPTION_KEY", "")
 
-# Hébergeur affiché dans les mentions légales (obligatoire) : à mettre à jour lors du changement d'hébergement.
+# Hébergeur des mentions légales : valeur de départ, modifiable ensuite dans /gestion/reglages/.
 LEGAL_HOST = os.environ.get(
     "LEGAL_HOST",
     "o2switch, 222 boulevard Gustave Flaubert, 63000 Clermont-Ferrand — SIRET 510 909 807 00024.",

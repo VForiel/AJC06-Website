@@ -33,6 +33,7 @@
       <a href="{% url 'gestion:reports' %}"{% if 'report' in name %} aria-current="page"{% endif %}>{% icon "users" 18 %} Signalements</a>
       <a href="{% url 'gestion:announcements' %}"{% if 'announcement' in name %} aria-current="page"{% endif %}>{% icon "mail" 18 %} Bandeau d'annonce</a>
       <a href="{% url 'gestion:effects' %}"{% if name == 'effects' %} aria-current="page"{% endif %}>{% icon "sun" 18 %} Effets saisonniers</a>
+      {% if user.is_superuser %}<a href="{% url 'gestion:settings' %}"{% if name == 'settings' %} aria-current="page"{% endif %}>{% icon "edit" 18 %} Réglages du site</a>{% endif %}
       <a href="{% url 'admin:index' %}">{% icon "edit" 18 %} Équipe, ressources, comptes</a>
     </nav>
     {% endwith %}

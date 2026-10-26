@@ -1,0 +1,81 @@
+{% extends "gestion/base.html" %}
+{% load ajc %}
+{% block title %}Réglages du site{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <h1>Réglages du site</h1>
+    <p class="g-muted">Ces réglages remplacent le fichier <code>.env</code> et s'appliquent immédiatement, sans redémarrage.
+      Les mots de passe et secrets sont chiffrés en base et ne sont jamais réaffichés.</p>
+  </div>
+</header>
+
+<form class="g-form-plain" method="post" novalidate>
+  {% csrf_token %}
+  {% if form.errors %}<p class="form-error" tabindex="-1" data-form-error>Rien n'est enregistré : corrige les champs signalés.</p>{% endif %}
+  {{ form.non_field_errors }}
+
+  <section class="g-panel">
+    <h2 class="g-panel-title">Courriel</h2>
+    <p class="g-help">Mot de passe oublié, confirmation d'inscription, formulaire de contact. Chez o2switch : serveur
+      <code>mail.ajc06.com</code> (ou le nom indiqué dans cPanel › Comptes de messagerie › Configurer le client), port 465, SSL/TLS,
+      identifiant = adresse complète.</p>
+    <div class="g-grid g-grid-2">
+      {% include "gestion/_field.html" with field=form.smtp_host %}
+      {% include "gestion/_field.html" with field=form.smtp_port %}
+      {% include "gestion/_field.html" with field=form.smtp_security %}
+      {% include "gestion/_field.html" with field=form.smtp_user %}
+      {% include "gestion/_field.html" with field=form.smtp_password %}
+      {% include "gestion/_field.html" with field=form.clear_smtp_password %}
+      {% include "gestion/_field.html" with field=form.from_email %}
+      {% include "gestion/_field.html" with field=form.contact_email %}
+    </div>
+  </section>
+
+  <section class="g-panel">
+    <h2 class="g-panel-title">Comptes membres</h2>
+    {% include "gestion/_field.html" with field=form.account_validation %}
+  </section>
+
+  <section class="g-panel">
+    <h2 class="g-panel-title">HelloAsso</h2>
+    <p class="g-help">Nombre d'inscrit·es synchronisé toutes les heures. Identifiants dans HelloAsso › Mon compte ›
+      Intégrations et API.{% if config.helloasso_ready %} <strong>Configuré.</strong>{% endif %}</p>
+    <div class="g-grid g-grid-2">
+      {% include "gestion/_field.html" with field=form.helloasso_client_id %}
+      {% include "gestion/_field.html" with field=form.helloasso_organization %}
+      {% include "gestion/_field.html" with field=form.helloasso_client_secret %}
+      {% include "gestion/_field.html" with field=form.clear_helloasso_client_secret %}
+    </div>
+  </section>
+
+  <section class="g-panel">
+    <h2 class="g-panel-title">Mentions légales</h2>
+    {% include "gestion/_field.html" with field=form.legal_host %}
+  </section>
+
+  <div class="g-buttons g-buttons-row"><button class="btn btn-primary" type="submit">{% icon "check" 18 %} Enregistrer</button></div>
+</form>
+
+<section class="g-panel g-settings-test">
+  <h2 class="g-panel-title">Tester l'envoi</h2>
+  <form class="g-inline-form" method="post" action="{% url 'gestion:test_email' %}">
+    {% csrf_token %}
+    <label for="{{ test_form.to.id_for_label }}">{{ test_form.to.label }}</label>
+    {{ test_form.to }}
+    <button class="btn btn-ghost" type="submit">{% icon "mail" 18 %} Envoyer</button>
+  </form>
+  <p class="g-help">Le test utilise les réglages enregistrés : enregistre d'abord. Passe la validation des comptes à
+    « par lien » seulement une fois ce courriel bien reçu.</p>
+</section>
+
+{% if changes %}
+<section class="g-panel">
+  <h2 class="g-panel-title">Dernières modifications</h2>
+  <ul class="g-log">
+    {% for c in changes %}<li><time>{{ c.changed_at|date:"d/m/Y H:i" }}</time> · {{ c.user|default:"?" }} · {{ c.fields }}</li>{% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

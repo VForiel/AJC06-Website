@@ -55,7 +55,7 @@ N'importe qui peut créer un compte (`/compte/inscription/`, connexion par courr
 - **garde-fous** : piège à robots et 5 inscriptions par heure et par adresse IP, 5 sorties par jour et par membre ;
 - **RGPD** : suppression du compte par la personne elle-même, politique de confidentialité à jour.
 
-Validation des nouveaux comptes, réglage `ACCOUNT_VALIDATION` :
+Validation des nouveaux comptes, réglage « validation des nouveaux comptes » de `/gestion/reglages/` :
 
 - `aucune` : compte actif dès l'inscription ;
 - `bureau` : le compte attend qu'un membre du bureau le valide (ou le refuse) dans `/gestion/comptes/`, signalé dans
@@ -81,11 +81,21 @@ n'apparaît que dans les journaux).
   site), photos, et devis/factures annexés. Génération dans `projets/pdf.py` (fpdf2 + pypdf, polices Archivo statiques
   dans `static/fonts/pdf/`).
 - **HelloAsso** : `python manage.py sync_helloasso` récupère les billets des événements dont le lien d'inscription pointe
-  vers un formulaire de l'AJC06 (cron horaire en production). Variables `HELLOASSO_CLIENT_ID` et `HELLOASSO_CLIENT_SECRET`.
+  vers un formulaire de l'AJC06 (cron horaire en production). Identifiants dans `/gestion/reglages/`.
 - **Photos** (`/photos/`) : tout membre peut en publier, liées ou non à un événement, en identifiant d'autres membres ;
   l'accord des personnes photographiées est obligatoire, une personne identifiée peut se retirer ou signaler la photo.
 - **Coordonnées** du profil (téléphone, WhatsApp, Discord, Instagram, Facebook, X, autre) : jamais publiques,
   visibles des amis par défaut.
+
+## Réglages du site (à la place du .env)
+
+`/gestion/reglages/` (superutilisateurs seulement) règle sans toucher au `.env` ni redémarrer : serveur mail (avec un
+bouton « courriel de test »), expéditeur et adresse de contact, validation des nouveaux comptes, identifiants HelloAsso,
+hébergeur des mentions légales. Les secrets (mot de passe SMTP, client_secret HelloAsso) sont chiffrés en base avec
+`CONFIG_ENCRYPTION_KEY` (à défaut, une clé dérivée de `DJANGO_SECRET_KEY`) et ne sont jamais réaffichés ; chaque
+modification est journalisée. À la première lecture, les réglages reprennent les anciennes variables du `.env`
+(`EMAIL_*`, `ACCOUNT_VALIDATION`, `HELLOASSO_*`, `CONTACT_EMAIL`, `LEGAL_HOST`), qui ne servent plus ensuite.
+Module partagé avec le site Nice-Event (`siteconfig/`).
 
 ## Effets saisonniers et annonces
 

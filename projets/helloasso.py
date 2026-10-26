@@ -32,8 +32,14 @@ class HelloAssoError(Exception):
     pass
 
 
+def config():
+    from siteconfig.models import SiteConfig
+
+    return SiteConfig.get()
+
+
 def configured():
-    return bool(settings.HELLOASSO_CLIENT_ID and settings.HELLOASSO_CLIENT_SECRET)
+    return config().helloasso_ready
 
 
 def parse_link(url):
@@ -59,10 +65,11 @@ def token():
     cached = cache.get("helloasso:token")
     if cached:
         return cached
+    current = config()
     data = urllib.parse.urlencode({
         "grant_type": "client_credentials",
-        "client_id": settings.HELLOASSO_CLIENT_ID,
-        "client_secret": settings.HELLOASSO_CLIENT_SECRET,
+        "client_id": current.helloasso_client_id,
+        "client_secret": current.helloasso_client_secret,
     }).encode()
     answer = _request(f"{API}/oauth2/token", data, {"Content-Type": "application/x-www-form-urlencoded"})
     cache.set("helloasso:token", answer["access_token"], max(60, int(answer.get("expires_in", 1800)) - 120))
@@ -93,7 +100,7 @@ def sync_event(event):
     if not link or not configured():
         return None
     org, form_type, slug = link
-    if org != settings.HELLOASSO_ORGANIZATION:
+    if org != config().helloasso_organization:
         return None  # formulaire d'une autre organisation : pas d'accès
     items = [i for i in form_items(org, form_type, slug) if i.get("type") in ("Registration", "Membership", None)]
     seen = set()

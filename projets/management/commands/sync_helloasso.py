@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not helloasso.configured():
-            self.stderr.write("HELLOASSO_CLIENT_ID / HELLOASSO_CLIENT_SECRET absents : rien à faire.")
+            self.stderr.write("Identifiants HelloAsso absents (/gestion/reglages/) : rien à faire.")
             return
         events = Event.objects.filter(registration_url__contains="helloasso.com")
         if not options["all"]:

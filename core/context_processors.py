@@ -1,6 +1,7 @@
 from django.conf import settings
 
 from events.models import Event
+from siteconfig.models import SiteConfig
 
 from . import effects
 from .models import Announcement
@@ -21,10 +22,11 @@ HELLOASSO = "https://www.helloasso.com/associations/association-des-jeunes-cherc
 
 
 def site(request):
+    config = SiteConfig.get()
     return {
         "SITE_URL": settings.SITE_URL,
-        "CONTACT_EMAIL": settings.CONTACT_EMAIL,
-        "LEGAL_HOST": settings.LEGAL_HOST,
+        "CONTACT_EMAIL": config.contact_email,
+        "LEGAL_HOST": config.legal_host,
         "SOCIALS": SOCIALS,
         "WHATSAPP_URL": WHATSAPP_URL,
         "INSTAGRAM_URL": INSTAGRAM_URL,
