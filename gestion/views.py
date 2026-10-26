@@ -1,4 +1,5 @@
 import smtplib
+import socket
 from functools import wraps
 
 from django.contrib import messages
@@ -37,6 +38,17 @@ from siteconfig.models import ConfigChange, SiteConfig
 from .forms import EventForm, PostForm, UploadForm
 
 User = get_user_model()
+
+
+def smtp_error_message(exc):
+    """Message compréhensible pour les erreurs d'envoi les plus courantes."""
+    if isinstance(exc, (smtplib.SMTPAuthenticationError, smtplib.SMTPServerDisconnected)):
+        return ("Le serveur a refusé l'identifiant ou le mot de passe (Gmail coupe la connexion dans ce cas). "
+                "Avec Google : identifiant = vrai compte (pas un alias), validation en deux étapes activée et "
+                "mot de passe d'application de 16 lettres.")
+    if isinstance(exc, (socket.timeout, TimeoutError, ConnectionRefusedError)):
+        return "Serveur injoignable : vérifie le nom du serveur, le port et la sécurité (465 = SSL, 587 = STARTTLS)."
+    return f"{exc.__class__.__name__} — {exc}"
 
 
 def editor_required(view):
@@ -485,8 +497,8 @@ def test_email(request):
     )
     try:
         message.send()
-    except (smtplib.SMTPException, OSError) as exc:
-        messages.error(request, f"Échec de l'envoi : {exc.__class__.__name__} — {exc}")
+    except (smtplib.SMTPException, OSError, socket.timeout) as exc:
+        messages.error(request, f"Échec de l'envoi : {smtp_error_message(exc)}")
     else:
         if config.smtp_ready:
             messages.success(request, f"Courriel de test envoyé à {form.cleaned_data['to']}. Vérifie aussi les indésirables.")
