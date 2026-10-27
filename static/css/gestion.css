@@ -195,3 +195,12 @@
 .g-inline-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
 .g-inline-form input { flex: 1 1 260px; min-height: 48px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); color: var(--ink); font: inherit; }
 .g-log { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: .9375rem; }
+
+/* Diffusion des événements */
+.g-previews { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+.g-previews a { display: grid; gap: 4px; color: var(--ink-2); font-size: .8125rem; text-decoration: none; }
+.g-previews img { height: 220px; width: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+.g-networks { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); }
+.g-network textarea { width: 100%; }
+.g-network.is-off { opacity: .7; }
+.g-network legend { font-weight: 700; }

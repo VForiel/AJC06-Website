@@ -118,7 +118,7 @@ class ProfileForm(PartialSaveMixin, forms.ModelForm):
         model = Profile
         fields = [
             "display_name", "pronouns", "avatar", "headline", "discipline", "doctoral_school", "lab", "stage",
-            "thesis_title", "bio", "interests", "linkedin", "website", "orcid", "accent", "visibility", "show_events",
+            "thesis_title", "bio", "interests", "linkedin", "website", "orcid", "accent", "visibility", "show_events", "past_events",
             "phone", "whatsapp", "discord", "instagram", "facebook", "x", "other_contact", "contact_visibility",
         ]
         widgets = {
@@ -127,6 +127,7 @@ class ProfileForm(PartialSaveMixin, forms.ModelForm):
             "accent": forms.RadioSelect,
             "visibility": forms.RadioSelect,
             "contact_visibility": forms.RadioSelect,
+            "past_events": forms.RadioSelect,
             "thesis_title": forms.Textarea(attrs={"rows": 2}),
             "phone": forms.TextInput(attrs={"type": "tel", "autocomplete": "tel"}),
             "whatsapp": forms.TextInput(attrs={"type": "tel"}),
@@ -356,28 +357,83 @@ class SupportRequestForm(forms.ModelForm):
         return amount
 
 
-class PhotoForm(forms.ModelForm):
-    consent = forms.BooleanField(label=_("Toutes les personnes reconnaissables sur cette photo m'ont donné leur accord pour qu'elle soit publiée sur le site."))
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput(attrs={"accept": "image/*,video/mp4,video/webm,video/quicktime"}))
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        if isinstance(data, (list, tuple)):
+            return [super(MultipleFileField, self).clean(d, initial) for d in data if d]
+        return [super().clean(data, initial)] if data else []
+
+
+class PhotoForm(forms.Form):
+    """Plusieurs photos et vidéos d'un coup, et/ou des liens vers des médias hébergés ailleurs (un par ligne)."""
+
+    MAX_ITEMS = 20
+
+    files = MultipleFileField(label=_("Photos et vidéos"), required=False,
+                              help_text=_("Plusieurs fichiers à la fois. Photos jusqu'à 12 Mo (converties en WebP), "
+                                          "vidéos MP4, MOV ou WebM jusqu'à 50 Mo."))
+    links = forms.CharField(label=_("Ou des liens"), required=False, widget=forms.Textarea(attrs={"rows": 3}),
+                            help_text=_("Un par ligne : YouTube, Vimeo, Dailymotion (lus sur place), Pinterest, "
+                                        "Google Photos, Drive, Flickr… Pratique pour les vidéos lourdes ou les albums."))
+    caption = forms.CharField(label=_("Légende"), max_length=200, required=False)
+    event = forms.ModelChoiceField(label=_("Événement"), queryset=Event.objects.none(), required=False)
+    consent = forms.BooleanField(label=_("Les personnes reconnaissables sur ces photos et vidéos m'ont donné leur accord "
+                                         "pour qu'elles soient publiées sur le site."))
     tagged_handles = forms.CharField(required=False, label=_("Autres membres présents"),
                                      help_text=_("Leurs adresses de profil, séparées par des virgules (ex. lea-moreau, karim-benali). Ils seront prévenus."))
-
-    class Meta:
-        model = Photo
-        fields = ["image", "caption", "event"]
-        widgets = {"image": forms.ClearableFileInput(attrs={"accept": "image/*"})}
 
     def __init__(self, user, *args, **kwargs):
         from .models import friends_of
 
         super().__init__(*args, **kwargs)
         self.fields["friends"] = forms.ModelMultipleChoiceField(
-            label=_("Tes amis présents sur la photo"), required=False, widget=forms.CheckboxSelectMultiple,
+            label=_("Tes amis présents"), required=False, widget=forms.CheckboxSelectMultiple,
             queryset=friends_of(user).order_by("profile__display_name"))
         self.fields["friends"].label_from_instance = lambda u: u.profile.display_name
-        self.fields["image"].required = True
-        self.fields["event"].required = False
         self.fields["event"].queryset = Event.objects.published().order_by("-start_date")
         self.fields["event"].empty_label = _("Aucun (photo libre)")
+
+    def clean_files(self):
+        from django.core.exceptions import ValidationError
+
+        from core.images import is_video_name, validate_image, validate_video
+
+        items, errors = [], []
+        for f in self.cleaned_data["files"]:
+            try:
+                if is_video_name(f.name):
+                    validate_video(f)
+                    items.append(("video", f))
+                else:
+                    validate_image(f)
+                    items.append(("photo", f))
+            except ValidationError as exc:
+                hint = _("ou partage-la par un lien (Google Photos, Flickr…)") if not is_video_name(f.name) else ""
+                errors.append(f"{f.name} : {' '.join(exc.messages)} {hint}".strip())
+        if errors:
+            raise forms.ValidationError(errors)
+        return items
+
+    def clean_links(self):
+        from core.embeds import parse
+
+        links, bad = [], []
+        for line in self.cleaned_data["links"].split():
+            if not line.startswith(("http://", "https://")):
+                line = "https://" + line
+            line = line.replace("http://", "https://", 1)
+            (links if parse(line) and len(line) <= 500 else bad).append(line)
+        if bad:
+            raise forms.ValidationError(_("Lien non valable : %(list)s") % {"list": ", ".join(bad)})
+        return links
 
     def clean_tagged_handles(self):
         handles = [h.strip().lower() for h in self.cleaned_data["tagged_handles"].replace(";", ",").split(",") if h.strip()]
@@ -387,10 +443,23 @@ class PhotoForm(forms.ModelForm):
             raise forms.ValidationError(_("Profil inconnu : %(list)s") % {"list": ", ".join(unknown)})
         return [p.user for p in profiles]
 
+    def clean(self):
+        data = super().clean()
+        count = len(data.get("files") or []) + len(data.get("links") or [])
+        if not count and not self.errors:
+            raise forms.ValidationError(_("Ajoute au moins une photo, une vidéo ou un lien."))
+        if count > self.MAX_ITEMS:
+            raise forms.ValidationError(_("%(n)s éléments au plus à la fois.") % {"n": self.MAX_ITEMS})
+        return data
+
     def tagged_users(self):
         users = {u.pk: u for u in self.cleaned_data.get("friends") or []}
         users.update({u.pk: u for u in self.cleaned_data.get("tagged_handles") or []})
         return list(users.values())
+
+
+class CommentForm(forms.Form):
+    body = forms.CharField(label=_("Ton commentaire"), max_length=2000, widget=forms.Textarea(attrs={"rows": 3}))
 
 
 class ReportForm(forms.Form):

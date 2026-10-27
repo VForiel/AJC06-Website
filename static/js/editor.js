@@ -113,3 +113,15 @@
   form.addEventListener("submit", function () { dirty = false; });
   window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
 })();
+
+// Diffusion : nombre de caractères sous chaque texte
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-count-for]").forEach(function (out) {
+    var field = document.getElementById(out.dataset.countFor);
+    if (!field) return;
+    var update = function () { out.textContent = field.value.length; };
+    field.addEventListener("input", update);
+    update();
+  });
+})();

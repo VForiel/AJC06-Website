@@ -106,6 +106,9 @@ def privacy(request):
 
 @require_GET
 def robots(request):
+    from social.service import kick
+
+    kick()  # appelé toutes les 5 minutes par le cron de maintien en éveil : envoie les diffusions programmées
     lines = ["User-agent: *", "Disallow: /gestion/", "Disallow: /admin/", f"Sitemap: {settings.SITE_URL}/sitemap.xml"]
     return HttpResponse("\n".join(lines) + "\n", content_type="text/plain")
 

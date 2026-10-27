@@ -51,6 +51,11 @@ class Profile(models.Model):
         MEMBERS = "membres", _("Tous les membres connectés")
         NOBODY = "personne", _("Personne")
 
+    class PastVisibility(models.TextChoices):
+        PROFILE = "profil", _("Tous ceux qui voient mon profil")
+        FRIENDS = "amis", _("Mes amis uniquement")
+        ME = "moi", _("Moi seul·e")
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     handle = models.SlugField(_("adresse du profil"), unique=True, max_length=60)
     display_name = models.CharField(_("nom affiché"), max_length=80)
@@ -72,7 +77,9 @@ class Profile(models.Model):
     accent = models.CharField(_("couleur du profil"), max_length=10, choices=Accent.choices, default=Accent.AZUR)
     visibility = models.CharField(_("qui peut voir mon profil"), max_length=10, choices=Visibility.choices,
                                   default=Visibility.MEMBERS)
-    show_events = models.BooleanField(_("afficher les événements auxquels je participe"), default=True)
+    show_events = models.BooleanField(_("afficher les événements à venir auxquels je participe"), default=True)
+    past_events = models.CharField(_("qui voit les événements auxquels j'ai participé"), max_length=10,
+                                   choices=PastVisibility.choices, default=PastVisibility.PROFILE)
     # Faux tant que le lien de confirmation n'a pas été ouvert (le compte reste alors inactif).
     email_confirmed = models.BooleanField("adresse confirmée", default=True)
     # Coordonnées : jamais publiques, visibles selon contact_visibility.
@@ -133,6 +140,11 @@ class Profile(models.Model):
         if not user.is_authenticated or self.contact_visibility == self.ContactVisibility.NOBODY:
             return False
         return self.contact_visibility == self.ContactVisibility.MEMBERS or rel == "friends"
+
+    def past_events_visible_to(self, rel):
+        if rel == "self" or self.past_events == self.PastVisibility.PROFILE:
+            return True
+        return self.past_events == self.PastVisibility.FRIENDS and rel == "friends"
 
     @property
     def whatsapp_link(self):
@@ -231,6 +243,7 @@ class Report(models.Model):
     event = models.ForeignKey("events.Event", null=True, blank=True, on_delete=models.CASCADE, related_name="reports")
     photo = models.ForeignKey("Photo", null=True, blank=True, on_delete=models.CASCADE, related_name="reports")
     profile = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.CASCADE, related_name="reports")
+    comment = models.ForeignKey("Comment", null=True, blank=True, on_delete=models.CASCADE, related_name="reports")
     reason = models.TextField("motif")
     created_at = models.DateTimeField(auto_now_add=True)
     handled = models.BooleanField("traité", default=False)
@@ -241,14 +254,23 @@ class Report(models.Model):
 
     @property
     def target(self):
-        return self.event or self.photo or self.profile
+        return self.comment or self.event or self.photo or self.profile
 
 
 class Photo(models.Model):
-    """Photo partagée par un membre, liée ou non à un événement, avec les membres présents identifiés."""
+    """Photo, vidéo ou lien vers un média hébergé ailleurs (YouTube, Google Photos…), partagé par un membre, lié ou
+    non à un événement, avec les membres présents identifiés."""
+
+    class Kind(models.TextChoices):
+        PHOTO = "photo", _("Photo")
+        VIDEO = "video", _("Vidéo")
+        LINK = "lien", _("Lien")
 
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="photos")
-    image = models.ImageField(_("photo"), upload_to="photos/%Y/", validators=[validate_image])
+    kind = models.CharField(max_length=5, choices=Kind.choices, default=Kind.PHOTO)
+    image = models.ImageField(_("photo"), upload_to="photos/%Y/", blank=True, validators=[validate_image])
+    video = models.FileField(_("vidéo"), upload_to="photos/%Y/", blank=True)
+    url = models.URLField(_("lien"), max_length=500, blank=True)
     caption = models.CharField(_("légende"), max_length=200, blank=True)
     event = models.ForeignKey("events.Event", null=True, blank=True, on_delete=models.SET_NULL, related_name="photos",
                               verbose_name=_("événement"))
@@ -263,14 +285,46 @@ class Photo(models.Model):
         verbose_name = "photo"
 
     def __str__(self):
-        return self.caption or self.image.name.rsplit("/", 1)[-1]
+        return self.caption or self.url or (self.image or self.video).name.rsplit("/", 1)[-1]
 
     def save(self, *args, **kwargs):
         normalize_field(self, "image")
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        for field in (self.image, self.video):
+            if field:
+                field.delete(save=False)
+        return super().delete(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse("community:photo", args=[self.pk])
+
+    @property
+    def embed(self):
+        from core.embeds import parse
+
+        return parse(self.url) if self.url else None
+
+
+class Comment(models.Model):
+    """Commentaire d'un membre sur un événement."""
+
+    event = models.ForeignKey("events.Event", on_delete=models.CASCADE, related_name="comments")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
+    body = models.TextField(_("commentaire"), max_length=2000)
+    is_hidden = models.BooleanField("masqué", default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+        verbose_name = "commentaire"
+
+    def __str__(self):
+        return self.body if len(self.body) <= 60 else self.body[:59] + "…"
+
+    def get_absolute_url(self):
+        return f"{self.event.get_absolute_url()}#commentaire-{self.pk}"
 
 
 class AlertPreference(models.Model):

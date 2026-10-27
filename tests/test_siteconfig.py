@@ -73,7 +73,8 @@ class SettingsPageTests(TestCase):
         values = {"smtp_host": "mail.ajc06.com", "smtp_port": 465, "smtp_security": "ssl", "smtp_user": "contact@ajc06.com",
                   "smtp_password": "", "from_email": "AJC06 <contact@ajc06.com>", "contact_email": "contact@ajc06.com",
                   "account_validation": "bureau", "helloasso_client_id": "id", "helloasso_client_secret": "",
-                  "helloasso_organization": "association-des-jeunes-chercheurs-des-alpes-mariti", "legal_host": "o2switch"}
+                  "helloasso_organization": "association-des-jeunes-chercheurs-des-alpes-mariti", "legal_host": "o2switch",
+                  "meta_api_version": "v24.0", "email_diffusion_enabled": "on"}
         values.update(overrides)
         return values
 

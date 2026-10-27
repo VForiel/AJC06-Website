@@ -4,6 +4,7 @@ from itertools import groupby
 from django.conf import settings
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views.decorators.cache import cache_control
 
 from .ical import calendar
@@ -50,8 +51,17 @@ def event_detail(request, slug):
     if not others:
         others = Event.objects.published().past().with_type(event.main_type).exclude(pk=event.pk).exclude(poster="")[:3]
     attendees = [a.user for a in Attendance.objects.filter(event=event, user__is_active=True).select_related("user__profile")]
+    from community.forms import CommentForm
+    from community.models import Comment
+
     context = {"event": event, "others": others, "attendees": attendees, "attendee_count": len(attendees),
-               "visible": visible, "photos": photos}
+               "visible": visible, "photos": photos,
+               "comments": Comment.objects.filter(event=event, is_hidden=False, author__is_active=True)
+               .select_related("author__profile"),
+               "comment_form": CommentForm(),
+               "share_url": request.build_absolute_uri(event.get_absolute_url()),
+               "share_text": share_text(event),
+               "story_url": reverse("events:visual", args=[event.slug, "story"]) + "?telecharger=1"}
     if request.user.is_authenticated:
         friends = list(friends_of(request.user))
         going_ids = {u.pk for u in attendees}
@@ -62,6 +72,33 @@ def event_detail(request, slug):
             "can_edit": event.is_community and (event.organizer_id == request.user.pk or request.user.is_staff),
         })
     return render(request, "events/detail.html", context)
+
+
+def share_text(event):
+    """Texte des liens de partage : « PhD meet-up de rentrée — 17 janvier 2026, Nice »."""
+    from core.templatetags.ajc import when
+
+    place = f", {event.venue}" if event.venue else ""
+    return f"{event.title_tr} — {when(event)}{place}"
+
+
+VISUALS = {"og", "portrait", "story"}
+
+
+def event_visual(request, slug, fmt):
+    """Visuel généré de l'événement (story à télécharger, diffusion sur les réseaux et par courriel)."""
+    from django.http import FileResponse
+
+    from social.visuals import visual_path
+
+    event = get_object_or_404(Event, slug=slug)
+    if fmt not in VISUALS or not (event.is_published and not event.on_hold or request.user.is_staff):
+        raise Http404
+    response = FileResponse(open(visual_path(event, fmt), "rb"), content_type="image/jpeg")
+    response["Cache-Control"] = "public, max-age=3600"
+    if request.GET.get("telecharger"):
+        response["Content-Disposition"] = f'attachment; filename="ajc06-{event.slug}-{fmt}.jpg"'
+    return response
 
 
 def _ics_response(body, filename):

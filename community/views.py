@@ -25,9 +25,9 @@ from projets.models import SupportRequest
 
 from . import confirmation
 
-from .forms import (AlertForm, CommunityEventForm, DeleteAccountForm, EmailForm, PhotoForm, ProfileForm, ReportForm, SignupForm,
+from .forms import (AlertForm, CommentForm, CommunityEventForm, DeleteAccountForm, EmailForm, PhotoForm, ProfileForm, ReportForm, SignupForm,
                     SupportRequestForm)
-from .models import (AlertPreference, Attendance, Friendship, Notification, Photo, Profile, Report, friends_of,
+from .models import (AlertPreference, Attendance, Comment, Friendship, Notification, Photo, Profile, Report, friends_of,
                      relation)
 
 SIGNUPS_PER_HOUR = 5
@@ -219,9 +219,14 @@ def profile(request, handle):
         going = (Event.objects.published().upcoming().filter(attendances__user=person.user)
                  .exclude(organizer=person.user).select_related("organizer__profile")[:6])
     organized = Event.objects.published().filter(organizer=person.user).order_by("-start_date")[:6]
+    went = []
+    if person.past_events_visible_to(rel):
+        went = (Event.objects.published().past().filter(attendances__user=person.user)
+                .select_related("organizer__profile")[:12])
     return render(request, "community/profile.html", {
         "person": person, "rel": rel, "friends": friends_of(person.user)[:12],
         "friend_count": friends_of(person.user).count(), "going": going, "organized": organized, "today": today,
+        "went": went,
         "photos": photos, "show_contacts": person.has_contacts and person.contacts_visible_to(request.user, rel),
     })
 
@@ -365,20 +370,33 @@ def invite(request, slug):
     return redirect(event.get_absolute_url() + "#participants")
 
 
+AUTO_HIDE_REPORTS = 3
+
+
 @login_required
 def report(request, kind, key):
     if kind == "evenement":
         target = get_object_or_404(Event, slug=key)
     elif kind == "photo":
         target = get_object_or_404(Photo, pk=key)
-    else:
+    elif kind == "commentaire":
+        target = get_object_or_404(Comment.objects.select_related("event"), pk=key if key.isdigit() else 0, is_hidden=False)
+    elif kind == "profil":
         target = get_object_or_404(Profile, handle=key)
+    else:
+        raise Http404
     form = ReportForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         Report.objects.create(reporter=request.user, reason=form.cleaned_data["reason"],
                               event=target if kind == "evenement" else None,
                               photo=target if kind == "photo" else None,
-                              profile=target if kind not in ("evenement", "photo") else None)
+                              comment=target if kind == "commentaire" else None,
+                              profile=target if kind == "profil" else None)
+        if kind == "commentaire":
+            reporters = Report.objects.filter(comment=target, handled=False).values("reporter").distinct().count()
+            if reporters >= AUTO_HIDE_REPORTS:  # masqué en attendant le bureau
+                target.is_hidden = True
+                target.save(update_fields=["is_hidden"])
         messages.success(request, _("Merci, le bureau va regarder ça."))
         return redirect(target.get_absolute_url())
     return render(request, "community/report.html", {"form": form, "target": target})
@@ -408,21 +426,28 @@ def photo_new(request):
     initial = {}
     slug = request.GET.get("evenement")
     if slug:
-        event = Event.objects.published().filter(slug=slug).first()
-        initial["event"] = event
+        initial["event"] = Event.objects.published().filter(slug=slug).first()
     form = PhotoForm(request.user, request.POST or None, request.FILES or None, initial=initial)
     if request.method == "POST" and form.is_valid():
-        if throttled(f"photos:{request.user.pk}", 40, 86400):
+        data = form.cleaned_data
+        count = len(data["files"]) + len(data["links"])
+        if throttled(f"photos:{request.user.pk}", 60, 86400, cost=count):
             messages.error(request, _("Beaucoup de photos aujourd'hui : réessaie demain."))
             return redirect("community:photos")
-        item = form.save(commit=False)
-        item.uploader, item.consent = request.user, True
-        item.save()
-        for user in form.tagged_users():
-            item.tagged.add(user)
-            notify(user, request.user, Notification.Verb.PHOTO_TAG, item.event, photo=item)
-        messages.success(request, _("Photo publiée. Merci !"))
-        return redirect(item.get_absolute_url())
+        common = {"uploader": request.user, "consent": True, "event": data["event"], "caption": data["caption"].strip()}
+        items = [Photo(kind=Photo.Kind.PHOTO if kind == "photo" else Photo.Kind.VIDEO,
+                       **({"image": f} if kind == "photo" else {"video": f}), **common) for kind, f in data["files"]]
+        items += [Photo(kind=Photo.Kind.LINK, url=link, **common) for link in data["links"]]
+        tagged = form.tagged_users()
+        for item in items:
+            item.save()
+            item.tagged.add(*tagged)
+        for user in tagged:  # une seule notification par personne, même pour plusieurs photos
+            notify(user, request.user, Notification.Verb.PHOTO_TAG, data["event"], photo=items[0])
+        messages.success(request, _("Merci ! %(n)s élément(s) ajouté(s).") % {"n": count})
+        if data["event"]:
+            return redirect(data["event"].get_absolute_url() + "#photos")
+        return redirect(items[0].get_absolute_url() if count == 1 else "community:photos")
     return render(request, "community/photo_form.html", {"form": form})
 
 
@@ -441,7 +466,6 @@ def photo_delete(request, pk):
     item = get_object_or_404(Photo, pk=pk)
     if item.uploader_id != request.user.pk and not request.user.is_staff:
         return HttpResponseForbidden()
-    item.image.delete(save=False)
     item.delete()
     messages.success(request, _("Photo supprimée."))
     return redirect("community:photos")
@@ -456,3 +480,36 @@ def event_publish(request, slug):
     event.save(update_fields=["is_published"])
     messages.success(request, _("C'est en ligne ! Invite tes amis depuis la page de l'événement."))
     return redirect(event.get_absolute_url())
+
+
+# Commentaires -------------------------------------------------------------------
+
+
+@login_required
+@require_POST
+def comment_new(request, slug):
+    event = get_object_or_404(Event.objects.published(), slug=slug)
+    form = CommentForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, _("Écris quelques mots (2 000 caractères au plus)."))
+    elif throttled(f"comments:{request.user.pk}", 30, 3600):
+        messages.error(request, _("Beaucoup de commentaires en peu de temps : réessaie plus tard."))
+    else:
+        comment = Comment.objects.create(event=event, author=request.user, body=form.cleaned_data["body"].strip())
+        messages.success(request, _("Commentaire publié."))
+        return redirect(comment.get_absolute_url())
+    return redirect(event.get_absolute_url() + "#commentaires")
+
+
+@login_required
+@require_POST
+def comment_delete(request, pk):
+    comment = get_object_or_404(Comment.objects.select_related("event"), pk=pk)
+    if comment.author_id != request.user.pk and not request.user.is_staff:
+        raise Http404
+    comment.delete()
+    messages.success(request, _("Commentaire supprimé."))
+    target = request.POST.get("next", "")
+    if target.startswith("/gestion/"):
+        return redirect(target)
+    return redirect(comment.event.get_absolute_url() + "#commentaires")

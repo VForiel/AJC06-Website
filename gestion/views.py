@@ -201,7 +201,8 @@ def inbox_toggle(request, pk):
 @editor_required
 def reports(request):
     return render(request, "gestion/reports.html", {
-        "items": Report.objects.select_related("reporter__profile", "event", "profile")[:200],
+        "items": Report.objects.select_related("reporter__profile", "event", "profile", "photo",
+                                             "comment__event", "comment__author__profile")[:200],
     })
 
 
@@ -503,3 +504,89 @@ def test_email(request):
         if config.smtp_ready:
             messages.success(request, f"Courriel de test envoyé à {form.cleaned_data['to']}. Vérifie aussi les indésirables.")
     return redirect("gestion:settings")
+
+
+# Diffusion des événements (Instagram, Facebook, courriel) -------------------
+
+
+@editor_required
+def diffuse(request, pk):
+    from social.forms import DiffusionForm
+    from social.models import Post
+    from social.service import claim, send
+    from social.visuals import visual_url
+
+    event = get_object_or_404(Event, pk=pk)
+    config = SiteConfig.get()
+    form = DiffusionForm(request.POST or None, event=event, config=config)
+    if request.method == "POST" and form.is_valid():
+        data = form.cleaned_data
+        at = data["scheduled_at"] if data["when"] == "later" else timezone.now()
+        posts = [Post.objects.create(
+            event=event, network=n, text=data[f"text_{n}"].strip(), scheduled_at=at, created_by=request.user,
+            subject=data["subject"].strip() if n == "email" else "", recipients=data["recipients"] if n == "email" else "",
+        ) for n in data["chosen"]]
+        if data["when"] == "now":
+            for post in posts:
+                if claim(post.pk):
+                    send(post)
+            done = [p for p in posts if Post.objects.get(pk=p.pk).status == Post.Status.PUBLISHED]
+            if len(done) == len(posts):
+                messages.success(request, f"Diffusé : {', '.join(p.get_network_display() for p in posts)}.")
+            else:
+                messages.warning(request, "Certaines diffusions ont échoué : détail ci-dessous.")
+        else:
+            messages.success(request, f"Programmé le {timezone.localtime(at):%d/%m à %H:%M} ({len(posts)} canal·aux).")
+        return redirect("gestion:diffuse", pk=event.pk)
+    return render(request, "gestion/diffuse.html", {
+        "event": event, "form": form, "config": config,
+        "previews": [(label, visual_url(event, fmt)) for fmt, label in
+                     (("portrait", "Instagram, Facebook"), ("og", "Courriel"), ("story", "Story"))],
+        "posts": event.posts.select_related("created_by")[:30],
+    })
+
+
+@editor_required
+def diffusion_list(request):
+    from django.core.paginator import Paginator
+
+    from social.models import Post
+
+    items = Post.objects.select_related("event", "created_by").order_by("-scheduled_at")
+    return render(request, "gestion/diffusions.html", {"page": Paginator(items, 50).get_page(request.GET.get("page"))})
+
+
+@editor_required
+@require_POST
+def diffusion_action(request, pk):
+    from social.models import Post
+
+    post = get_object_or_404(Post, pk=pk)
+    action = request.POST.get("action")
+    if action == "cancel" and post.status == Post.Status.SCHEDULED:
+        post.status = Post.Status.CANCELLED
+        post.save(update_fields=["status"])
+        messages.success(request, "Diffusion annulée.")
+    elif action == "retry" and post.status in (Post.Status.FAILED, Post.Status.CANCELLED):
+        post.status, post.attempts, post.scheduled_at = Post.Status.SCHEDULED, 0, timezone.now()
+        post.save(update_fields=["status", "attempts", "scheduled_at"])
+        messages.success(request, "Relancée : elle part dans les 5 minutes.")
+    target = request.POST.get("next", "")
+    return redirect(target if target.startswith("/gestion/") else "gestion:diffusions")
+
+
+@superuser_required
+@require_POST
+def test_network(request, network):
+    from social.networks import check
+
+    config = SiteConfig.get()
+    if network not in ("facebook", "instagram") or not config.network_ready(network):
+        messages.warning(request, "Active le réseau et enregistre ses identifiants avant de le tester.")
+    else:
+        ok, message = check(network, config)
+        config.social_check = {**config.social_check, network: {"ok": ok, "message": message}}
+        config.social_checked_at = timezone.now()
+        config.save(update_fields=["social_check", "social_checked_at"])
+        (messages.success if ok else messages.error)(request, f"{network.capitalize()} : {message}")
+    return redirect(reverse("gestion:settings") + "#diffusion")

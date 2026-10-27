@@ -56,6 +56,9 @@
         <span><small>{% translate "Proposé par" %}</small><strong>{{ event.organizer.profile.display_name }}</strong></span>
       </a>
       {% endif %}
+      {% if user.is_staff %}
+      <p class="owner-tools"><a href="{% url 'gestion:diffuse' event.pk %}">{% icon "share" 16 %} {% translate "Diffuser (bureau)" %}</a></p>
+      {% endif %}
       {% if can_edit %}
       <p class="owner-tools"><a href="{% url 'community:event_edit' event.slug %}">{% icon "edit" 16 %} {% translate "Modifier" %}</a> · <a class="danger-link" href="{% url 'community:event_delete' event.slug %}">{% translate "Supprimer" %}</a></p>
       {% endif %}
@@ -96,6 +99,8 @@
         {% if event.shared_on_nice_event %}<a class="btn btn-ghost" href="{{ event.nice_event_url }}" rel="noopener" title="{% translate "Cette sortie est aussi publiée sur l'agenda participatif de la région niçoise" %}">{% icon "external" 18 %} {% translate "Voir sur Nice-Event" %}</a>{% endif %}
       </div>
       {% endif %}
+
+      {% if visible %}{% include "events/_share.html" %}{% endif %}
 
       <section class="attend" id="participants" aria-labelledby="attend-title">
         <header class="attend-head">
@@ -144,15 +149,17 @@
 
       <section class="event-photos" id="photos" aria-labelledby="photos-title">
         <header class="attend-head">
-          <h2 id="photos-title">{% translate "Photos" %}</h2>
-          {% if user.is_authenticated %}<a class="btn btn-ghost" href="{% url 'community:photo_new' %}?evenement={{ event.slug }}">{% icon "plus" 18 %} {% translate "Ajouter une photo" %}</a>{% endif %}
+          <h2 id="photos-title">{% translate "Photos et vidéos" %}</h2>
+          {% if user.is_authenticated %}<a class="btn btn-ghost" href="{% url 'community:photo_new' %}?evenement={{ event.slug }}">{% icon "plus" 18 %} {% translate "Ajouter des photos ou vidéos" %}</a>{% endif %}
         </header>
         {% if photos %}
-        <div class="photo-strip">{% for p in photos %}<a href="{{ p.get_absolute_url }}"><img src="{{ p.image|thumb:320 }}" alt="{{ p.caption }}" loading="lazy"></a>{% endfor %}</div>
+        <div class="photo-strip">{% for p in photos %}<a href="{{ p.get_absolute_url }}">{% include "community/_media_tile.html" with size=320 %}</a>{% endfor %}</div>
         {% else %}
-        <p class="help">{% translate "Pas encore de photo de cet événement." %}</p>
+        <p class="help">{% translate "Pas encore de photo ni de vidéo. Partage les tiennes : fichiers, ou un lien vers ton album." %}</p>
         {% endif %}
       </section>
+
+      {% if visible %}{% include "events/_comments.html" %}{% endif %}
     </div>
   </article>
 </div>

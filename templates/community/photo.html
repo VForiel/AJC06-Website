@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 {% load i18n ajc %}
 {% block title %}{% if photo.caption %}{{ photo.caption }}{% else %}{% translate "Photo" %}{% endif %}{% endblock %}
-{% block og_image %}<meta property="og:image" content="{{ SITE_URL }}{{ photo.image.url }}">{% endblock %}
+{% block og_image %}{% if photo.image %}<meta property="og:image" content="{{ SITE_URL }}{{ photo.image.url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block content %}
 <div class="wrap page-body">
   <div class="page-head"><a class="breadcrumb" href="{% url 'community:photos' %}">{% icon "arrow-left" 16 %} {% translate "Photos" %}</a></div>
   <figure class="photo-view">
-    <img src="{{ photo.image.url }}" alt="{{ photo.caption }}">
+    {% if photo.kind == "video" %}<video src="{{ photo.video.url }}" controls preload="metadata" playsinline></video>
+    {% elif photo.kind == "lien" %}{% with e=photo.embed %}
+      {% if e.player %}
+      <div class="embed" data-embed="{{ e.player }}" data-embed-title="{{ photo.caption|default:e.provider }}">
+        <button class="embed-play" type="button">{% icon "play" 28 %}<span>{% blocktranslate with p=e.provider %}Lire la vidéo ({{ p }}){% endblocktranslate %}</span></button>
+        <p class="embed-note">{% blocktranslate with p=e.provider %}Le lecteur {{ p }} ne se charge qu'au clic.{% endblocktranslate %} <a href="{{ photo.url }}" rel="noopener nofollow" target="_blank">{% translate "Ouvrir le lien" %}</a></p>
+      </div>
+      {% else %}
+      <a class="embed media-link" href="{{ photo.url }}" rel="noopener nofollow" target="_blank">{% icon "external" 28 %}<b>{{ e.provider }}</b><span>{% translate "Voir l'album ou le média" %}</span></a>
+      {% endif %}
+    {% endwith %}
+    {% else %}<img src="{{ photo.image.url }}" alt="{{ photo.caption }}">{% endif %}
     <figcaption>
       {% if photo.caption %}<p class="photo-caption">{{ photo.caption }}</p>{% endif %}
       <p class="help">
@@ -23,8 +34,8 @@
         {% endif %}
         <div class="photo-actions">
           {% if is_tagged %}<form method="post" action="{% url 'community:photo_untag' photo.pk %}">{% csrf_token %}<button class="btn btn-ghost" type="submit">{% translate "Retirer mon identification" %}</button></form>{% endif %}
-          {% if can_delete %}<form method="post" action="{% url 'community:photo_delete' photo.pk %}">{% csrf_token %}<button class="btn btn-danger" type="submit">{% translate "Supprimer la photo" %}</button></form>{% endif %}
-          <a class="report-link" href="{% url 'community:report' 'photo' photo.pk %}">{% translate "Signaler cette photo" %}</a>
+          {% if can_delete %}<form method="post" action="{% url 'community:photo_delete' photo.pk %}">{% csrf_token %}<button class="btn btn-danger" type="submit">{% translate "Supprimer" %}</button></form>{% endif %}
+          <a class="report-link" href="{% url 'community:report' 'photo' photo.pk %}">{% translate "Signaler" %}</a>
         </div>
       {% else %}
         {% if tagged %}<p class="help">{% translate "Connecte-toi pour voir qui est sur la photo." %}</p>{% endif %}

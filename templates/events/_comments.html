@@ -1,0 +1,33 @@
+{% load i18n ajc %}{# Commentaires des membres sur un événement #}
+<section class="event-comments" id="commentaires" aria-labelledby="comments-title">
+  <header class="attend-head">
+    <h2 id="comments-title">{% translate "Commentaires" %}{% if comments %} <small>{{ comments|length }}</small>{% endif %}</h2>
+  </header>
+  {% if comments %}
+  <ol class="comments">
+    {% for c in comments %}
+    <li class="comment" id="commentaire-{{ c.pk }}">
+      {% if user.is_authenticated or c.author.profile.visibility == "public" %}<a href="{{ c.author.profile.get_absolute_url }}">{% include "community/_avatar.html" with p=c.author.profile size="sm" %}</a>{% else %}<span class="avatar avatar-sm" aria-hidden="true">?</span>{% endif %}
+      <div class="comment-body">
+        {# Les noms des membres ne sont montrés qu'aux membres connectés, sauf profil public #}
+        <p class="comment-meta"><strong>{% if user.is_authenticated or c.author.profile.visibility == "public" %}{{ c.author.profile.display_name }}{% else %}{% translate "Un·e membre" %}{% endif %}</strong> ·<time datetime="{{ c.created_at|date:'c' }}">{% blocktranslate with t=c.created_at|timesince %}il y a {{ t }}{% endblocktranslate %}</time></p>
+        <p>{{ c.body|linebreaksbr }}</p>
+        {% if user.is_authenticated %}<div class="comment-tools">
+          {% if c.author_id == user.pk or user.is_staff %}<form method="post" action="{% url 'community:comment_delete' c.pk %}">{% csrf_token %}<button type="submit" data-confirm="{% translate "Supprimer ce commentaire ?" %}">{% translate "Supprimer" %}</button></form>{% endif %}
+          {% if c.author_id != user.pk %}<a href="{% url 'community:report' 'commentaire' c.pk %}">{% translate "Signaler" %}</a>{% endif %}
+        </div>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}<p class="help">{% translate "Pas encore de commentaire. Tu y étais, ou tu as une question ? Lance la discussion." %}</p>{% endif %}
+  {% if user.is_authenticated %}
+  <form class="form comment-form" method="post" action="{% url 'community:comment_new' event.slug %}">
+    {% csrf_token %}
+    <div class="field"><label for="{{ comment_form.body.id_for_label }}">{{ comment_form.body.label }}</label>{{ comment_form.body }}</div>
+    <button class="btn btn-primary" type="submit">{% translate "Publier" %}</button>
+  </form>
+  {% else %}
+  <p><a class="btn btn-ghost" href="{% url 'community:login' %}?next={{ request.path|urlencode }}">{% translate "Se connecter pour commenter" %}</a></p>
+  {% endif %}
+</section>

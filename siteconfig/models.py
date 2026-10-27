@@ -64,6 +64,26 @@ class SiteConfig(models.Model):
                                               default="association-des-jeunes-chercheurs-des-alpes-mariti",
                                               help_text="Identifiant de l'asso dans les adresses helloasso.com/associations/…")
 
+    # Diffusion des événements (app social) : Instagram et Facebook par l'API Graph de Meta, et courriel
+    social_signature = models.CharField("signature des publications", max_length=200, blank=True,
+                                        default="#AJC06 #doctorat #PhDlife #NiceCotedAzur",
+                                        help_text="Ajoutée à la fin des textes Instagram et Facebook (hashtags…).")
+    meta_api_version = models.CharField("version de l'API Graph de Meta", max_length=10, default="v24.0")
+    facebook_enabled = models.BooleanField("Facebook actif", default=False)
+    facebook_page_id = models.CharField("identifiant de la Page Facebook", max_length=40, blank=True)
+    facebook_page_token = EncryptedTextField("jeton d'accès de la Page", blank=True,
+                                             help_text="Jeton de Page longue durée (sert aussi à Instagram).")
+    instagram_enabled = models.BooleanField("Instagram actif", default=False)
+    instagram_user_id = models.CharField("identifiant du compte Instagram professionnel", max_length=40, blank=True,
+                                         help_text="Compte @assojc06, relié à la Page Facebook.")
+    email_diffusion_enabled = models.BooleanField("diffusion par courriel active", default=True,
+                                                  help_text="Nécessite le serveur SMTP ci-dessus.")
+    diffusion_emails = models.TextField("liste de diffusion", blank=True,
+                                        help_text="Adresses proposées par défaut pour les courriels d'événements, une par ligne "
+                                                  "(ex. une liste des doctorant·es). Modifiables à chaque envoi.")
+    social_checked_at = models.DateTimeField("dernière vérification des comptes", null=True, blank=True)
+    social_check = models.JSONField("résultat de la vérification", default=dict, blank=True)
+
     legal_host = models.TextField("hébergeur (mentions légales)", blank=True,
                                   help_text="Nom, adresse et téléphone de l'hébergeur actuel du site.")
 
@@ -86,6 +106,14 @@ class SiteConfig(models.Model):
     @property
     def smtp_ready(self):
         return bool(self.smtp_host)
+
+    def network_ready(self, network):
+        """Le canal est-il activé et configuré ?"""
+        return bool({
+            "facebook": self.facebook_enabled and self.facebook_page_id and self.facebook_page_token,
+            "instagram": self.instagram_enabled and self.instagram_user_id and self.facebook_page_token,
+            "email": self.email_diffusion_enabled and self.smtp_ready,
+        }.get(network))
 
     @property
     def helloasso_ready(self):

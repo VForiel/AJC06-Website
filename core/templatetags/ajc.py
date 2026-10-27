@@ -14,6 +14,8 @@ register = template.Library()
 # Tracés 24×24, trait 2 px, dessinés pour le site.
 ICONS = {
     "arrow": '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    "play": '<path d="M8 5.5v13l10.5-6.5z"/>',
+    "share": '<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4M8.2 13.2l7.6 4"/>',
     "arrow-left": '<path d="M19 12H5M11 6l-6 6 6 6"/>',
     "external": '<path d="M14 5h5v5M19 5l-8 8M18 14v5H5V6h5"/>',
     "calendar": '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',

@@ -1,0 +1,18 @@
+{% extends "gestion/base.html" %}
+{% block title %}Diffusions{% endblock %}
+
+{% block content %}
+<header class="g-head">
+  <div>
+    <h1>Diffusions</h1>
+    <p class="g-muted">Publications Instagram et Facebook et courriels d'événements, envoyés ou programmés. Pour diffuser un
+      événement : Événements › icône de partage, ou « Diffuser » sur sa page.</p>
+  </div>
+</header>
+<section class="g-panel">
+  {% include "gestion/_diffusions.html" with items=page.object_list show_event=True %}
+  {% if page.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="Pages">{% for n in page.paginator.page_range %}{% if n == page.number %}<span aria-current="page">{{ n }}</span>{% else %}<a href="?page={{ n }}">{{ n }}</a>{% endif %}{% endfor %}</nav>
+  {% endif %}
+</section>
+{% endblock %}

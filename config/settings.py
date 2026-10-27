@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 from core.csp import NONCE, NONE, SELF
+from core.embeds import FRAME_SOURCES
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -68,6 +69,7 @@ INSTALLED_APPS = [
     "community",
     "projets",
     "siteconfig",
+    "social",
 ]
 
 MIDDLEWARE = [
@@ -199,6 +201,7 @@ SECURE_CSP = {
     "font-src": [SELF],
     "connect-src": [SELF],
     "form-action": [SELF],
+    "frame-src": [SELF, *FRAME_SOURCES],  # lecteurs vidéo chargés au clic (core/embeds.py)
     "frame-ancestors": [NONE],
     "base-uri": [SELF],
     "object-src": [NONE],

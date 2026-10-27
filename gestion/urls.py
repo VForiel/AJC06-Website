@@ -39,6 +39,10 @@ urlpatterns = [
     path("signalements/<int:pk>/traite/", views.report_toggle, name="report_toggle"),
     path("evenements/<int:pk>/masquer/", views.event_hide, name="event_hide"),
     path("messages/<int:pk>/traite/", views.inbox_toggle, name="inbox_toggle"),
+    path("evenements/<int:pk>/diffuser/", views.diffuse, name="diffuse"),
+    path("diffusions/", views.diffusion_list, name="diffusions"),
+    path("diffusions/<int:pk>/", views.diffusion_action, name="diffusion_action"),
+    path("reglages/test-reseau/<str:network>/", views.test_network, name="test_network"),
     path("apercu/", views.preview, name="preview"),
     path("televerser/", views.upload, name="upload"),
 ]

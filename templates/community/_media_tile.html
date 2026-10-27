@@ -1,0 +1,4 @@
+{% load i18n ajc %}{# Vignette d'une photo, d'une vidéo ou d'un lien externe (murs et bandeaux de photos) ; p = Photo, size = côté #}
+{% if p.kind == "video" %}<span class="media-tile media-tile-video"><video src="{{ p.video.url }}#t=0.1" preload="metadata" muted playsinline tabindex="-1"></video>{% icon "play" 28 %}<span class="sr">{% translate "Vidéo" %}</span></span>
+{% elif p.kind == "lien" %}{% with e=p.embed %}<span class="media-tile media-tile-link">{% if e.player %}{% icon "play" 28 %}{% else %}{% icon "external" 24 %}{% endif %}<b>{{ e.provider }}</b></span>{% endwith %}
+{% else %}<img src="{{ p.image|thumb:size }}" alt="{{ p.caption }}" loading="lazy">{% endif %}

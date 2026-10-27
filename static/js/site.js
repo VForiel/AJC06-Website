@@ -87,3 +87,35 @@
     if (toggle) toggle.click();
   });
 })();
+
+// Partage natif (mobile) : le bouton n'apparaît que si le navigateur sait partager.
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-share]").forEach(function (btn) {
+    if (!navigator.share) return;
+    btn.hidden = false;
+    btn.addEventListener("click", function () {
+      navigator.share({ title: btn.dataset.shareTitle, text: btn.dataset.shareTitle, url: btn.dataset.shareUrl })
+        .catch(function () { /* partage annulé */ });
+    });
+  });
+})();
+
+// Vidéos YouTube, Vimeo, Dailymotion : le lecteur n'est chargé qu'au clic (rien n'est demandé à ces sites avant).
+(function () {
+  "use strict";
+  document.addEventListener("click", function (e) {
+    var button = e.target.closest(".embed-play");
+    if (!button) return;
+    var box = button.closest("[data-embed]");
+    var frame = document.createElement("iframe");
+    var src = box.dataset.embed;
+    frame.src = src + (src.indexOf("?") < 0 ? "?" : "&") + "autoplay=1";
+    frame.title = box.dataset.embedTitle || "";
+    frame.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+    box.replaceChildren(frame);
+    box.classList.add("is-playing");
+  });
+})();

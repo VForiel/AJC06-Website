@@ -10,6 +10,7 @@
       <td class="g-muted">{{ e.venue|truncatechars:32 }}</td>
       <td class="g-actions">
         {% if e.is_association %}<a href="{% url 'gestion:dossier' e.pk %}" title="Dossier université (projet prévisionnel, bilan)">{% icon "download" 16 %}<span class="sr">Dossier</span></a>{% endif %}
+        <a href="{% url 'gestion:diffuse' e.pk %}" title="Diffuser sur Instagram, Facebook, par courriel">{% icon "share" 16 %}<span class="sr">Diffuser</span></a>
         <a href="{% url 'gestion:event_duplicate' e.pk %}" title="Dupliquer (nouvelle date)">{% icon "copy" 16 %}<span class="sr">Dupliquer</span></a>
         {% if e.is_published or e.on_hold %}<a href="{{ e.get_absolute_url }}" title="Voir sur le site">{% icon "external" 16 %}<span class="sr">Voir</span></a>{% endif %}
       </td>

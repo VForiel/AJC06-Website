@@ -1,0 +1,26 @@
+{% if items %}
+<table class="g-table">
+  <thead><tr><th>Prévue</th><th>Canal</th>{% if show_event %}<th>Événement</th>{% endif %}<th>État</th><th>Par</th><th><span class="sr">Actions</span></th></tr></thead>
+  <tbody>
+    {% for p in items %}
+    <tr>
+      <td class="g-nowrap">{{ p.scheduled_at|date:"d/m/Y H:i" }}</td>
+      <td>{{ p.get_network_display }}{% if p.network == "email" %} <span class="g-muted">({{ p.recipient_list|length }})</span>{% endif %}</td>
+      {% if show_event %}<td><a href="{% url 'gestion:diffuse' p.event.pk %}">{{ p.event.title }}</a></td>{% endif %}
+      <td>{% if p.status == 'published' %}{% if p.external_url %}<a href="{{ p.external_url }}" target="_blank" rel="noopener">Publiée ↗</a>{% else %}Envoyée{% endif %}{% if p.published_at %} <span class="g-muted">{{ p.published_at|date:"d/m H:i" }}</span>{% endif %}
+        {% elif p.status == 'failed' %}<span class="g-badge g-badge-late" title="{{ p.error }}">Échec</span><br><small class="g-help">{{ p.error|truncatechars:200 }}</small>
+        {% else %}<span class="g-badge{% if p.status == 'scheduled' %} g-badge-hold{% endif %}">{{ p.get_status_display }}</span>{% if p.error %}<br><small class="g-help">{{ p.error|truncatechars:120 }}</small>{% endif %}{% endif %}</td>
+      <td class="g-muted">{{ p.created_by.get_short_name|default:p.created_by.username|default:"" }}</td>
+      <td class="g-actions">
+        {% if p.status == 'scheduled' or p.status == 'failed' or p.status == 'cancelled' %}
+        <form method="post" action="{% url 'gestion:diffusion_action' p.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+          {% if p.status == 'scheduled' %}<button class="btn btn-ghost" type="submit" name="action" value="cancel">Annuler</button>
+          {% else %}<button class="btn btn-ghost" type="submit" name="action" value="retry">Relancer</button>{% endif %}
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}<p class="g-empty">Aucune diffusion.</p>{% endif %}

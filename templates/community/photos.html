@@ -9,7 +9,7 @@
     <p class="kicker">{% translate "Communauté" %}</p>
     <h1 class="page-title">{% translate "Photos" %}</h1>
     <p class="page-lede">{% translate "Les souvenirs des événements et des sorties, partagés par les membres." %}</p>
-    <div class="hero-actions"><a class="btn btn-primary" href="{% url 'community:photo_new' %}">{% icon "plus" 18 %} {% translate "Ajouter une photo" %}</a></div>
+    <div class="hero-actions"><a class="btn btn-primary" href="{% url 'community:photo_new' %}">{% icon "plus" 18 %} {% translate "Ajouter des photos ou vidéos" %}</a></div>
   </div>
 </header>
 
@@ -18,7 +18,7 @@
   <div class="wall photo-wall">
     {% for p in page.object_list %}
     <a class="wall-item" href="{{ p.get_absolute_url }}">
-      <img src="{{ p.image|thumb:480 }}" alt="{{ p.caption }}" loading="lazy">
+      {% include "community/_media_tile.html" with size=480 %}
       <span class="wall-caption">{% if p.event %}<span>{{ p.event.title_tr }}</span>{% endif %}{{ p.caption }}</span>
     </a>
     {% endfor %}

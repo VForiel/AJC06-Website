@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load i18n ajc %}
-{% block title %}{% translate "Ajouter une photo" %}{% endblock %}
+{% block title %}{% translate "Ajouter des photos ou vidéos" %}{% endblock %}
 
 {% block content %}
 <header class="page-head">
   <div class="wrap">
     <p class="kicker">{% translate "Photos" %}</p>
-    <h1 class="page-title">{% translate "Ajouter une photo" %}</h1>
+    <h1 class="page-title">{% translate "Ajouter des photos ou vidéos" %}</h1>
+    <p class="page-lede">{% translate "Plusieurs fichiers d'un coup, ou des liens vers un média hébergé ailleurs. Une vidéo trop lourde, une photo qui ne passe pas ou un album entier ? Mets-les sur YouTube, Vimeo, Google Photos ou Flickr et colle simplement le lien." %}</p>
   </div>
 </header>
 
@@ -18,16 +19,17 @@
       {% icon "users" 22 %}
       <div>
         <p><strong>{% translate "Avant de publier" %}</strong></p>
-        <p>{% translate "Toutes les personnes reconnaissables sur la photo doivent avoir donné leur autorisation pour qu'elle soit affichée sur le site. Sans leur accord, ne la publie pas. Une personne identifiée peut retirer son identification ou signaler la photo à tout moment." %}</p>
+        <p>{% translate "Toutes les personnes reconnaissables doivent avoir donné leur autorisation pour que la photo ou la vidéo soit affichée sur le site. Sans leur accord, ne la publie pas. Une personne identifiée peut retirer son identification ou signaler le média à tout moment." %}</p>
       </div>
     </div>
     <section class="settings-block">
-      {% include "community/_field.html" with field=form.image %}
+      {% include "community/_field.html" with field=form.files %}
+      {% include "community/_field.html" with field=form.links %}
       {% include "community/_field.html" with field=form.caption %}
       {% include "community/_field.html" with field=form.event %}
     </section>
     <section class="settings-block">
-      <h2>{% translate "Qui est sur la photo ?" %}</h2>
+      <h2>{% translate "Qui est dessus ?" %}</h2>
       {% if form.fields.friends.queryset %}
       <fieldset class="field">
         <legend>{{ form.friends.label }}</legend>
@@ -40,7 +42,7 @@
       <label class="check">{{ form.consent }} <span>{{ form.consent.label }}</span></label>
       {{ form.consent.errors }}
     </div>
-    <div class="settings-actions"><button class="btn btn-primary" type="submit">{% icon "check" 18 %} {% translate "Publier la photo" %}</button></div>
+    <div class="settings-actions"><button class="btn btn-primary" type="submit">{% icon "check" 18 %} {% translate "Publier" %}</button></div>
   </form>
 </div>
 {% endblock %}

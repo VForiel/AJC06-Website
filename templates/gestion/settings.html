@@ -50,6 +50,30 @@
     </div>
   </section>
 
+  <section class="g-panel" id="diffusion">
+    <h2 class="g-panel-title">Diffusion des événements</h2>
+    <p class="g-help">Le bureau diffuse un événement depuis Événements › icône de partage : visuel et texte pré-remplis,
+      envoi immédiat ou programmé. Instagram et Facebook passent par l'API Graph de Meta : Page Facebook de l'asso reliée au
+      compte Instagram professionnel @assojc06, application Meta avec les droits <code>pages_manage_posts</code>,
+      <code>instagram_content_publish</code>, puis jeton de Page longue durée (détail dans le README).
+      Le courriel utilise le serveur SMTP réglé plus haut.</p>
+    {% include "gestion/_field.html" with field=form.social_signature %}
+    <div class="g-grid g-grid-2">
+      {% include "gestion/_field.html" with field=form.facebook_enabled %}
+      {% include "gestion/_field.html" with field=form.instagram_enabled %}
+      {% include "gestion/_field.html" with field=form.facebook_page_id %}
+      {% include "gestion/_field.html" with field=form.instagram_user_id %}
+      {% include "gestion/_field.html" with field=form.facebook_page_token %}
+      {% include "gestion/_field.html" with field=form.clear_facebook_page_token %}
+      {% include "gestion/_field.html" with field=form.meta_api_version %}
+    </div>
+    {% include "gestion/_field.html" with field=form.email_diffusion_enabled %}
+    {% include "gestion/_field.html" with field=form.diffusion_emails %}
+    {% if config.social_check %}
+    <ul class="g-log">{% for network, r in config.social_check.items %}<li>{{ network|capfirst }} : {% if r.ok %}OK{% else %}<strong>à revoir</strong>{% endif %} — {{ r.message }}</li>{% endfor %}</ul>
+    {% endif %}
+  </section>
+
   <section class="g-panel">
     <h2 class="g-panel-title">Mentions légales</h2>
     {% include "gestion/_field.html" with field=form.legal_host %}
@@ -68,6 +92,15 @@
   </form>
   <p class="g-help">Le test utilise les réglages enregistrés : enregistre d'abord. Passe la validation des comptes à
     « par lien » seulement une fois ce courriel bien reçu.</p>
+</section>
+
+<section class="g-panel g-settings-test">
+  <h2 class="g-panel-title">Tester Facebook et Instagram</h2>
+  <div class="g-buttons-row">
+    <form method="post" action="{% url 'gestion:test_network' 'facebook' %}">{% csrf_token %}<button class="btn btn-ghost" type="submit">{% icon "facebook" 18 %} Tester Facebook</button></form>
+    <form method="post" action="{% url 'gestion:test_network' 'instagram' %}">{% csrf_token %}<button class="btn btn-ghost" type="submit">{% icon "instagram" 18 %} Tester Instagram</button></form>
+  </div>
+  <p class="g-help">Vérifie les identifiants enregistrés sans rien publier.</p>
 </section>
 
 {% if changes %}

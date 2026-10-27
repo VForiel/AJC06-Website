@@ -224,14 +224,14 @@ class PhotoTests(TestCase):
 
     def test_upload_requires_consent(self):
         self.client.force_login(self.alice)
-        response = self.client.post(reverse("community:photo_new"), {"image": png(), "caption": "Partie"})
+        response = self.client.post(reverse("community:photo_new"), {"files": png(), "caption": "Partie"})
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Photo.objects.exists())
 
     def test_upload_tag_notify_untag(self):
         self.client.force_login(self.alice)
         self.client.post(reverse("community:photo_new"), {
-            "image": png(), "caption": "Partie endiablée", "event": self.event.pk, "consent": "on",
+            "files": png(), "caption": "Partie endiablée", "event": self.event.pk, "consent": "on",
             "friends": [self.bob.pk]})
         photo = Photo.objects.get()
         self.assertTrue(photo.image.name.endswith(".webp"))
@@ -251,7 +251,7 @@ class PhotoTests(TestCase):
     def test_unknown_handle_rejected(self):
         self.client.force_login(self.alice)
         response = self.client.post(reverse("community:photo_new"), {
-            "image": png(), "consent": "on", "tagged_handles": "personne-inconnue"})
+            "files": png(), "consent": "on", "tagged_handles": "personne-inconnue"})
         self.assertContains(response, "Profil inconnu")
 
 

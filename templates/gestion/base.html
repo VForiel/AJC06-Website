@@ -25,6 +25,7 @@
     <nav class="g-nav" aria-label="Espace bureau">
       <a href="{% url 'gestion:dashboard' %}"{% if name == 'dashboard' %} aria-current="page"{% endif %}>{% icon "check" 18 %} Tableau de bord</a>
       <a href="{% url 'gestion:events' %}"{% if 'event' in name %} aria-current="page"{% endif %}>{% icon "calendar" 18 %} Événements</a>
+      <a href="{% url 'gestion:diffusions' %}"{% if 'diffus' in name %} aria-current="page"{% endif %}>{% icon "share" 18 %} Diffusions</a>
       <a href="{% url 'gestion:posts' %}"{% if 'post' in name %} aria-current="page"{% endif %}>{% icon "edit" 18 %} Articles</a>
       <a href="{% url 'gestion:inbox' %}"{% if 'inbox' in name %} aria-current="page"{% endif %}>{% icon "mail" 18 %} Messages</a>
       <a href="{% url 'gestion:supports' %}"{% if 'support' in name %} aria-current="page"{% endif %}>{% icon "heart" 18 %} Demandes de soutien</a>

@@ -86,8 +86,28 @@ n'apparaît que dans les journaux).
   dans `/evenements/nice-event.json`, lu par nice-event.fr, avec un bouton « Voir sur Nice-Event » sur la page.
 - **HelloAsso** : `python manage.py sync_helloasso` récupère les billets des événements dont le lien d'inscription pointe
   vers un formulaire de l'AJC06 (cron horaire en production). Identifiants dans `/gestion/reglages/`.
-- **Photos** (`/photos/`) : tout membre peut en publier, liées ou non à un événement, en identifiant d'autres membres ;
-  l'accord des personnes photographiées est obligatoire, une personne identifiée peut se retirer ou signaler la photo.
+- **Photos et vidéos** (`/photos/`) : tout membre peut en publier plusieurs à la fois, liées ou non à un événement, en
+  identifiant d'autres membres ; l'accord des personnes photographiées est obligatoire, une personne identifiée peut se
+  retirer ou signaler le média. Photos converties en WebP (12 Mo max.), vidéos MP4/MOV/WebM jusqu'à 50 Mo (servies par
+  plages d'octets pour Safari), et liens externes : YouTube, Vimeo, Dailymotion se lisent sur place mais le lecteur ne se
+  charge qu'au clic (CSP `frame-src` dans `core/embeds.py`), Pinterest, Google Photos, Drive, Flickr… en carte cliquable.
+- **Commentaires** sous chaque événement (membres connectés ; noms masqués aux visiteurs sauf profil public),
+  signalables, masqués automatiquement après trois signalements, supprimables par leur auteur·rice et le bureau.
+- **Événements passés** : rubrique « Y est allé·e » du profil, visible par tous ceux qui voient le profil, les amis ou
+  la personne seule (réglage du profil).
+- **Partage** : bloc « Fais tourner ! » sur chaque événement (WhatsApp, Facebook, LinkedIn, courriel, lien, partage
+  natif sur mobile, visuel de story à télécharger), sans rien charger chez les réseaux avant le clic.
+- **Diffusion par le bureau** (`/gestion/evenements/<id>/diffuser/`, icône de partage dans la liste des événements) :
+  Instagram, Facebook et courriel à une liste, avec visuel généré (`social/visuals.py` : affiche entière ou titre en
+  grand, formats portrait, paysage et story) et textes pré-remplis modifiables, tout de suite ou programmés ; historique
+  dans `/gestion/diffusions/` (annuler, relancer). Les diffusions programmées partent avec `python manage.py send_posts`
+  (cron) et, à défaut, au passage du ping de `robots.txt` toutes les 5 minutes. Courriels en copie cachée par paquets
+  de 50, visuel en pièce jointe.
+  Pour Instagram et Facebook (réglages › Diffusion) : Page Facebook de l'asso reliée au compte Instagram professionnel,
+  application sur developers.facebook.com avec `pages_show_list`, `pages_manage_posts`, `pages_read_engagement`,
+  `instagram_basic`, `instagram_content_publish`, puis jeton de Page longue durée (Explorateur de l'API Graph →
+  jeton utilisateur → échange longue durée → `GET /me/accounts`), identifiant de la Page et identifiant Instagram
+  (`GET /<page-id>?fields=instagram_business_account`). Boutons « Tester » sans rien publier.
 - **Coordonnées** du profil (téléphone, WhatsApp, Discord, Instagram, Facebook, X, autre) : jamais publiques,
   visibles des amis par défaut.
 
@@ -167,7 +187,8 @@ Hébergement mutualisé de l'asso (`ssh ajc06`), application Python cPanel (Pass
 - base, médias et sauvegardes hors du code : `~/ajc06-data/{db.sqlite3,media,backups}`, journal des crons dans
   `~/ajc06-data/cron.log` ;
 - crons (installer avec `crontab fichier`, `crontab -` ne marche pas sous CageFS) : `backup_site` à 3 h 30,
-  `sync_helloasso` toutes les heures, `send_alerts` toutes les 15 minutes (alertes des membres), et un appel à `http://beta.ajc06.com/robots.txt` toutes les 5 minutes pour
+  `sync_helloasso` toutes les heures, `send_alerts` toutes les 15 minutes (alertes des membres), `send_posts` toutes
+  les 5 minutes (diffusions programmées), et un appel à `http://beta.ajc06.com/robots.txt` toutes les 5 minutes pour
   garder l'application chargée (sinon le premier visiteur après une pause attend ~2,5 s ; `PassengerMinInstances`
   est refusé dans le `.htaccess` et casse le site) ;
 - `CACHE_DIR=~/ajc06-data/cache` : cache sur disque partagé entre les processus Passenger (limites d'envoi).

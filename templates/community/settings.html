@@ -95,6 +95,12 @@
         {{ form.visibility.errors }}
       </fieldset>
       {% include "community/_field.html" with field=form.show_events %}
+      <fieldset class="field{% if form.past_events.errors %} has-error{% endif %}" id="{{ form.past_events.auto_id }}">
+        <legend>{{ form.past_events.label|capfirst }}</legend>
+        <div class="choices">{% for radio in form.past_events %}<label>{{ radio.tag }} {{ radio.choice_label }}</label>{% endfor %}</div>
+        <p class="help">{% translate "Ils apparaissent sur ton profil, rubrique « Y est allé·e ». Tu les vois toujours." %}</p>
+        {{ form.past_events.errors }}
+      </fieldset>
     </section>
 
     <div class="settings-actions"><button class="btn btn-primary" type="submit" name="save_profile" value="1">{% icon "check" 18 %} {% translate "Enregistrer mon profil" %}</button></div>

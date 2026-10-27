@@ -10,4 +10,5 @@ urlpatterns = [
     path("nice-event.json", views.nice_event_feed, name="nice_event_feed"),
     path("<slug:slug>/", views.event_detail, name="detail"),
     path("<slug:slug>.ics", views.event_ics, name="ics"),
+    path("<slug:slug>/visuel/<str:fmt>.jpg", views.event_visual, name="visual"),
 ]
