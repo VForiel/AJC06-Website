@@ -93,3 +93,12 @@ class AlertTests(TestCase):
         Event.objects.create(title="Rando", types=",plein-air,", start_date=soon(), is_community=True, organizer=self.alice)
         call_command("send_alerts", stdout=StringIO())
         self.assertFalse(Notification.objects.filter(verb="alert").exists())
+
+    def test_evening_ending_at_midnight(self):
+        from datetime import time
+
+        event = Event.objects.create(title="Halloween", types=",soiree,", start_date=soon(), start_time=time(19),
+                                     end_time=time(0), is_community=True, organizer=self.alice)
+        self.assertEqual(event.ends_at - event.starts_at, timezone.timedelta(hours=5))
+        item = self.client.get(reverse("events:nice_event_feed")).json()["events"][0]
+        self.assertGreater(item["end"], item["start"])

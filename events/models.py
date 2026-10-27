@@ -193,7 +193,9 @@ class Event(models.Model):
         if self.all_day:
             return timezone.make_aware(datetime.combine(self.last_date + timedelta(days=1), time(0)))
         if self.end_time:
-            return timezone.make_aware(datetime.combine(self.last_date, self.end_time))
+            end = timezone.make_aware(datetime.combine(self.last_date, self.end_time))
+            # « 19 h – 0 h » sur un seul jour : la fin est le lendemain
+            return end + timedelta(days=1) if end <= self.starts_at else end
         return self.starts_at + timedelta(hours=2)
 
     @property
