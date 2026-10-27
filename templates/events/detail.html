@@ -96,11 +96,8 @@
         <a class="btn {% if event.is_community %}btn-ghost{% else %}btn-primary{% endif %}" href="{{ event.registration_url }}" rel="noopener">{% if event.is_community %}{% icon "external" 18 %} {% translate "Lien utile" %}{% else %}{% icon "ticket" 18 %} {% translate "S'inscrire" %}{% endif %}</a>
         {% endif %}
         <a class="btn btn-ghost" href="{% url 'events:ics' event.slug %}">{% icon "calendar" 18 %} {% translate "Ajouter à mon agenda" %}</a>
-        {% if event.shared_on_nice_event %}<a class="btn btn-ghost" href="{{ event.nice_event_url }}" rel="noopener" title="{% translate "Cette sortie est aussi publiée sur l'agenda participatif de la région niçoise" %}">{% icon "external" 18 %} {% translate "Voir sur Nice-Event" %}</a>{% endif %}
       </div>
       {% endif %}
-
-      {% if visible %}{% include "events/_share.html" %}{% endif %}
 
       <section class="attend" id="participants" aria-labelledby="attend-title">
         <header class="attend-head">
@@ -142,6 +139,8 @@
           <p class="help">{% translate "Connecte-toi pour voir qui y va." %}</p>
         {% endif %}
       </section>
+
+      {% if visible %}{% include "events/_share.html" %}{% endif %}
 
       {% get_current_language as LANG %}
       {% if LANG == 'en' and not event.is_community and not event.body_en and event.body %}<p class="lang-note">{% translate "Cette description n'existe qu'en français." %}</p>{% endif %}

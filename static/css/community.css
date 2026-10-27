@@ -268,6 +268,7 @@ fieldset.field legend { font-weight: 700; padding: 0; }
 .comment-tools form { display: inline; }
 .comment-tools button, .comment-tools a { background: none; border: 0; padding: 0; color: var(--ink-2); font: inherit; cursor: pointer; text-decoration: underline; }
 .comment-form { display: grid; gap: 10px; max-width: 640px; }
+.comment-form .btn { justify-self: start; }
 
 /* Vignettes de vidéos et de liens externes, lecteurs chargés au clic */
 .media-tile { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 4px; background: var(--night); color: var(--on-night); text-align: center; }

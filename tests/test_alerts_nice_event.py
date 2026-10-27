@@ -47,10 +47,8 @@ class NiceEventTests(TestCase):
                          (shared.pk, "Quiz et soupe au potiron.", ["soiree"], "Gratuit"))
         self.assertTrue(item["start"].endswith("+01:00") or item["start"].endswith("+02:00"))
         self.assertNotIn("Alice", str(data))  # pas le nom du membre
-        page = self.client.get(shared.get_absolute_url())
-        self.assertContains(page, f"https://nice-event.fr/evenements/source/ajc06/{shared.pk}/")
-        page = self.client.get(Event.objects.get(title="Entre nous").get_absolute_url())
-        self.assertNotContains(page, "Voir sur Nice-Event")
+        page = self.client.get(shared.get_absolute_url())  # plus de lien « Voir sur Nice-Event » sur la page
+        self.assertNotContains(page, f"https://nice-event.fr/evenements/source/ajc06/{shared.pk}/")
 
 
 class AlertTests(TestCase):

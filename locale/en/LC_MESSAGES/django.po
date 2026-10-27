@@ -2432,6 +2432,10 @@ msgid "Fais tourner !"
 msgstr "Spread the word!"
 
 #: templates/events/_share.html
+msgid "Lien copié : colle-le sur Instagram"
+msgstr "Link copied: paste it on Instagram"
+
+#: templates/events/_share.html
 msgid "Partager…"
 msgstr "Share…"
 
@@ -2486,10 +2490,6 @@ msgstr "This event is over. Not to miss the next one, <a href=\"%(wa)s\" rel=\"n
 #: templates/events/detail.html
 msgid "Cette description n'existe qu'en français."
 msgstr "This description is only available in French."
-
-#: templates/events/detail.html
-msgid "Cette sortie est aussi publiée sur l'agenda participatif de la région niçoise"
-msgstr "This outing is also published on the community calendar of the Nice area"
 
 #: templates/events/detail.html
 msgid "Complet"
@@ -2562,10 +2562,6 @@ msgstr "Report this event"
 #: templates/events/detail.html
 msgid "Voir sur Google Maps"
 msgstr "View on Google Maps"
-
-#: templates/events/detail.html
-msgid "Voir sur Nice-Event"
-msgstr "See on Nice-Event"
 
 #: templates/events/detail.html
 msgid "annuler"
