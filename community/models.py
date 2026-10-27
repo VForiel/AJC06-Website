@@ -210,9 +210,10 @@ class Notification(models.Model):
         PHOTO_TAG = "photo_tag", "identification sur une photo"
         SUPPORT = "support", "demande de soutien reçue (bureau)"
         SUPPORT_ANSWER = "support_answer", "réponse à une demande de soutien"
+        ALERT = "alert", "nouvel événement (alerte)"
 
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications")
-    actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+")
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE, related_name="+")
     verb = models.CharField(max_length=20, choices=Verb.choices)
     event = models.ForeignKey("events.Event", null=True, blank=True, on_delete=models.CASCADE, related_name="+")
     photo = models.ForeignKey("Photo", null=True, blank=True, on_delete=models.CASCADE, related_name="+")
@@ -270,3 +271,51 @@ class Photo(models.Model):
 
     def get_absolute_url(self):
         return reverse("community:photo", args=[self.pk])
+
+
+class AlertPreference(models.Model):
+    """Filtre et alerte d'un membre (un seul par compte) : types d'événements et origine, comme les filtres de l'agenda."""
+
+    class Origin(models.TextChoices):
+        ALL = "", _("Tous")
+        ASSO = "asso", _("Par l'AJC06")
+        COMMUNITY = "communaute", _("Par les membres")
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="alert_preference")
+    types = models.CharField(_("types"), max_length=300, blank=True, default="", help_text="« ,code1,code2, » ; vide = tous")
+    origin = models.CharField(_("proposés"), max_length=12, choices=Origin.choices, blank=True, default="")
+    active = models.BooleanField(_("m'alerter des nouveaux événements"), default=False)
+    by_email = models.BooleanField(_("aussi par courriel"), default=True)
+    # Seuls les événements publiés ou modifiés après la mise en route sont signalés (pas d'avalanche).
+    active_since = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "alerte"
+
+    @property
+    def type_codes(self):
+        return [c for c in self.types.strip(",").split(",") if c]
+
+    def matching(self, events):
+        if self.type_codes:
+            q = Q()
+            for code in self.type_codes:
+                q |= Q(types__contains=f",{code},")
+            events = events.filter(q)
+        if self.origin == self.Origin.ASSO:
+            events = events.official()
+        elif self.origin == self.Origin.COMMUNITY:
+            events = events.community()
+        return events
+
+
+class AlertSent(models.Model):
+    """Événement déjà signalé à un membre : jamais deux fois."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+")
+    event = models.ForeignKey("events.Event", on_delete=models.CASCADE, related_name="+")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "event"], name="unique_alert_sent")]

@@ -24,7 +24,8 @@
         <a class="filter" href="?par=communaute{% if kind %}&amp;type={{ kind }}{% endif %}"{% if origin == 'communaute' %} aria-current="true"{% endif %}>{% translate "Par les membres" %}</a>
       </nav>
       <nav class="filters" aria-label="{% translate "Filtrer par type" %}">
-        <a class="filter" href="?{% if origin %}par={{ origin }}{% endif %}"{% if not kind %} aria-current="true"{% endif %}>{% translate "Tout" %}</a>
+        <a class="filter" href="?{% if origin %}par={{ origin }}{% endif %}"{% if not kind and not several %} aria-current="true"{% endif %}>{% translate "Tout" %}</a>
+        {% if several %}<span class="filter" aria-current="true">{% translate "Mes types" %}</span>{% endif %}
         {% for value, label in kinds %}
         <a class="filter" href="?type={{ value }}{% if origin %}&amp;par={{ origin }}{% endif %}"{% if kind == value %} aria-current="true"{% endif %}>{{ label }}</a>
         {% endfor %}

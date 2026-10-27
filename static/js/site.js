@@ -42,6 +42,14 @@
       return;
     }
 
+    // « Tout cocher / Tout décocher » d'une liste de cases (filtres et alertes)
+    var all = e.target.closest("[data-check-all], [data-check-none]");
+    if (all) {
+      var name = all.dataset.checkAll || all.dataset.checkNone;
+      document.querySelectorAll("input[name='" + name + "']").forEach(function (box) { box.checked = !!all.dataset.checkAll; });
+      return;
+    }
+
     var copy = e.target.closest("[data-copy]");
     if (copy && navigator.clipboard) {
       navigator.clipboard.writeText(copy.dataset.copy).then(function () {

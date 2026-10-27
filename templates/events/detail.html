@@ -93,6 +93,7 @@
         <a class="btn {% if event.is_community %}btn-ghost{% else %}btn-primary{% endif %}" href="{{ event.registration_url }}" rel="noopener">{% if event.is_community %}{% icon "external" 18 %} {% translate "Lien utile" %}{% else %}{% icon "ticket" 18 %} {% translate "S'inscrire" %}{% endif %}</a>
         {% endif %}
         <a class="btn btn-ghost" href="{% url 'events:ics' event.slug %}">{% icon "calendar" 18 %} {% translate "Ajouter à mon agenda" %}</a>
+        {% if event.shared_on_nice_event %}<a class="btn btn-ghost" href="{{ event.nice_event_url }}" rel="noopener" title="{% translate "Cette sortie est aussi publiée sur l'agenda participatif de la région niçoise" %}">{% icon "external" 18 %} {% translate "Voir sur Nice-Event" %}</a>{% endif %}
       </div>
       {% endif %}
 

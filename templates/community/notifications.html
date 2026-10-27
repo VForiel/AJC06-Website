@@ -15,7 +15,8 @@
   <ul class="notif-list">
     {% for n in items %}
     <li class="notif{% if not n.read %} is-new{% endif %}">
-      <a class="notif-avatar" href="{{ n.actor.profile.get_absolute_url }}">{% include "community/_avatar.html" with p=n.actor.profile size="md" %}</a>
+      {% if n.actor %}<a class="notif-avatar" href="{{ n.actor.profile.get_absolute_url }}">{% include "community/_avatar.html" with p=n.actor.profile size="md" %}</a>
+      {% else %}<span class="notif-avatar notif-icon">{% icon "bell" 22 %}</span>{% endif %}
       <div class="notif-text">
         <p>
           {% with name=n.actor.profile.display_name %}
@@ -25,6 +26,7 @@
           {% elif n.verb == "photo_tag" %}{% blocktranslate %}<strong>{{ name }}</strong> t'a identifié·e sur une photo.{% endblocktranslate %}
           {% elif n.verb == "support" %}{% blocktranslate with title=n.event.title %}<strong>{{ name }}</strong> demande le soutien de l'asso pour « {{ title }} ».{% endblocktranslate %}
           {% elif n.verb == "support_answer" %}{% blocktranslate with title=n.event.title %}Le bureau a répondu à ta demande de soutien pour « {{ title }} ».{% endblocktranslate %}
+          {% elif n.verb == "alert" %}{% blocktranslate with title=n.event.title_tr %}Nouvel événement pour ton alerte : <strong>{{ title }}</strong>.{% endblocktranslate %}
           {% elif n.verb == "attending" %}{% blocktranslate with title=n.event.title_tr %}<strong>{{ name }}</strong> vient à ton événement « {{ title }} ».{% endblocktranslate %}
           {% endif %}
           {% endwith %}

@@ -240,3 +240,7 @@ fieldset.field legend { font-weight: 700; padding: 0; }
 .tag-sport { background: #e3efd9; color: #2f5d1c; }
 .tag-conference, .tag-mediation, .tag-soutenance { background: #e8e4f4; color: #4a3a7a; }
 .tag-autre { background: var(--paper-2); color: var(--ink-2); }
+
+/* Filtres et alertes */
+.link-btn { border: 0; background: none; padding: 0; color: var(--azur-ink, var(--azur)); font: inherit; font-weight: 700; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px; }

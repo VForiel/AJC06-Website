@@ -26,6 +26,7 @@ urlpatterns = [
         name="password_change"),
     path(_("compte/"), views.me, name="me"),
     path(_("compte/reglages/"), views.settings_view, name="settings"),
+    path(_("compte/alertes/"), views.alerts, name="alerts"),
     path(_("compte/supprimer/"), views.delete_account, name="delete_account"),
     path(_("membres/"), views.members, name="members"),
     path(_("membres/<slug:handle>/"), views.profile, name="profile"),

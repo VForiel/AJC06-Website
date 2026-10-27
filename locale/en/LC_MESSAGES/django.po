@@ -38,6 +38,10 @@ msgid "Aucun (photo libre)"
 msgstr "None (standalone photo)"
 
 #: community/forms.py
+msgid "Aucun coché = tous les types."
+msgstr "None ticked = all types."
+
+#: community/forms.py
 msgid "Autres membres présents"
 msgstr "Other members in the photo"
 
@@ -166,6 +170,10 @@ msgid "Programme, niveau, matériel à prévoir, point de rendez-vous… Mise en
 msgstr "Programme, level, what to bring, meeting point… Markdown formatting is supported."
 
 #: community/forms.py
+msgid "Proposés par"
+msgstr "Organised by"
+
+#: community/forms.py
 msgid "Précise le type."
 msgstr "Specify the type."
 
@@ -184,6 +192,10 @@ msgstr "A few lines about you, your research, what you enjoy. Markdown formattin
 #: community/forms.py
 msgid "Seulement si ça dure plusieurs jours"
 msgstr "Only if it lasts several days"
+
+#: community/forms.py
+msgid "Ta sortie apparaît aussi sur nice-event.fr, l'agenda participatif de la région niçoise, avec un lien vers cette page : plus de monde ! Décoche pour la garder entre doctorant·es."
+msgstr "Your outing also appears on nice-event.fr, the community calendar of the Nice area, with a link to this page: more people! Untick to keep it among PhD students."
 
 #: community/forms.py
 msgid "Tes amis présents sur la photo"
@@ -208,6 +220,10 @@ msgstr "Everyone recognisable in this photo has agreed to it being published on 
 #: community/forms.py
 msgid "Type"
 msgstr "Type"
+
+#: community/forms.py
+msgid "Types d'événements"
+msgstr "Event types"
 
 #: community/forms.py
 msgid "Un compte existe déjà avec cette adresse."
@@ -302,6 +318,14 @@ msgid "Olivier"
 msgstr "Olive"
 
 #: community/models.py
+msgid "Par l'AJC06"
+msgstr "By AJC06"
+
+#: community/models.py
+msgid "Par les membres"
+msgstr "By members"
+
+#: community/models.py
 msgid "Personne"
 msgstr "Nobody"
 
@@ -312,6 +336,10 @@ msgstr "Postdoc"
 #: community/models.py
 msgid "Séparés par des virgules : randonnée, jeux de société, plongée…"
 msgstr "Separated by commas: hiking, board games, diving…"
+
+#: community/models.py
+msgid "Tous"
+msgstr "All"
 
 #: community/models.py
 msgid "Tous les membres connectés"
@@ -332,6 +360,10 @@ msgstr "profile address"
 #: community/models.py
 msgid "afficher les événements auxquels je participe"
 msgstr "show the events I'm going to"
+
+#: community/models.py
+msgid "aussi par courriel"
+msgstr "also by email"
 
 #: community/models.py
 msgid "autorisation des personnes photographiées"
@@ -366,6 +398,10 @@ msgid "légende"
 msgstr "caption"
 
 #: community/models.py
+msgid "m'alerter des nouveaux événements"
+msgstr "alert me about new events"
+
+#: community/models.py
 msgid "nom affiché"
 msgstr "display name"
 
@@ -384,6 +420,10 @@ msgstr "photo"
 #: community/models.py
 msgid "pronoms"
 msgstr "pronouns"
+
+#: community/models.py
+msgid "proposés"
+msgstr "organised by"
 
 #: community/models.py
 msgid "présentation"
@@ -406,6 +446,10 @@ msgid "sujet de thèse"
 msgstr "thesis topic"
 
 #: community/models.py
+msgid "types"
+msgstr "types"
+
+#: community/models.py
 msgid "téléphone"
 msgstr "phone"
 
@@ -424,6 +468,10 @@ msgstr "friends/"
 #: community/urls.py
 msgid "compte/"
 msgstr "account/"
+
+#: community/urls.py
+msgid "compte/alertes/"
+msgstr "account/alerts/"
 
 #: community/urls.py
 msgid "compte/confirmer/<uidb64>/<token>/"
@@ -534,6 +582,10 @@ msgid "Adresse mise à jour."
 msgstr "Address updated."
 
 #: community/views.py
+msgid "Alerte activée : tu seras prévenu·e des prochains événements."
+msgstr "Alert on: you will be told about upcoming events."
+
+#: community/views.py
 msgid "Beaucoup de photos aujourd'hui : réessaie demain."
 msgstr "Lots of photos today: try again tomorrow."
 
@@ -564,6 +616,10 @@ msgstr "Request sent."
 #: community/views.py
 msgid "Désolé, c'est complet."
 msgstr "Sorry, it's full."
+
+#: community/views.py
+msgid "Filtre enregistré (alerte désactivée)."
+msgstr "Filter saved (alert off)."
 
 #: community/views.py
 msgid "Invitation envoyée."
@@ -871,6 +927,10 @@ msgstr "other type"
 msgid "nombre de places"
 msgstr "number of places"
 
+#: events/models.py
+msgid "publier aussi sur Nice-Event"
+msgstr "also publish on Nice-Event"
+
 #: projets/models.py
 msgid "Ex. 35 € (jeu + pizza + boisson)"
 msgstr "E.g. €35 (game + pizza + drink)"
@@ -1008,6 +1068,10 @@ msgstr "Find out more"
 #: templates/base.html
 msgid "Espace bureau"
 msgstr "Board area"
+
+#: templates/base.html
+msgid "Filtres et alertes"
+msgstr "Filters and alerts"
 
 #: templates/base.html
 msgid "Flux RSS"
@@ -1229,6 +1293,40 @@ msgstr "Remove from friends"
 msgid "Se connecter pour l'ajouter"
 msgstr "Log in to add them"
 
+#: templates/community/alerts.html
+msgid "Voir l'agenda filtré (%(n)s à venir)"
+msgid_plural "Voir l'agenda filtré (%(n)s à venir)"
+msgstr[0] "See the filtered calendar (%(n)s upcoming)"
+msgstr[1] "See the filtered calendar (%(n)s upcoming)"
+
+#: templates/community/alerts.html
+msgid "Alerte"
+msgstr "Alert"
+
+#: templates/community/alerts.html
+msgid "Coche les événements qui t'intéressent : tu es prévenu·e dès qu'un nouveau est publié, dans tes notifications et, si tu veux, par courriel."
+msgstr "Tick the events you are interested in: you are told as soon as a new one is published, in your notifications and, if you like, by email."
+
+#: templates/community/alerts.html
+msgid "Enregistrer"
+msgstr "Save"
+
+#: templates/community/alerts.html
+msgid "Espace membres"
+msgstr "Members' area"
+
+#: templates/community/alerts.html
+msgid "Les courriels partent vers %(email)s. Seuls les événements publiés après l'activation de l'alerte sont signalés."
+msgstr "Emails go to %(email)s. Only events published after the alert is turned on are reported."
+
+#: templates/community/alerts.html
+msgid "Tout cocher"
+msgstr "Select all"
+
+#: templates/community/alerts.html
+msgid "Tout décocher"
+msgstr "Deselect all"
+
 #: templates/community/approved_email.txt
 msgid "Bonjour %(name)s,\n\nTon compte sur le site de l'AJC06 vient d'être validé par le bureau. Tu peux te connecter avec ton courriel et ton mot de passe :"
 msgstr "Hello %(name)s,\n\nYour account on the AJC06 website has just been approved by the board. You can log in with your email and password:"
@@ -1260,10 +1358,6 @@ msgstr "Confirm your address"
 #: templates/community/confirm_sent.html
 msgid "En attendant"
 msgstr "In the meantime"
-
-#: templates/community/confirm_sent.html
-msgid "Espace membres"
-msgstr "Members' area"
 
 #: templates/community/confirm_sent.html
 msgid "Nous venons d'envoyer un lien de confirmation. Ouvre-le pour activer ton compte ; pense aux courriers indésirables."
@@ -1346,6 +1440,10 @@ msgid "Demande de %(amount)s € : %(status)s."
 msgstr "Request for €%(amount)s: %(status)s."
 
 #: templates/community/event_form.html
+msgid "Diffusion"
+msgstr "Sharing"
+
+#: templates/community/event_form.html
 msgid "Donne tous les détails : comment y aller, où, le prix par personne et les coûts fixes, et la somme que tu demandes à l'asso."
 msgstr "Give all the details: how to get there, where, the price per person and fixed costs, and the amount you are asking the association for."
 
@@ -1356,10 +1454,6 @@ msgstr "Details"
 #: templates/community/event_form.html
 msgid "En publiant, tu t'engages à proposer un événement ouvert, bienveillant et non commercial. Le bureau de l'AJC06 peut retirer un événement qui ne respecte pas cet esprit."
 msgstr "By publishing, you commit to an open, friendly, non-commercial event. The AJC06 board may remove any event that goes against this spirit."
-
-#: templates/community/event_form.html
-msgid "Enregistrer"
-msgstr "Save"
 
 #: templates/community/event_form.html
 msgid "Infos pratiques"
@@ -1564,6 +1658,10 @@ msgstr "The board has answered your support request for \"%(title)s\"."
 #: templates/community/notifications.html
 msgid "Les demandes d'ami, les invitations et les inscriptions à tes événements apparaîtront ici."
 msgstr "Friend requests, invitations and sign-ups to your events will appear here."
+
+#: templates/community/notifications.html
+msgid "Nouvel événement pour ton alerte : <strong>%(title)s</strong>."
+msgstr "New event for your alert: <strong>%(title)s</strong>."
 
 #: templates/community/notifications.html
 msgid "Rien de neuf pour l'instant."
@@ -2210,6 +2308,10 @@ msgid "Cette description n'existe qu'en français."
 msgstr "This description is only available in French."
 
 #: templates/events/detail.html
+msgid "Cette sortie est aussi publiée sur l'agenda participatif de la région niçoise"
+msgstr "This outing is also published on the community calendar of the Nice area"
+
+#: templates/events/detail.html
 msgid "Complet"
 msgstr "Full"
 
@@ -2282,6 +2384,10 @@ msgid "Voir sur Google Maps"
 msgstr "View on Google Maps"
 
 #: templates/events/detail.html
+msgid "Voir sur Nice-Event"
+msgstr "See on Nice-Event"
+
+#: templates/events/detail.html
 msgid "annuler"
 msgstr "cancel"
 
@@ -2336,12 +2442,8 @@ msgid "Meet-ups, sorties, camps, soirées"
 msgstr "Meet-ups, outings, camps, nights out"
 
 #: templates/events/list.html
-msgid "Par l'AJC06"
-msgstr "By AJC06"
-
-#: templates/events/list.html
-msgid "Par les membres"
-msgstr "By members"
+msgid "Mes types"
+msgstr "My types"
 
 #: templates/events/list.html
 msgid "Rien d'annoncé dans cette catégorie pour l'instant."
@@ -2354,10 +2456,6 @@ msgstr "Nothing announced yet."
 #: templates/events/list.html
 msgid "S'abonner"
 msgstr "Subscribe"
-
-#: templates/events/list.html
-msgid "Tous"
-msgstr "All"
 
 #: templates/events/list.html
 msgid "Tout"

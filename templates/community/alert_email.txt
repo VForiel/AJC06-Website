@@ -1,0 +1,11 @@
+{% load ajc %}{% autoescape off %}Bonjour {{ name }},
+
+{% if events|length == 1 %}Un nouvel événement correspond à ton alerte :{% else %}{{ events|length }} nouveaux événements correspondent à ton alerte :{% endif %}
+{% for e in events %}
+• {{ e.title }}
+  {{ e|when|capfirst }}, {{ e|hours }}{% if e.venue %} · {{ e.venue }}{% endif %}
+  {{ site }}{{ e.get_absolute_url }}
+{% endfor %}
+— L'AJC06
+Modifier ou couper l'alerte : {{ site }}/compte/alertes/
+{% endautoescape %}

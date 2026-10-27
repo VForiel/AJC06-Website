@@ -57,6 +57,11 @@
     </section>
 
     <section class="settings-block">
+      <h2>{% translate "Diffusion" %}</h2>
+      {% include "community/_field.html" with field=form.on_nice_event %}
+    </section>
+
+    <section class="settings-block">
       <h2>{% translate "Détails" %}</h2>
       {% include "community/_field.html" with field=form.body %}
     </section>

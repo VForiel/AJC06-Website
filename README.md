@@ -80,6 +80,10 @@ n'apparaît que dans les journaux).
   et bilan, au format des documents remis à la DVU (convention UniCA 2026-2028), en PDF avec participant·es (HelloAsso et
   site), photos, et devis/factures annexés. Génération dans `projets/pdf.py` (fpdf2 + pypdf, polices Archivo statiques
   dans `static/fonts/pdf/`).
+- **Filtres et alertes** (`/compte/alertes/`, menu du compte) : chaque membre coche les types d'événements et l'origine
+  qui l'intéressent ; `python manage.py send_alerts` (cron) le prévient des nouveaux événements, sur le site et par courriel.
+- **Nice-Event** : les sorties de membres cochées « publier aussi sur Nice-Event » (case cochée par défaut) sont publiées
+  dans `/evenements/nice-event.json`, lu par nice-event.fr, avec un bouton « Voir sur Nice-Event » sur la page.
 - **HelloAsso** : `python manage.py sync_helloasso` récupère les billets des événements dont le lien d'inscription pointe
   vers un formulaire de l'AJC06 (cron horaire en production). Identifiants dans `/gestion/reglages/`.
 - **Photos** (`/photos/`) : tout membre peut en publier, liées ou non à un événement, en identifiant d'autres membres ;
@@ -163,7 +167,7 @@ Hébergement mutualisé de l'asso (`ssh ajc06`), application Python cPanel (Pass
 - base, médias et sauvegardes hors du code : `~/ajc06-data/{db.sqlite3,media,backups}`, journal des crons dans
   `~/ajc06-data/cron.log` ;
 - crons (installer avec `crontab fichier`, `crontab -` ne marche pas sous CageFS) : `backup_site` à 3 h 30,
-  `sync_helloasso` toutes les heures, et un appel à `http://beta.ajc06.com/robots.txt` toutes les 5 minutes pour
+  `sync_helloasso` toutes les heures, `send_alerts` toutes les 15 minutes (alertes des membres), et un appel à `http://beta.ajc06.com/robots.txt` toutes les 5 minutes pour
   garder l'application chargée (sinon le premier visiteur après une pause attend ~2,5 s ; `PassengerMinInstances`
   est refusé dans le `.htaccess` et casse le site) ;
 - `CACHE_DIR=~/ajc06-data/cache` : cache sur disque partagé entre les processus Passenger (limites d'envoi).

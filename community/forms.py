@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from events.models import Event, type_choices
 from projets.models import SupportRequest
 
-from .models import Photo, Profile
+from .models import AlertPreference, Photo, Profile
 
 User = get_user_model()
 
@@ -177,6 +177,37 @@ class EmailForm(forms.Form):
         return email
 
 
+class AlertForm(forms.ModelForm):
+    """Filtre unique du membre : types (plusieurs) et origine, comme sur l'agenda ; alerte et courriel."""
+
+    type_list = forms.MultipleChoiceField(label=_("Types d'événements"), required=False, widget=forms.CheckboxSelectMultiple,
+                                          help_text=_("Aucun coché = tous les types."))
+
+    class Meta:
+        model = AlertPreference
+        fields = ["origin", "active", "by_email"]
+        widgets = {"origin": forms.RadioSelect}
+        labels = {"origin": _("Proposés par")}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["type_list"].choices = type_choices(staff=True)
+        self.fields["type_list"].initial = self.instance.type_codes
+        self.fields["origin"].choices = AlertPreference.Origin.choices
+
+    def save(self, commit=True):
+        pref = super().save(commit=False)
+        codes = self.cleaned_data.get("type_list") or []
+        pref.types = f",{','.join(codes)}," if codes else ""
+        if pref.active and not pref.active_since:
+            pref.active_since = timezone.now()
+        if not pref.active:
+            pref.active_since = None
+        if commit:
+            pref.save()
+        return pref
+
+
 class DeleteAccountForm(forms.Form):
     password = forms.CharField(label=_("Ton mot de passe, pour confirmer"), strip=False, widget=forms.PasswordInput)
 
@@ -237,7 +268,7 @@ class CommunityEventForm(EventTypesMixin, forms.ModelForm):
     class Meta:
         model = Event
         fields = ["title", "other_type", "start_date", "start_time", "end_date", "end_time", "venue", "address",
-                  "price", "capacity", "registration_url", "poster", "summary", "body"]
+                  "price", "capacity", "registration_url", "poster", "summary", "body", "on_nice_event"]
         labels = {
             "title": _("Titre"),
             "start_date": _("Date"),
@@ -260,6 +291,8 @@ class CommunityEventForm(EventTypesMixin, forms.ModelForm):
             "registration_url": _("Facultatif : billetterie, groupe WhatsApp, itinéraire…"),
             "summary": _("Une phrase qui donne envie."),
             "body": _("Programme, niveau, matériel à prévoir, point de rendez-vous… Mise en forme Markdown possible."),
+            "on_nice_event": _("Ta sortie apparaît aussi sur nice-event.fr, l'agenda participatif de la région niçoise, avec un "
+                               "lien vers cette page : plus de monde ! Décoche pour la garder entre doctorant·es."),
         }
         widgets = {
             "start_date": DateInput(),

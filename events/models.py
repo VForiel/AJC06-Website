@@ -61,6 +61,12 @@ class EventQuerySet(models.QuerySet):
     def with_type(self, code):
         return self.filter(types__contains=f",{code},")
 
+    def with_types(self, codes):
+        q = Q()
+        for code in codes:
+            q |= Q(types__contains=f",{code},")
+        return self.filter(q)
+
     def official(self):
         """Événements de l'asso : ceux du bureau et les sorties de membres soutenues par l'asso."""
         return self.filter(Q(is_community=False) | Q(supported=True))
@@ -116,6 +122,8 @@ class Event(models.Model):
                                   help_text="Caché du site tant que le dossier n'est pas validé par l'université")
     # Sortie de membre dont la demande de soutien a été acceptée : présentée comme un événement de l'asso.
     supported = models.BooleanField("soutenu par l'asso", default=False)
+    # Sorties de membres : reprises par nice-event.fr (agenda de la région niçoise) avec un lien vers cette page.
+    on_nice_event = models.BooleanField(_("publier aussi sur Nice-Event"), default=True)
     helloasso_count = models.PositiveIntegerField("inscrit·es HelloAsso", null=True, blank=True)
     helloasso_synced_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -152,6 +160,15 @@ class Event(models.Model):
 
     def get_absolute_url(self):
         return reverse("events:detail", args=[self.slug])
+
+    @property
+    def shared_on_nice_event(self):
+        return self.is_community and self.on_nice_event and self.is_published and not self.on_hold
+
+    @property
+    def nice_event_url(self):
+        """Lien stable : Nice-Event redirige vers sa copie de l'événement (ou vers son agenda en attendant le scan)."""
+        return f"{settings.NICE_EVENT_URL}/evenements/source/ajc06/{self.pk}/"
 
     # Dates -----------------------------------------------------------------
 

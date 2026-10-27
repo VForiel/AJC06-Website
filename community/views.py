@@ -25,9 +25,10 @@ from projets.models import SupportRequest
 
 from . import confirmation
 
-from .forms import (CommunityEventForm, DeleteAccountForm, EmailForm, PhotoForm, ProfileForm, ReportForm, SignupForm,
+from .forms import (AlertForm, CommunityEventForm, DeleteAccountForm, EmailForm, PhotoForm, ProfileForm, ReportForm, SignupForm,
                     SupportRequestForm)
-from .models import Attendance, Friendship, Notification, Photo, Profile, Report, friends_of, relation
+from .models import (AlertPreference, Attendance, Friendship, Notification, Photo, Profile, Report, friends_of,
+                     relation)
 
 SIGNUPS_PER_HOUR = 5
 EVENTS_PER_DAY = 5
@@ -148,6 +149,25 @@ def settings_view(request):
             messages.success(request, _("Adresse mise à jour."))
             return redirect("community:settings")
     return render(request, "community/settings.html", {"form": form, "email_form": email_form, "profile": profile})
+
+
+@login_required
+def alerts(request):
+    """Filtres et alertes : les types et l'origine des événements qui m'intéressent, et l'alerte qui va avec."""
+    pref, _created = AlertPreference.objects.get_or_create(user=request.user)
+    form = AlertForm(request.POST or None, instance=pref)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Alerte activée : tu seras prévenu·e des prochains événements.") if pref.active
+                         else _("Filtre enregistré (alerte désactivée)."))
+        return redirect("community:alerts")
+    query = [("type", code) for code in pref.type_codes] + ([("par", pref.origin)] if pref.origin else [])
+    from urllib.parse import urlencode
+
+    return render(request, "community/alerts.html", {
+        "form": form, "pref": pref, "agenda_query": urlencode(query),
+        "matching": pref.matching(Event.objects.published().upcoming()).count(),
+    })
 
 
 @login_required

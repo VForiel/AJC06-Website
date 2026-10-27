@@ -46,6 +46,8 @@ if not SECRET_KEY:
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 SITE_URL = os.environ.get("SITE_URL", "http://localhost:8000").rstrip("/")
+# Agenda de la région niçoise qui reprend les sorties des membres (case « publier aussi sur Nice-Event »).
+NICE_EVENT_URL = os.environ.get("NICE_EVENT_URL", "https://nice-event.fr").rstrip("/")
 # Derrière un reverse proxy de confiance (Caddy) : l'adresse du visiteur est dans X-Forwarded-For.
 TRUST_X_FORWARDED_FOR = env_bool("TRUST_X_FORWARDED_FOR", False)
 

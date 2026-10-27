@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n ajc %}
+{% block title %}{% translate "Filtres et alertes" %}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">{% translate "Espace membres" %}</p>
+    <h1 class="page-title">{% translate "Filtres et alertes" %}</h1>
+    <p class="page-lede">{% translate "Coche les événements qui t'intéressent : tu es prévenu·e dès qu'un nouveau est publié, dans tes notifications et, si tu veux, par courriel." %}</p>
+  </div>
+</header>
+
+<div class="wrap page-body settings">
+  <form class="form settings-form alerts-form" method="post" novalidate>
+    {% csrf_token %}
+    {% include "community/_form_errors.html" %}
+
+    <section class="settings-block">
+      <h2>{{ form.type_list.label }}</h2>
+      <p class="help">{{ form.type_list.help_text }}
+        <button type="button" class="link-btn" data-check-all="type_list">{% translate "Tout cocher" %}</button> ·
+        <button type="button" class="link-btn" data-check-none="type_list">{% translate "Tout décocher" %}</button></p>
+      <div class="choices type-choices">{% for box in form.type_list %}<label>{{ box.tag }} {{ box.choice_label }}</label>{% endfor %}</div>
+    </section>
+
+    <section class="settings-block">
+      <h2>{{ form.origin.label }}</h2>
+      <div class="choices">{% for radio in form.origin %}<label>{{ radio.tag }} {{ radio.choice_label }}</label>{% endfor %}</div>
+    </section>
+
+    <section class="settings-block">
+      <h2>{% translate "Alerte" %}</h2>
+      {% include "community/_field.html" with field=form.active %}
+      {% include "community/_field.html" with field=form.by_email %}
+      <p class="help">{% blocktranslate trimmed with email=user.email %}Les courriels partent vers {{ email }}. Seuls les événements publiés après l'activation de l'alerte sont signalés.{% endblocktranslate %}</p>
+    </section>
+
+    <div class="settings-actions">
+      <button class="btn btn-primary" type="submit">{% icon "check" 18 %} {% translate "Enregistrer" %}</button>
+      <a class="btn btn-ghost" href="{% url 'events:list' %}{% if agenda_query %}?{{ agenda_query }}{% endif %}">{% icon "calendar" 18 %}
+        {% blocktranslate count n=matching %}Voir l'agenda filtré ({{ n }} à venir){% plural %}Voir l'agenda filtré ({{ n }} à venir){% endblocktranslate %}</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
