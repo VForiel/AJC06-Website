@@ -39,7 +39,7 @@
   </div>
 
   <section aria-labelledby="upcoming-title">
-    <h2 class="sr" id="upcoming-title">{% translate "À venir" %}</h2>
+    <h2 class="section-title agenda-part" id="upcoming-title">{% translate "À venir" %}{% if upcoming %} <small>{% blocktranslate count n=upcoming|length %}{{ n }} événement{% plural %}{{ n }} événements{% endblocktranslate %}</small>{% endif %}</h2>
     {% if upcoming %}
     <div class="rows">
       {% for event in upcoming %}{% include "events/_row.html" %}{% endfor %}
@@ -57,10 +57,11 @@
   </section>
 
   {% if years %}
-  <section id="archives" aria-label="{% translate "Événements passés" %}">
+  <section id="archives" class="agenda-past" aria-labelledby="past-title">
+    <h2 class="section-title agenda-part" id="past-title">{% translate "Passés" %} <small>{% blocktranslate count n=past_count %}{{ n }} événement{% plural %}{{ n }} événements{% endblocktranslate %}</small></h2>
     {% for year, items in years %}
     <div class="year">
-      <h2 class="year-title">{{ year }} <small>{% blocktranslate count n=items|length %}{{ n }} événement{% plural %}{{ n }} événements{% endblocktranslate %}</small></h2>
+      <h3 class="year-title">{{ year }} <small>{% blocktranslate count n=items|length %}{{ n }} événement{% plural %}{{ n }} événements{% endblocktranslate %}</small></h3>
       <div class="rows">
         {% for event in items %}{% include "events/_row.html" %}{% endfor %}
       </div>

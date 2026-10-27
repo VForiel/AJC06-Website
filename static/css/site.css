@@ -462,7 +462,12 @@ a.next-card:hover { background: #0f5290; }
   font: inherit; font-weight: 600; cursor: pointer; text-decoration: none;
 }
 .subscribe button:hover, .subscribe a.small-btn:hover { border-color: var(--ink); }
-.year { margin-top: clamp(40px, 6vw, 72px); }
+.agenda-part { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 16px; }
+.agenda-part small { font-size: 1rem; font-weight: 600; font-stretch: 100%; text-transform: none; color: var(--ink-2); }
+.agenda-past { margin-top: clamp(56px, 8vw, 96px); padding-top: clamp(28px, 4vw, 40px); border-top: 2px solid var(--ink); }
+.agenda-past .year:first-of-type { margin-top: 8px; }
+.year { margin-top: clamp(32px, 5vw, 56px); }
+.agenda-past .year-title { font-size: clamp(1.75rem, 4vw, 2.5rem); }
 .year-title { display: flex; align-items: baseline; gap: 16px; margin-bottom: 12px; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; font-stretch: 62%; }
 .year-title small { font-size: 1rem; font-weight: 600; font-stretch: 100%; color: var(--ink-2); }
 .empty {

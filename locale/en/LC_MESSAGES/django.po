@@ -2446,6 +2446,10 @@ msgid "Mes types"
 msgstr "My types"
 
 #: templates/events/list.html
+msgid "Passés"
+msgstr "Past"
+
+#: templates/events/list.html
 msgid "Rien d'annoncé dans cette catégorie pour l'instant."
 msgstr "Nothing announced in this category yet."
 
@@ -2464,7 +2468,3 @@ msgstr "All"
 #: templates/events/list.html
 msgid "À venir"
 msgstr "Upcoming"
-
-#: templates/events/list.html
-msgid "Événements passés"
-msgstr "Past events"
