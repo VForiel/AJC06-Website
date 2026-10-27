@@ -1,6 +1,6 @@
 # AJC06-Website
 
-Site de l'Association des Jeunes Chercheurs des Alpes-Maritimes (AJC06), en remplacement du WordPress de https://ajc06.com.
+Site de l'Association des Jeunes Chercheurs des Alpes-Maritimes (AJC06), https://ajc06.com (en ligne depuis le 27/10/2026, l'ancien WordPress est archivé sur https://archive.ajc06.com).
 Django 6.1, gabarits et CSS écrits à la main, aucune ressource tierce. Le plan de la refonte est dans [docs/PLAN.md](docs/PLAN.md).
 
 ## Lancer en local
@@ -175,20 +175,25 @@ Les anciennes adresses (`/events/…`, `/evenement/`, `/don/`, articles à la ra
 .venv311/Scripts/python manage.py test tests     # Python 3.11, comme en production
 ```
 
-## Production : o2switch (beta.ajc06.com)
+## Production : o2switch (ajc06.com)
 
 Hébergement mutualisé de l'asso (`ssh ajc06`), application Python cPanel (Passenger, Python 3.11, d'où Django 5.2 LTS) :
 
 - code dans `~/ajc06-site` (copie du dépôt, sans git), `.env` à côté (droits 600) ;
 - virtualenv `~/virtualenv/ajc06-site/3.11`, point d'entrée `passenger_wsgi.py`. Attention : recréer l'application
   avec `cloudlinux-selector create` remplace ce fichier par un modèle qui ne marche pas, il faut le recopier ;
-- racine web `~/website` : elle ne contient que le `.htaccess` Passenger (l'ancien WordPress de beta est rangé dans
-  `~/beta-wordpress-archive`) ;
+- domaines : ajc06.com (racine web `~/public_html`, qui ne contient que le `.htaccess` Passenger, `.well-known` et
+  `old_website`) ; www.ajc06.com et beta.ajc06.com (racine `~/website`, domaine sous lequel l'application est
+  enregistrée dans cPanel) redirigent en 301 vers ajc06.com. Les variables `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS` et
+  `SITE_URL` du `.env` listent ces domaines ;
+- l'ancien WordPress est archivé sur https://archive.ajc06.com (racine `~/public_html/old_website`, `PassengerEnabled off`
+  dans son `.htaccess`, non indexé ; sauvegarde de la base avant bascule dans `~/wordpress-backup`). Le WordPress de
+  l'ancien beta est rangé dans `~/beta-wordpress-archive` ;
 - base, médias et sauvegardes hors du code : `~/ajc06-data/{db.sqlite3,media,backups}`, journal des crons dans
   `~/ajc06-data/cron.log` ;
 - crons (installer avec `crontab fichier`, `crontab -` ne marche pas sous CageFS) : `backup_site` à 3 h 30,
   `sync_helloasso` toutes les heures, `send_alerts` toutes les 15 minutes (alertes des membres), `send_posts` toutes
-  les 5 minutes (diffusions programmées), et un appel à `http://beta.ajc06.com/robots.txt` toutes les 5 minutes pour
+  les 5 minutes (diffusions programmées), et un appel à `https://ajc06.com/robots.txt` toutes les 5 minutes pour
   garder l'application chargée (sinon le premier visiteur après une pause attend ~2,5 s ; `PassengerMinInstances`
   est refusé dans le `.htaccess` et casse le site) ;
 - `CACHE_DIR=~/ajc06-data/cache` : cache sur disque partagé entre les processus Passenger (limites d'envoi).
@@ -203,7 +208,6 @@ scp ajc06.tgz ajc06: && ssh ajc06 'tar xzf ajc06.tgz -C ~/ajc06-site && rm ajc06
     && python manage.py migrate && python manage.py collectstatic --noinput && touch tmp/restart.txt'
 ```
 
-Le site principal ajc06.com (`~/public_html`, WordPress) n'est pas concerné.
 
 ### Avec Docker (autre hébergeur)
 
