@@ -179,6 +179,14 @@ class LegacyRedirectTests(TestCase):
         self.assertRedirectsTo("/en/prize-cped/", "/en/news/prix-de-these-cped/")
         self.assertRedirectsTo("/en/ajc06-association-of-young-researchers-from-06-alpes-maritimes/", "/en/")
 
+    def test_wix_urls(self):
+        self.assertRedirectsTo("/board", "/equipe/")
+        self.assertRedirectsTo("/nos-missions", "/missions/")
+        self.assertRedirectsTo("/liens-uca", "/ressources/faire-son-doctorat-a-luca/")
+        self.assertRedirectsTo("/single-post/2019/02/10/prix-de-these-cped", "/actu/prix-de-these-cped/")
+        self.assertRedirectsTo("/single-post/2017/11/23/phd-meet-up", "/actu/")
+        self.assertRedirectsTo("/actu/categories/post-doc", "/actu/")
+
     def test_old_english_pages_still_exist(self):
         for url in ["/en/team/", "/en/our-missions/", "/en/legal-notice/", "/en/privacy-policy/", "/en/news/"]:
             with self.subTest(url=url):

@@ -24,6 +24,24 @@ FIXED = {
     "sitemap-page": "core:home",
 }
 
+# Adresses du site Wix d'avant WordPress, que le .htaccess du WordPress redirigeait.
+WIX = {
+    "board": ("core:team",),
+    "bureau-2022": ("core:team",),
+    "anciens-bureaux": ("core:team",),
+    "nos-missions": ("core:missions",),
+    "copie-de-en": ("core:missions",),
+    "contacts": ("core:contact",),
+    "liens-utiles": ("core:resources",),
+    "liens-doctorants": ("core:resources",),
+    "jeunes-chercheurs-du-06": ("core:resource", "faire-son-doctorat-a-luca"),
+    "ed": ("core:resource", "faire-son-doctorat-a-luca"),
+    "liens-uca": ("core:resource", "faire-son-doctorat-a-luca"),
+    "university-site": ("core:resource", "faire-son-doctorat-a-luca"),
+    "liens-apres-these": ("core:resource", "aide-a-la-recherche-demploi"),
+    "events-1": ("core:resource", "cartographie-des-associations"),
+}
+
 
 def legacy_target(path):
     from blog.models import Post
@@ -49,6 +67,14 @@ def legacy_target(path):
             return reverse("core:resources")
         if head in FIXED and len(parts) == 1:
             return reverse(FIXED[head])
+        if head in WIX and len(parts) == 1:
+            name, *args = WIX[head]
+            return reverse(name, args=args)
+        if head == "single-post":
+            post = Post.objects.live().filter(slug=parts[-1]).first()
+            return post.get_absolute_url() if post else reverse("blog:list")
+        if head == "actu" and len(parts) > 2:
+            return reverse("blog:list")
         if len(parts) == 1:
             live = Post.objects.live()
             field = "legacy_slug_en" if lang == "en" else "legacy_slug"
