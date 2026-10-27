@@ -524,6 +524,7 @@ def diffuse(request, pk):
         at = data["scheduled_at"] if data["when"] == "later" else timezone.now()
         posts = [Post.objects.create(
             event=event, network=n, text=data[f"text_{n}"].strip(), scheduled_at=at, created_by=request.user,
+            language=data["language"],
             subject=data["subject"].strip() if n == "email" else "", recipients=data["recipients"] if n == "email" else "",
         ) for n in data["chosen"]]
         if data["when"] == "now":
@@ -540,8 +541,9 @@ def diffuse(request, pk):
         return redirect("gestion:diffuse", pk=event.pk)
     return render(request, "gestion/diffuse.html", {
         "event": event, "form": form, "config": config,
-        "previews": [(label, visual_url(event, fmt)) for fmt, label in
+        "previews": [(lang, label, visual_url(event, fmt, lang)) for lang in ("fr", "en") for fmt, label in
                      (("portrait", "Instagram, Facebook"), ("og", "Courriel"), ("story", "Story"))],
+        "prefills": form.prefills(),
         "posts": event.posts.select_related("created_by")[:30],
     })
 

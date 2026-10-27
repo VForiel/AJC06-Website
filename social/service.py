@@ -40,9 +40,10 @@ def send(post):
     event = post.event
     fmt = post.visual_format
     try:
-        image = visual_path(event, fmt)
-        image_url = settings.SITE_URL + visual_url(event, fmt)
-        external_id, url = networks.PUBLISHERS[post.network](post, config, image, image_url, alt_text(event))
+        lang = post.visual_language
+        image = visual_path(event, fmt, lang)
+        image_url = settings.SITE_URL + visual_url(event, fmt, lang)
+        external_id, url = networks.PUBLISHERS[post.network](post, config, image, image_url, alt_text(event, post.language))
     except Exception as exc:  # erreur de réseau, d'API, de SMTP… : notée sur la diffusion, jamais perdue
         log.warning("Diffusion %s en échec : %s", post.pk, exc)
         retry = post.attempts < MAX_ATTEMPTS and isinstance(exc, (networks.NetworkError, OSError))

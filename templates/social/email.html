@@ -1,5 +1,5 @@
 {% load ajc %}<!doctype html>
-<html lang="fr">
+<html lang="{% if english %}en{% else %}fr{% endif %}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ post.subject }}</title></head>
 <body style="margin:0;padding:0;background:#f7f4ec;color:#0f1d2e;font-family:Arial,Helvetica,sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f4ec;">
@@ -10,12 +10,13 @@
         </td></tr>
         <tr><td style="padding:24px 28px;font-size:16px;line-height:1.5;">
           {{ post.text|linebreaks|urlize }}
-          <p style="margin:24px 0 8px;"><a href="{{ url }}" style="display:inline-block;background:#1460a6;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 20px;border-radius:8px;">Voir l'événement</a>
-          {% if event.registration_url %} &nbsp; <a href="{{ event.registration_url }}" style="color:#1460a6;font-weight:bold;">S'inscrire</a>{% endif %}</p>
+          <p style="margin:24px 0 8px;"><a href="{{ url }}" style="display:inline-block;background:#1460a6;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 20px;border-radius:8px;">{% if english %}See the event{% else %}Voir l'événement{% endif %}</a>
+          {% if event.registration_url %} &nbsp; <a href="{{ event.registration_url }}" style="color:#1460a6;font-weight:bold;">{% if english %}Register{% else %}S'inscrire{% endif %}</a>{% endif %}</p>
         </td></tr>
         <tr><td style="padding:16px 28px;border-top:1px solid #ddd5c4;font-size:13px;color:#4a5563;">
-          AJC06 — Association des Jeunes Chercheurs des Alpes-Maritimes · <a href="{{ SITE_URL|default:'https://ajc06.com' }}" style="color:#4a5563;">ajc06.com</a><br>
-          Tu reçois ce message parce que ton adresse figure sur une liste de diffusion de l'AJC06. Pour ne plus le recevoir, réponds simplement à ce courriel.
+          AJC06 — Association des Jeunes Chercheurs des Alpes-Maritimes · <a href="https://ajc06.com" style="color:#4a5563;">ajc06.com</a><br>
+          {% if not english %}Tu reçois ce message parce que ton adresse figure sur une liste de diffusion de l'AJC06. Pour ne plus le recevoir, réponds simplement à ce courriel.{% endif %}
+          {% if english or post.language == "both" %}{% if not english %}<br>{% endif %}You receive this message because your address is on an AJC06 mailing list. To stop receiving it, just reply to this email.{% endif %}
         </td></tr>
       </table>
     </td></tr>

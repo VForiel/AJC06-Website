@@ -111,12 +111,42 @@ class DiffusionTests(TestCase):
         self.assertContains(page, "lien en bio")
         self.assertContains(page, "doctorants@example.org")
         self.assertContains(page, "/media/visuels/")
+        self.assertRegex(page.content.decode(), r'name="language" value="fr"[^>]*checked')  # sans version anglaise
+
+    def test_languages(self):
+        from social.texts import SEPARATOR, default_subject, default_text
+
+        self.event.title_en, self.event.summary_en = "Back-to-school PhD meet-up", "Let's meet."
+        self.event.save()
+        en = default_text(self.event, "facebook", language="en")
+        self.assertIn("Back-to-school PhD meet-up", en)
+        self.assertIn("/en/", en)
+        self.assertNotIn("Inscription", en)
+        both = default_text(self.event, "instagram", "#AJC06", language="both")
+        self.assertIn(SEPARATOR.strip(), both)
+        self.assertLess(both.index("On fait connaissance."), both.index("Let's meet."))
+        self.assertTrue(both.endswith("#AJC06"))
+        self.assertLessEqual(len(both), 2200)
+        self.assertIn(" / ", default_subject(self.event, "both"))
+        self.client.force_login(self.staff)
+        page = self.client.get(reverse("gestion:diffuse", args=[self.event.pk]))
+        self.assertRegex(page.content.decode(), r'name="language" value="both"[^>]*checked')  # bilingue par défaut
+        self.assertContains(page, 'id="diffusion-prefills"')
+        self.client.post(reverse("gestion:diffuse", args=[self.event.pk]), {
+            "on_email": "on", "text_email": en, "subject": "Meet-up", "recipients": "a@example.org", "when": "now",
+            "language": "en"})
+        post = Post.objects.get()
+        self.assertEqual((post.language, post.status), ("en", Post.Status.PUBLISHED))
+        html = mail.outbox[0].alternatives[0][0]
+        self.assertIn("See the event", html)
+        self.assertIn("/media/visuels/", html)
+        self.assertIn("/en-og-", html)  # visuel anglais
 
     def test_email_now_in_bcc_with_visual(self):
         self.client.force_login(self.staff)
         self.client.post(reverse("gestion:diffuse", args=[self.event.pk]), {
             "on_email": "on", "text_email": "Bonjour à toutes et à tous", "subject": "Meet-up",
-            "recipients": "a@example.org\nb@example.org", "when": "now"})
+            "recipients": "a@example.org\nb@example.org", "when": "now", "language": "fr"})
         post = Post.objects.get()
         self.assertEqual(post.status, Post.Status.PUBLISHED, post.error)
         self.assertEqual(len(mail.outbox), 1)
@@ -129,7 +159,7 @@ class DiffusionTests(TestCase):
     def test_invalid_recipient_refused(self):
         self.client.force_login(self.staff)
         self.client.post(reverse("gestion:diffuse", args=[self.event.pk]), {
-            "on_email": "on", "text_email": "Salut", "subject": "x", "recipients": "pas-une-adresse", "when": "now"})
+            "on_email": "on", "text_email": "Salut", "subject": "x", "recipients": "pas-une-adresse", "when": "now", "language": "fr"})
         self.assertFalse(Post.objects.exists())
 
     def test_scheduled_posts_go_out_when_due(self):
@@ -137,7 +167,7 @@ class DiffusionTests(TestCase):
         later = timezone.localtime() + timedelta(hours=2)
         self.client.post(reverse("gestion:diffuse", args=[self.event.pk]), {
             "on_instagram": "on", "text_instagram": "Insta", "on_facebook": "on", "text_facebook": "Facebook",
-            "when": "later", "scheduled_at": later.strftime("%Y-%m-%dT%H:%M")})
+            "language": "fr", "when": "later", "scheduled_at": later.strftime("%Y-%m-%dT%H:%M")})
         self.assertEqual(Post.objects.filter(status=Post.Status.SCHEDULED).count(), 2)
         self.assertEqual(send_due(), "Rien à diffuser")
         Post.objects.update(scheduled_at=timezone.now() - timedelta(minutes=1))
@@ -181,7 +211,7 @@ class DiffusionTests(TestCase):
         config.save()
         self.client.force_login(self.staff)
         self.client.post(reverse("gestion:diffuse", args=[self.event.pk]), {
-            "on_facebook": "on", "text_facebook": "x", "when": "now"})
+            "on_facebook": "on", "text_facebook": "x", "when": "now", "language": "fr"})
         self.assertFalse(Post.objects.exists())
 
     def test_robots_kick_sends_due_posts(self):

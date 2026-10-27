@@ -87,10 +87,13 @@ def publish_email(post, config, image_path, image_url, alt):
     recipients = post.recipient_list
     if not recipients:
         raise PublishError("Aucun destinataire.")
+    from django.utils import translation
+
     event = post.event
+    with translation.override(post.visual_language):  # page anglaise du site pour un courriel tout en anglais
+        url = settings.SITE_URL + event.get_absolute_url()
     html = render_to_string("social/email.html", {
-        "post": post, "event": event, "image_url": image_url, "alt": alt,
-        "url": settings.SITE_URL + event.get_absolute_url(),
+        "post": post, "event": event, "image_url": image_url, "alt": alt, "url": url, "english": post.language == "en",
     })
     connection = get_connection()
     with open(image_path, "rb") as f:

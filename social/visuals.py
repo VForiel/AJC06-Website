@@ -84,17 +84,19 @@ def emoji_free(text):
     return " ".join("".join(c for c in text if keep(c)).split())
 
 
-def labels(event):
+def labels(event, lang="fr"):
+    """Textes du visuel dans une langue (« fr » ou « en » ; titre et prix anglais s'ils existent, sinon le français)."""
     from core.templatetags.ajc import hours, when
 
-    with translation.override("fr"):
+    with translation.override(lang):
         kinds = [str(event.other_type if c == "autre" and event.other_type else TYPE_LABELS.get(c, c))
                  for c in event.type_codes][:2]
         date = when(event).capitalize()
         time = hours(event)
+        title, price = event.title_tr, event.price_tr
     place = event.venue or event.address
-    return {"kinds": " · ".join(kinds).upper(), "title": emoji_free(event.title), "date": date, "time": time,
-            "place": place, "price": event.price}
+    return {"kinds": " · ".join(kinds).upper(), "title": emoji_free(title), "date": date, "time": time,
+            "place": place, "price": price}
 
 
 @lru_cache(maxsize=4)
@@ -118,11 +120,11 @@ def poster_image(event):
         return None
 
 
-def render(event, fmt="portrait"):
+def render(event, fmt="portrait", lang="fr"):
     width, height = FORMATS[fmt]
     img = Image.new("RGB", (width, height), PAPER)
     draw = ImageDraw.Draw(img)
-    info = labels(event)
+    info = labels(event, lang)
     poster = poster_image(event) if event.poster else None
     pad = 64 if fmt != "og" else 56
 
@@ -177,25 +179,25 @@ def render(event, fmt="portrait"):
     return img
 
 
-def cache_key(event, fmt):
-    raw = f"{VERSION}|{fmt}|{event.pk}|{event.updated_at.isoformat()}|{event.poster.name if event.poster else ''}"
+def cache_key(event, fmt, lang="fr"):
+    raw = f"{VERSION}|{fmt}|{lang}|{event.pk}|{event.updated_at.isoformat()}|{event.poster.name if event.poster else ''}"
     return hashlib.sha1(raw.encode()).hexdigest()[:12]
 
 
-def visual_path(event, fmt):
-    """Chemin du visuel (généré au besoin), en JPEG : seul format accepté par l'API Instagram."""
+def visual_path(event, fmt, lang="fr"):
+    """Chemin du visuel (généré au besoin), en JPEG : seul format accepté par l'API Instagram. lang : « fr » ou « en »."""
     folder = Path(settings.MEDIA_ROOT) / "visuels" / str(event.pk)
-    target = folder / f"{fmt}-{cache_key(event, fmt)}.jpg"
+    target = folder / f"{lang}-{fmt}-{cache_key(event, fmt, lang)}.jpg"
     if not target.exists():
         folder.mkdir(parents=True, exist_ok=True)
-        for old in folder.glob(f"{fmt}-*.jpg"):
+        for old in [*folder.glob(f"{lang}-{fmt}-*.jpg"), *folder.glob(f"{fmt}-*.jpg")]:  # (+ noms d'avant les langues)
             old.unlink(missing_ok=True)
         tmp = target.with_suffix(".tmp")
-        render(event, fmt).save(tmp, "JPEG", quality=88, optimize=True, progressive=True)
+        render(event, fmt, lang).save(tmp, "JPEG", quality=88, optimize=True, progressive=True)
         tmp.replace(target)
     return target
 
 
-def visual_url(event, fmt):
-    path = visual_path(event, fmt)
+def visual_url(event, fmt, lang="fr"):
+    path = visual_path(event, fmt, lang)
     return f"{settings.MEDIA_URL}{path.relative_to(settings.MEDIA_ROOT).as_posix()}"

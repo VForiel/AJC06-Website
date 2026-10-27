@@ -4,13 +4,16 @@ from django import forms
 from django.core.validators import validate_email
 from django.utils import timezone
 
-from .models import LIMIT, Network
+from .models import LANGUAGES, LIMIT, Network
 from .texts import default_subject, default_text
 
 
 class DiffusionForm(forms.Form):
-    """Un bloc par canal (case à cocher + texte), puis « maintenant » ou une date de publication."""
+    """Langue, un bloc par canal (case à cocher + texte), puis « maintenant » ou une date de publication."""
 
+    language = forms.ChoiceField(label="Langue", choices=LANGUAGES, widget=forms.RadioSelect,
+                                 help_text="Change les textes proposés (et le visuel, en anglais pour une diffusion tout en "
+                                           "anglais). Les textes déjà modifiés sont remplacés.")
     when = forms.ChoiceField(label="Quand ?", choices=[("now", "Tout de suite"), ("later", "Programmer")],
                              widget=forms.RadioSelect, initial="now")
     scheduled_at = forms.DateTimeField(label="Le", required=False,
@@ -22,16 +25,28 @@ class DiffusionForm(forms.Form):
     def __init__(self, *args, event, config, **kwargs):
         super().__init__(*args, **kwargs)
         self.event, self.config = event, config
+        # Bilingue par défaut si l'événement a une version anglaise
+        language = "both" if event.title_en or event.summary_en or event.body_en else "fr"
+        self.fields["language"].initial = language
         self.networks = []
         for value, label in Network.choices:
             ready = config.network_ready(value)
             self.fields[f"on_{value}"] = forms.BooleanField(label=label, required=False, initial=ready, disabled=not ready)
             self.fields[f"text_{value}"] = forms.CharField(
-                label=f"Texte {label}", required=False, initial=default_text(event, value, config.social_signature),
+                label=f"Texte {label}", required=False,
+                initial=default_text(event, value, config.social_signature, language),
                 widget=forms.Textarea(attrs={"rows": 12 if value == "email" else 9, "data-limit": LIMIT[value]}))
             self.networks.append((value, label, ready))
-        self.fields["subject"].initial = default_subject(event)
+        self.fields["subject"].initial = default_subject(event, language)
         self.fields["recipients"].initial = config.diffusion_emails
+
+    def prefills(self):
+        """Textes proposés pour chaque langue, que la page échange quand on change de langue."""
+        out = {}
+        for lang, _label in LANGUAGES:
+            texts = {f"text_{n}": default_text(self.event, n, self.config.social_signature, lang) for n, _l in Network.choices}
+            out[lang] = {**texts, "subject": default_subject(self.event, lang)}
+        return out
 
     def blocks(self):
         return [(value, label, ready, self[f"on_{value}"], self[f"text_{value}"], LIMIT[value])

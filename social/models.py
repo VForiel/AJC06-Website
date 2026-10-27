@@ -10,6 +10,7 @@ class Network(models.TextChoices):
 
 
 # Visuel utilisé par canal (social.visuals.FORMATS) et longueur maximale du texte.
+LANGUAGES = [("fr", "Français"), ("en", "Anglais"), ("both", "Les deux")]
 FORMAT = {"instagram": "portrait", "facebook": "portrait", "email": "og"}
 LIMIT = {"instagram": 2200, "facebook": 5000, "email": 20000}
 
@@ -33,6 +34,7 @@ class Post(models.Model):
     event = models.ForeignKey("events.Event", on_delete=models.CASCADE, related_name="posts")
     network = models.CharField("canal", max_length=10, choices=Network.choices)
     text = models.TextField("texte")
+    language = models.CharField("langue", max_length=4, choices=LANGUAGES, default="fr")
     subject = models.CharField("objet du courriel", max_length=200, blank=True)
     recipients = models.TextField("destinataires", blank=True, help_text="Une adresse par ligne (courriel seulement)")
     scheduled_at = models.DateTimeField("prévue le", default=timezone.now, db_index=True)
@@ -57,6 +59,11 @@ class Post(models.Model):
     @property
     def visual_format(self):
         return FORMAT[self.network]
+
+    @property
+    def visual_language(self):
+        """Visuel en anglais seulement pour une diffusion tout en anglais (bilingue : visuel français)."""
+        return "en" if self.language == "en" else "fr"
 
     @property
     def recipient_list(self):

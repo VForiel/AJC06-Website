@@ -125,3 +125,22 @@
     update();
   });
 })();
+
+// Diffusion : changer de langue remplace les textes proposés (objet du courriel compris)
+(function () {
+  "use strict";
+  var data = document.getElementById("diffusion-prefills");
+  var choices = document.querySelector("[data-language]");
+  if (!data || !choices) return;
+  var prefills = JSON.parse(data.textContent);
+  choices.addEventListener("change", function (e) {
+    var texts = prefills[e.target.value];
+    if (!texts) return;
+    Object.keys(texts).forEach(function (name) {
+      var field = document.getElementById("id_" + name);
+      if (!field || field.disabled) return;
+      field.value = texts[name];
+      field.dispatchEvent(new Event("input"));  // compteur de caractères
+    });
+  });
+})();

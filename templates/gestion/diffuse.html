@@ -13,19 +13,25 @@
   </div>
 </header>
 
-<section class="g-panel">
-  <h2 class="g-panel-title">Visuels</h2>
-  <p class="g-help">{% if event.poster %}Générés à partir de l'affiche, montrée en entier.{% else %}Pas d'affiche : visuel aux couleurs de l'AJC06 avec le titre en grand. Ajoute une affiche à l'événement pour l'utiliser.{% endif %}
-    Le visuel portrait part sur Instagram et Facebook, le visuel paysage dans les courriels (en pièce jointe et dans le message).
-    La story se télécharge pour être publiée à la main.</p>
-  <div class="g-previews">
-    {% for label, url in previews %}<a href="{{ url }}" target="_blank" download><img src="{{ url }}" alt="Visuel {{ label }}" loading="lazy"><span>{{ label }}</span></a>{% endfor %}
-  </div>
-</section>
-
-<form class="g-form-plain" method="post" novalidate>
+<form class="g-form-plain g-diffuse" method="post" novalidate>
   {% csrf_token %}
   {% if form.errors %}<p class="form-error" tabindex="-1" data-form-error>Rien n'est parti : {% if form.non_field_errors %}{{ form.non_field_errors|join:" " }}{% else %}corrige les champs signalés.{% endif %}</p>{% endif %}
+  <fieldset class="g-panel">
+    <legend>{{ form.language.label }}</legend>
+    <div class="choices" data-language>{% for radio in form.language %}<label>{{ radio.tag }} {{ radio.choice_label }}</label>{% endfor %}</div>
+    <p class="g-help">{{ form.language.help_text }}{% if not event.title_en %} Pas de version anglaise de l'événement : les textes anglais reprennent le titre et la description en français, à traduire.{% endif %}</p>
+  </fieldset>
+
+  <section class="g-panel">
+    <h2 class="g-panel-title">Visuels</h2>
+    <p class="g-help">{% if event.poster %}Générés à partir de l'affiche, montrée en entier.{% else %}Pas d'affiche : visuel aux couleurs de l'AJC06 avec le titre en grand. Ajoute une affiche à l'événement pour l'utiliser.{% endif %}
+      Le visuel portrait part sur Instagram et Facebook, le visuel paysage dans les courriels (en pièce jointe et dans le message).
+      La story se télécharge pour être publiée à la main. Diffusion bilingue : visuel en français.</p>
+    <div class="g-previews">
+      {% for lang, label, url in previews %}<a href="{{ url }}" target="_blank" download data-lang="{{ lang }}"><img src="{{ url }}" alt="Visuel {{ label }} ({{ lang }})" loading="lazy"><span>{{ label }}{% if lang == "en" %} · anglais{% endif %}</span></a>{% endfor %}
+    </div>
+  </section>
+
   <div class="g-networks">
     {% for value, label, ready, on, text, limit in form.blocks %}
     <fieldset class="g-panel g-network{% if not ready %} is-off{% endif %}">
@@ -42,12 +48,17 @@
     </fieldset>
     {% endfor %}
   </div>
-  <fieldset class="g-panel">
-    <legend>Quand ?</legend>
+  <fieldset class="g-panel g-when">
+    <legend>{{ form.when.label }}</legend>
     <div class="choices">{% for radio in form.when %}<label>{{ radio.tag }} {{ radio.choice_label }}</label>{% endfor %}</div>
-    {% include "gestion/_field.html" with field=form.scheduled_at %}
-    <p class="g-help">Programmée : envoi à l'heure dite, à 5 minutes près.</p>
+    <div class="field g-when-later{% if form.scheduled_at.errors %} has-error{% endif %}">
+      <label for="{{ form.scheduled_at.id_for_label }}">Date et heure de l'envoi</label>
+      {{ form.scheduled_at }}
+      <p class="g-help">Envoi à l'heure dite, à 5 minutes près.</p>
+      {{ form.scheduled_at.errors }}
+    </div>
   </fieldset>
+  {{ prefills|json_script:"diffusion-prefills" }}
   <div class="g-buttons g-buttons-row"><button class="btn btn-primary" type="submit">{% icon "share" 18 %} Diffuser ou programmer</button></div>
 </form>
 

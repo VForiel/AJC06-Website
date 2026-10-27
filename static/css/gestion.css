@@ -178,7 +178,7 @@
 .g-effects { display: flex; flex-wrap: wrap; gap: 8px; }
 .g-preview { border-radius: var(--radius); margin-bottom: 6px; }
 .g-form-plain .field { margin-bottom: 12px; display: grid; gap: 6px; }
-.g-form-plain input:not([type="checkbox"]), .g-form-plain select { width: 100%; min-height: 44px; padding: .55em .75em; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); color: var(--ink); font: inherit; }
+.g-form-plain input:not([type="checkbox"]):not([type="radio"]), .g-form-plain select, .g-form-plain textarea { width: 100%; min-height: 44px; padding: .55em .75em; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); color: var(--ink); font: inherit; }
 .g-form .choices label { font-size: .875rem; }
 @media (max-width: 900px) { .g-steps { grid-template-columns: 1fr; } }
 
@@ -204,3 +204,10 @@
 .g-network textarea { width: 100%; }
 .g-network.is-off { opacity: .7; }
 .g-network legend { font-weight: 700; }
+.g-diffuse fieldset.g-panel { border: 1px solid var(--line); }
+.g-diffuse legend { font-weight: 700; padding: 0 6px; }
+.g-diffuse textarea { line-height: 1.45; resize: vertical; }
+.g-when-later { margin-top: 12px; max-width: 320px; }
+.g-when:has(input[value="now"]:checked) .g-when-later { display: none; }
+.g-diffuse:has(input[name="language"][value="en"]:checked) .g-previews [data-lang="fr"],
+.g-diffuse:not(:has(input[name="language"][value="en"]:checked)) .g-previews [data-lang="en"] { display: none; }
