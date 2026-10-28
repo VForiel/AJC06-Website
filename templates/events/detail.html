@@ -86,7 +86,7 @@
         <div class="fact">{% icon "ticket" 20 %}<div><strong>{% blocktranslate count n=event.helloasso_count %}{{ n }} inscription sur HelloAsso{% plural %}{{ n }} inscriptions sur HelloAsso{% endblocktranslate %}</strong>{% if event.helloasso_synced_at %}<span>{% blocktranslate with when=event.helloasso_synced_at|timesince %}mis à jour il y a {{ when }}{% endblocktranslate %}</span>{% endif %}</div></div>
         {% endif %}
         {% if event.capacity %}
-        <div class="fact">{% icon "users" 20 %}<div><strong>{% blocktranslate count n=event.capacity %}{{ n }} place{% plural %}{{ n }} places{% endblocktranslate %}</strong><span>{% if event.is_full %}{% translate "Complet" %}{% else %}{% blocktranslate with n=attendee_count %}{{ n }} inscrit·es pour l'instant{% endblocktranslate %}{% endif %}</span></div></div>
+        <div class="fact">{% icon "users" 20 %}<div><strong>{% blocktranslate count n=event.capacity %}{{ n }} place{% plural %}{{ n }} places{% endblocktranslate %}</strong>{% if event.is_upcoming %}<span>{% if event.is_full %}{% translate "Complet" %}{% else %}{% blocktranslate with n=attendee_count %}{{ n }} inscrit·es pour l'instant{% endblocktranslate %}{% endif %}</span>{% endif %}</div></div>
         {% endif %}
       </div>
 
@@ -99,9 +99,14 @@
       </div>
       {% endif %}
 
+      {% if event.is_upcoming or attendee_count %}
       <section class="attend" id="participants" aria-labelledby="attend-title">
         <header class="attend-head">
+          {% if event.is_upcoming %}
           <h2 id="attend-title">{% blocktranslate count n=attendee_count %}{{ n }} membre y va{% plural %}{{ n }} membres y vont{% endblocktranslate %}</h2>
+          {% else %}
+          <h2 id="attend-title">{% blocktranslate count n=attendee_count %}{{ n }} membre y est allé·e{% plural %}{{ n }} membres y sont allé·es{% endblocktranslate %}</h2>
+          {% endif %}
           {% if event.is_upcoming %}
             {% if user.is_authenticated %}
             <form method="post" action="{% url 'community:attend' event.slug %}">{% csrf_token %}
@@ -134,11 +139,12 @@
             </form>
           </details>
           {% endif %}
-          {% if event.is_community and event.organizer_id != user.pk %}<p class="report-link"><a href="{% url 'community:report' 'evenement' event.slug %}">{% translate "Signaler cet événement" %}</a></p>{% endif %}
         {% elif attendee_count %}
-          <p class="help">{% translate "Connecte-toi pour voir qui y va." %}</p>
+          <p class="help">{% if event.is_upcoming %}{% translate "Connecte-toi pour voir qui y va." %}{% else %}{% translate "Connecte-toi pour voir qui y est allé." %}{% endif %}</p>
         {% endif %}
       </section>
+      {% endif %}
+      {% if user.is_authenticated and event.is_community and event.organizer_id != user.pk %}<p class="report-link"><a href="{% url 'community:report' 'evenement' event.slug %}">{% translate "Signaler cet événement" %}</a></p>{% endif %}
 
       {% if visible %}{% include "events/_share.html" %}{% endif %}
 

@@ -2468,6 +2468,12 @@ msgstr[0] "%(n)s registration on HelloAsso"
 msgstr[1] "%(n)s registrations on HelloAsso"
 
 #: templates/events/detail.html
+msgid "%(n)s membre y est allé·e"
+msgid_plural "%(n)s membres y sont allé·es"
+msgstr[0] "%(n)s member went"
+msgstr[1] "%(n)s members went"
+
+#: templates/events/detail.html
 msgid "%(n)s membre y va"
 msgid_plural "%(n)s membres y vont"
 msgstr[0] "%(n)s member is going"
@@ -2498,6 +2504,10 @@ msgstr "This description is only available in French."
 #: templates/events/detail.html
 msgid "Complet"
 msgstr "Full"
+
+#: templates/events/detail.html
+msgid "Connecte-toi pour voir qui y est allé."
+msgstr "Log in to see who went."
 
 #: templates/events/detail.html
 msgid "Connecte-toi pour voir qui y va."

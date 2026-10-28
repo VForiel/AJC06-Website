@@ -9,6 +9,7 @@ from unittest import mock
 
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core.management import call_command
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase as BaseTestCase, override_settings
 from django.urls import reverse
@@ -16,7 +17,7 @@ from django.utils import timezone, translation
 from PIL import Image
 from pypdf import PdfReader
 
-from community.models import Friendship, Notification, Photo, Profile
+from community.models import Attendance, Friendship, Notification, Photo, Profile
 from core import effects
 from core.models import Announcement
 from events.models import Event
@@ -300,6 +301,34 @@ class HelloAssoTests(TestCase):
         self.assertEqual(event.helloasso_count, 2)
         self.assertEqual(set(HelloAssoTicket.objects.values_list("ticket_id", flat=True)), {1, 2})
         self.assertContains(self.client.get(event.get_absolute_url()), "2 inscriptions sur HelloAsso")
+
+    @override_settings(HELLOASSO_CLIENT_ID="id", HELLOASSO_CLIENT_SECRET="secret")
+    def test_past_event_finds_its_closed_form(self):
+        org = "association-des-jeunes-chercheurs-des-alpes-mariti"
+        day = in_days(-200)
+        event = Event.objects.create(title="PhD Meet Up : soirée au théâtre", start_date=day)
+        community = Event.objects.create(title="Soirée au théâtre", start_date=day, is_community=True)
+        upcoming = Event.objects.create(title="Laser game", start_date=in_days(5))
+        forms = [{"formType": "Event", "formSlug": "laser-game", "title": "Laser game", "startDate": f"{day}T19:00:00+02:00"},
+                 {"formType": "Event", "formSlug": "theatre", "title": "Soirée théâtre", "startDate": f"{day}T20:00:00+02:00"},
+                 {"formType": "Event", "formSlug": "laser-game-2", "title": "Laser game",
+                  "startDate": f"{in_days(5)}T19:00:00+02:00"}]
+        with mock.patch.object(helloasso, "org_forms", return_value=forms), \
+                mock.patch.object(helloasso, "form_items", return_value=[{"id": 7, "type": "Registration"}]):
+            call_command("sync_helloasso", "--all", stdout=io.StringIO())
+        event.refresh_from_db(), community.refresh_from_db(), upcoming.refresh_from_db()
+        self.assertEqual(event.registration_url, f"https://www.helloasso.com/associations/{org}/evenements/theatre")
+        self.assertEqual(event.helloasso_count, 1)
+        self.assertEqual(community.registration_url, "")  # sortie de membre : pas de rapprochement
+        self.assertEqual(upcoming.registration_url, "")  # à venir : le lien reste choisi à la main
+
+    def test_past_event_without_members_hides_the_counter(self):
+        event = Event.objects.create(title="Rando", start_date=in_days(-30))
+        page = self.client.get(event.get_absolute_url())
+        self.assertNotContains(page, "membres y vont")
+        self.assertNotContains(page, 'id="participants"')
+        Attendance.objects.create(event=event, user=member("Léa Martin"))
+        self.assertContains(self.client.get(event.get_absolute_url()), "1 membre y est allé·e")
 
 
 class EffectsTests(TestCase):

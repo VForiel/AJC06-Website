@@ -94,6 +94,68 @@ def form_items(org, form_type, slug):
     return items
 
 
+def org_forms(org):
+    """Tous les formulaires d'événement de l'organisation, clôturés compris (mis en cache une heure)."""
+    key = f"helloasso:forms:{org}"
+    cached = cache.get(key)
+    if cached is not None:
+        return cached
+    auth = {"Authorization": f"Bearer {token()}"}
+    forms, continuation = [], ""
+    for _page in range(20):
+        query = [("pageSize", 100), ("formTypes", "Event")]
+        query += [("states", state) for state in ("Public", "Private", "Draft", "Disabled")]
+        if continuation:
+            query.append(("continuationToken", continuation))
+        page = _request(f"{API}/v5/organizations/{org}/forms?{urllib.parse.urlencode(query)}", headers=auth)
+        data = page.get("data") or []
+        forms += data
+        continuation = (page.get("pagination") or {}).get("continuationToken", "")
+        if len(data) < 100 or not continuation:
+            break
+    cache.set(key, forms, 3600)
+    return forms
+
+
+def _words(text):
+    return set(re.findall(r"\w{3,}", (text or "").lower())) - {"phd", "meet", "the", "des", "les", "une", "ajc06"}
+
+
+def find_form(event, taken=()):
+    """Lien HelloAsso d'un événement qui n'en a pas : formulaire du même jour, au titre le plus proche."""
+    org = config().helloasso_organization
+    best, best_score = None, 0
+    for form in org_forms(org):
+        start = (form.get("startDate") or "")[:10]
+        if start != event.start_date.isoformat() or form.get("formType", "Event") != "Event":
+            continue
+        url = f"https://www.helloasso.com/associations/{org}/evenements/{form.get('formSlug')}"
+        if url in taken:
+            continue
+        score = len(_words(event.title) & _words(form.get("title"))) + 1  # même jour : déjà un indice
+        if score > best_score:
+            best, best_score = url, score
+    return best
+
+
+def discover_links(events):
+    """Renseigne le lien des événements passés qui n'en ont pas. Renvoie les événements complétés."""
+    from events.models import Event
+
+    taken = set(Event.objects.filter(registration_url__contains="helloasso.com").values_list("registration_url", flat=True))
+    found = []
+    for event in events:
+        if event.registration_url or event.is_upcoming:
+            continue
+        url = find_form(event, taken)
+        if url:
+            event.registration_url = url
+            event.save(update_fields=["registration_url"])
+            taken.add(url)
+            found.append(event)
+    return found
+
+
 def sync_event(event):
     """Met à jour les billets et le compteur d'un événement. Renvoie le nombre d'inscriptions, ou None."""
     link = parse_link(event.registration_url)
