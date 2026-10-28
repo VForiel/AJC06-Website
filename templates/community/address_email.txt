@@ -1,0 +1,11 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate %}Bonjour {{ name }},
+
+Pour ajouter l'adresse {{ email }} à ton compte de l'AJC06, ouvre ce lien (valable trois jours) :{% endblocktranslate %}
+
+{{ link }}
+
+{% blocktranslate %}Tes inscriptions HelloAsso faites avec cette adresse seront alors reliées à ton compte.
+Si tu n'as rien demandé, ignore simplement ce message.
+
+— L'AJC06{% endblocktranslate %}
+{% endautoescape %}

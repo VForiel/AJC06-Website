@@ -160,6 +160,8 @@ class HelloAssoTicket(models.Model):
     last_name = models.CharField(max_length=100, blank=True)
     tier = models.CharField(max_length=200, blank=True)
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    # Adresse du participant, sinon celle du payeur : sert à relier le billet à un compte du site
+    email = models.EmailField(blank=True, db_index=True)
 
     class Meta:
         ordering = ["last_name", "first_name"]
@@ -167,3 +169,13 @@ class HelloAssoTicket(models.Model):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
+
+
+class HelloAssoUnlink(models.Model):
+    """Participation reliée depuis HelloAsso puis retirée par la personne : la synchro ne la recrée pas."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="+")
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "event"], name="unique_helloasso_unlink")]

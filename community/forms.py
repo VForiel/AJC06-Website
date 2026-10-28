@@ -118,7 +118,7 @@ class ProfileForm(PartialSaveMixin, forms.ModelForm):
         model = Profile
         fields = [
             "display_name", "pronouns", "avatar", "headline", "discipline", "doctoral_school", "lab", "stage",
-            "thesis_title", "bio", "interests", "linkedin", "website", "orcid", "accent", "visibility", "show_events", "past_events",
+            "thesis_title", "bio", "interests", "linkedin", "website", "orcid", "accent", "visibility", "show_events", "past_events", "link_helloasso",
             "phone", "whatsapp", "discord", "instagram", "facebook", "x", "other_contact", "contact_visibility",
         ]
         widgets = {
@@ -173,8 +173,30 @@ class EmailForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
-        if User.objects.filter(email__iexact=email).exclude(pk=self.user.pk).exists():
+        from .addresses import taken
+
+        if taken(email, self.user):
             raise forms.ValidationError(_("Un compte existe déjà avec cette adresse."))
+        return email
+
+
+class AddressForm(forms.Form):
+    email = forms.EmailField(label=_("Autre adresse"), help_text=_("Celle utilisée sur HelloAsso, par exemple."))
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_email(self):
+        from .addresses import MAX_PER_USER, normalize, taken
+
+        email = normalize(self.cleaned_data["email"])
+        if self.user.email_addresses.filter(email=email).exists():
+            raise forms.ValidationError(_("Cette adresse est déjà dans ta liste."))
+        if taken(email, self.user):
+            raise forms.ValidationError(_("Cette adresse appartient déjà à un autre compte."))
+        if self.user.email_addresses.count() >= MAX_PER_USER:
+            raise forms.ValidationError(_("Six adresses au plus."))
         return email
 
 

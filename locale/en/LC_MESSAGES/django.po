@@ -13,7 +13,7 @@ msgstr "AJC06 — news"
 msgid "Les actualités de l'Association des Jeunes Chercheurs des Alpes-Maritimes."
 msgstr "News from the Association of Young Researchers of the Alpes-Maritimes."
 
-#: community/confirmation.py
+#: community/addresses.py
 msgid "AJC06 : confirme ton adresse"
 msgstr "AJC06: confirm your address"
 
@@ -50,12 +50,28 @@ msgid "Aucun coché = tous les types."
 msgstr "None ticked = all types."
 
 #: community/forms.py
+msgid "Autre adresse"
+msgstr "Other address"
+
+#: community/forms.py
 msgid "Autres membres présents"
 msgstr "Other members in the photo"
 
 #: community/forms.py
 msgid "Ce compte est désactivé."
 msgstr "This account is deactivated."
+
+#: community/forms.py
+msgid "Celle utilisée sur HelloAsso, par exemple."
+msgstr "The one you use on HelloAsso, for example."
+
+#: community/forms.py
+msgid "Cette adresse appartient déjà à un autre compte."
+msgstr "This address already belongs to another account."
+
+#: community/forms.py
+msgid "Cette adresse est déjà dans ta liste."
+msgstr "This address is already in your list."
 
 #: community/forms.py
 msgid "Choisis au moins un type."
@@ -226,6 +242,10 @@ msgid "Seulement si ça dure plusieurs jours"
 msgstr "Only if it lasts several days"
 
 #: community/forms.py
+msgid "Six adresses au plus."
+msgstr "Six addresses at most."
+
+#: community/forms.py
 msgid "Ta sortie apparaît aussi sur nice-event.fr, l'agenda participatif de la région niçoise, avec un lien vers cette page : plus de monde ! Décoche pour la garder entre doctorant·es."
 msgstr "Your outing also appears on nice-event.fr, the community calendar of the Nice area, with a link to this page: more people! Untick to keep it among PhD students."
 
@@ -334,6 +354,10 @@ msgid "Lavande"
 msgstr "Lavender"
 
 #: community/models.py
+msgid "Les événements où tu t'es inscrit·e sur HelloAsso, avec une de tes adresses confirmées, apparaissent comme « J'y vais » et dans « Y est allé·e »."
+msgstr "Events you registered for on HelloAsso with one of your confirmed addresses show as \"I'm going\" and under \"Went to\"."
+
+#: community/models.py
 msgid "Lien"
 msgstr "Link"
 
@@ -416,6 +440,10 @@ msgstr "One line: \"Writing up\", \"Looking for climbing partners\"…"
 #: community/models.py
 msgid "Vidéo"
 msgstr "Video"
+
+#: community/models.py
+msgid "adresse"
+msgstr "address"
 
 #: community/models.py
 msgid "adresse du profil"
@@ -514,6 +542,10 @@ msgid "qui voit les événements auxquels j'ai participé"
 msgstr "who can see the events I went to"
 
 #: community/models.py
+msgid "relier mes inscriptions HelloAsso à mon compte"
+msgstr "link my HelloAsso registrations to my account"
+
+#: community/models.py
 msgid "site web"
 msgstr "website"
 
@@ -552,6 +584,18 @@ msgstr "comments/<int:pk>/delete/"
 #: community/urls.py
 msgid "compte/"
 msgstr "account/"
+
+#: community/urls.py
+msgid "compte/adresses/<int:pk>/<str:action>/"
+msgstr "account/addresses/<int:pk>/<str:action>/"
+
+#: community/urls.py
+msgid "compte/adresses/ajouter/"
+msgstr "account/addresses/add/"
+
+#: community/urls.py
+msgid "compte/adresses/confirmer/<str:token>/"
+msgstr "account/addresses/confirm/<str:token>/"
 
 #: community/urls.py
 msgid "compte/alertes/"
@@ -662,12 +706,32 @@ msgid "%(n)s invitations envoyées."
 msgstr "%(n)s invitations sent."
 
 #: community/views.py
+msgid "Adresse %(email)s confirmée. Tes inscriptions HelloAsso faites avec elle sont reliées à ton compte."
+msgstr "Address %(email)s confirmed. Your HelloAsso registrations made with it are linked to your account."
+
+#: community/views.py
+msgid "Adresse ajoutée : ouvre le lien reçu à %(email)s pour la confirmer."
+msgstr "Address added: open the link sent to %(email)s to confirm it."
+
+#: community/views.py
+msgid "Adresse ajoutée, mais le courriel de confirmation n'a pas pu partir. Réessaie plus tard."
+msgstr "Address added, but the confirmation email could not be sent. Try again later."
+
+#: community/views.py
 msgid "Adresse confirmée, bienvenue ! Complète ton profil pour que les autres doctorant·es te trouvent."
 msgstr "Address confirmed, welcome! Fill in your profile so other PhD candidates can find you."
 
 #: community/views.py
 msgid "Adresse mise à jour."
 msgstr "Address updated."
+
+#: community/views.py
+msgid "Adresse mise à jour. Ouvre le lien reçu pour la confirmer et relier tes inscriptions HelloAsso."
+msgstr "Address updated. Open the link you received to confirm it and link your HelloAsso registrations."
+
+#: community/views.py
+msgid "Adresse retirée."
+msgstr "Address removed."
 
 #: community/views.py
 msgid "Alerte activée : tu seras prévenu·e des prochains événements."
@@ -690,12 +754,20 @@ msgid "C'est en ligne ! Invite tes amis depuis la page de l'événement."
 msgstr "It's live! Invite your friends from the event page."
 
 #: community/views.py
+msgid "Ce lien de confirmation n'est plus valable : demande-en un nouveau depuis ton profil."
+msgstr "This confirmation link is no longer valid: ask for a new one from your profile."
+
+#: community/views.py
 msgid "Ce lien de confirmation n'est plus valable. Connecte-toi, ou demande un nouveau lien."
 msgstr "This confirmation link is no longer valid. Log in, or ask for a new link."
 
 #: community/views.py
 msgid "Cet événement est passé."
 msgstr "This event is over."
+
+#: community/views.py
+msgid "Cette adresse est déjà confirmée sur un autre compte."
+msgstr "This address is already confirmed on another account."
 
 #: community/views.py
 msgid "Commentaire publié."
@@ -726,6 +798,14 @@ msgid "Invitation envoyée."
 msgstr "Invitation sent."
 
 #: community/views.py
+msgid "Le courriel de confirmation n'a pas pu partir. Réessaie plus tard."
+msgstr "The confirmation email could not be sent. Try again later."
+
+#: community/views.py
+msgid "Lien envoyé à %(email)s."
+msgstr "Link sent to %(email)s."
+
+#: community/views.py
 msgid "Merci ! %(n)s élément(s) ajouté(s)."
 msgstr "Thanks! %(n)s item(s) added."
 
@@ -754,6 +834,10 @@ msgid "Ton compte et tes données ont été supprimés."
 msgstr "Your account and your data have been deleted."
 
 #: community/views.py
+msgid "Trop d'essais, réessaie plus tard."
+msgstr "Too many attempts, try again later."
+
+#: community/views.py
 msgid "Trop d'inscriptions depuis cette connexion, réessaie plus tard."
 msgstr "Too many sign-ups from this connection, please try again later."
 
@@ -764,6 +848,10 @@ msgstr "You've already proposed a lot of events today, try again tomorrow."
 #: community/views.py
 msgid "Tu n'es plus identifié·e sur cette photo. Si tu veux qu'elle soit retirée, signale-la."
 msgstr "You are no longer tagged in this photo. If you want it removed, report it."
+
+#: community/views.py
+msgid "Tu te connectes désormais avec %(email)s."
+msgstr "You now log in with %(email)s."
 
 #: community/views.py
 msgid "Vous êtes maintenant amis."
@@ -1413,6 +1501,14 @@ msgstr "Remove from friends"
 msgid "Se connecter pour l'ajouter"
 msgstr "Log in to add them"
 
+#: templates/community/address_email.txt
+msgid "Bonjour %(name)s,\n\nPour ajouter l'adresse %(email)s à ton compte de l'AJC06, ouvre ce lien (valable trois jours) :"
+msgstr "Hello %(name)s,\n\nTo add the address %(email)s to your AJC06 account, open this link (valid for three days):"
+
+#: templates/community/address_email.txt
+msgid "Tes inscriptions HelloAsso faites avec cette adresse seront alors reliées à ton compte.\nSi tu n'as rien demandé, ignore simplement ce message.\n\n— L'AJC06"
+msgstr "Your HelloAsso registrations made with this address will then be linked to your account.\nIf you did not ask for this, just ignore this message.\n\n— AJC06"
+
 #: templates/community/alerts.html
 msgid "Voir l'agenda filtré (%(n)s à venir)"
 msgid_plural "Voir l'agenda filtré (%(n)s à venir)"
@@ -1792,6 +1888,10 @@ msgid "Répondre"
 msgstr "Respond"
 
 #: templates/community/notifications.html
+msgid "Ton inscription HelloAsso à « %(title)s » est reliée à ton compte : l'événement apparaît dans ton profil. Tu peux la retirer depuis la page de l'événement, ou désactiver la liaison dans ton profil."
+msgstr "Your HelloAsso registration for \"%(title)s\" is linked to your account: the event shows on your profile. You can remove it from the event page, or turn linking off in your profile."
+
+#: templates/community/notifications.html
 msgid "Voir"
 msgstr "View"
 
@@ -1996,6 +2096,14 @@ msgid "Tu signales « %(name)s ». Le bureau de l'AJC06 lira ton message ; la pe
 msgstr "You are reporting \"%(name)s\". The AJC06 board will read your message; the person concerned won't know who sent it."
 
 #: templates/community/settings.html
+msgid "Ajoute les adresses que tu utilises sur HelloAsso : une fois confirmées, tes inscriptions y sont reliées à ton compte."
+msgstr "Add the addresses you use on HelloAsso: once confirmed, your registrations there are linked to your account."
+
+#: templates/community/settings.html
+msgid "Ajouter"
+msgstr "Add"
+
+#: templates/community/settings.html
 msgid "Ce que tu remplis ici apparaît sur ta page, pour aider les autres doctorant·es à te trouver. Tout est facultatif, sauf ton nom."
 msgstr "What you fill in here appears on your page, to help other PhD candidates find you. Everything is optional except your name."
 
@@ -2020,6 +2128,14 @@ msgid "Ma recherche"
 msgstr "My research"
 
 #: templates/community/settings.html
+msgid "Me connecter avec"
+msgstr "Log in with it"
+
+#: templates/community/settings.html
+msgid "Mes adresses"
+msgstr "My addresses"
+
+#: templates/community/settings.html
 msgid "Personnalisation"
 msgstr "Customisation"
 
@@ -2028,12 +2144,28 @@ msgid "Qui je suis"
 msgstr "Who I am"
 
 #: templates/community/settings.html
+msgid "Retirer"
+msgstr "Remove"
+
+#: templates/community/settings.html
 msgid "Tes coordonnées ne sont jamais publiques : par défaut, seuls tes amis les voient."
 msgstr "Your contact details are never public: by default, only your friends can see them."
 
 #: templates/community/settings.html
 msgid "Voir ma page"
 msgstr "See my page"
+
+#: templates/community/settings.html
+msgid "confirmée"
+msgstr "confirmed"
+
+#: templates/community/settings.html
+msgid "connexion"
+msgstr "login"
+
+#: templates/community/settings.html
+msgid "non confirmée"
+msgstr "not confirmed"
 
 #: templates/community/settings.html
 msgid "À propos"
@@ -2498,6 +2630,12 @@ msgstr[0] "%(n)s place"
 msgstr[1] "%(n)s places"
 
 #: templates/events/detail.html
+msgid "Reliée à ton inscription HelloAsso, avec %(n)s accompagnant·e."
+msgid_plural "Reliée à ton inscription HelloAsso, avec %(n)s accompagnant·es."
+msgstr[0] "Linked to your HelloAsso registration, with %(n)s guest."
+msgstr[1] "Linked to your HelloAsso registration, with %(n)s guests."
+
+#: templates/events/detail.html
 msgid "dont %(n)s membre du site"
 msgid_plural "dont %(n)s membres du site"
 msgstr[0] "including %(n)s site member"
@@ -2572,6 +2710,10 @@ msgid "Le bureau n'a pas pu soutenir cet événement."
 msgstr "The board could not support this event."
 
 #: templates/events/detail.html
+msgid "Ne pas l'afficher"
+msgstr "Don't show it"
+
+#: templates/events/detail.html
 msgid "Non publié : cet événement n'est pas visible sur le site."
 msgstr "Unpublished: this event is not visible on the website."
 
@@ -2590,6 +2732,14 @@ msgstr "Proposed by a member"
 #: templates/events/detail.html
 msgid "Publier quand même, sans le soutien de l'asso"
 msgstr "Publish anyway, without the association's support"
+
+#: templates/events/detail.html
+msgid "Reliée à ton inscription HelloAsso."
+msgstr "Linked to your HelloAsso registration."
+
+#: templates/events/detail.html
+msgid "Retirer de mon profil"
+msgstr "Remove from my profile"
 
 #: templates/events/detail.html
 msgid "Se connecter pour dire que tu y vas"

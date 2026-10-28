@@ -27,6 +27,7 @@
           {% elif n.verb == "support" %}{% blocktranslate with title=n.event.title %}<strong>{{ name }}</strong> demande le soutien de l'asso pour « {{ title }} ».{% endblocktranslate %}
           {% elif n.verb == "support_answer" %}{% blocktranslate with title=n.event.title %}Le bureau a répondu à ta demande de soutien pour « {{ title }} ».{% endblocktranslate %}
           {% elif n.verb == "alert" %}{% blocktranslate with title=n.event.title_tr %}Nouvel événement pour ton alerte : <strong>{{ title }}</strong>.{% endblocktranslate %}
+          {% elif n.verb == "helloasso" %}{% blocktranslate with title=n.event.title_tr %}Ton inscription HelloAsso à « {{ title }} » est reliée à ton compte : l'événement apparaît dans ton profil. Tu peux la retirer depuis la page de l'événement, ou désactiver la liaison dans ton profil.{% endblocktranslate %}
           {% elif n.verb == "attending" %}{% blocktranslate with title=n.event.title_tr %}<strong>{{ name }}</strong> vient à ton événement « {{ title }} ».{% endblocktranslate %}
           {% endif %}
           {% endwith %}

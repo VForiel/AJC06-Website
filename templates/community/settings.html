@@ -101,6 +101,7 @@
         <p class="help">{% translate "Ils apparaissent sur ton profil, rubrique « Y est allé·e ». Tu les vois toujours." %}</p>
         {{ form.past_events.errors }}
       </fieldset>
+      {% include "community/_field.html" with field=form.link_helloasso %}
     </section>
 
     <div class="settings-actions"><button class="btn btn-primary" type="submit" name="save_profile" value="1">{% icon "check" 18 %} {% translate "Enregistrer mon profil" %}</button></div>
@@ -113,6 +114,28 @@
       {% include "community/_field.html" with field=email_form.email %}
       <button class="btn btn-ghost" type="submit" name="save_email" value="1">{% translate "Changer d'adresse" %}</button>
     </form>
+    <section class="settings-block" id="adresses">
+      <h2>{% translate "Mes adresses" %}</h2>
+      <p class="help">{% translate "Ajoute les adresses que tu utilises sur HelloAsso : une fois confirmées, tes inscriptions y sont reliées à ton compte." %}</p>
+      <ul class="address-list">
+        {% for a in addresses %}
+        <li>
+          <span class="address">{{ a.email }}</span>
+          <span class="address-state">{% if a.is_primary %}{% translate "connexion" %} · {% endif %}{% if a.confirmed %}{% translate "confirmée" %}{% else %}{% translate "non confirmée" %}{% endif %}</span>
+          <span class="address-actions">
+            {% if not a.confirmed %}<form method="post" action="{% url 'community:address_action' a.pk 'renvoyer' %}">{% csrf_token %}<button class="link-button" type="submit">{% translate "Envoyer le lien" %}</button></form>{% endif %}
+            {% if a.confirmed and not a.is_primary %}<form method="post" action="{% url 'community:address_action' a.pk 'principale' %}">{% csrf_token %}<button class="link-button" type="submit">{% translate "Me connecter avec" %}</button></form>{% endif %}
+            {% if not a.is_primary %}<form method="post" action="{% url 'community:address_action' a.pk 'supprimer' %}">{% csrf_token %}<button class="link-button danger-link" type="submit">{% translate "Retirer" %}</button></form>{% endif %}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+      <form method="post" action="{% url 'community:address_add' %}" novalidate>
+        {% csrf_token %}
+        {% include "community/_field.html" with field=address_form.email %}
+        <button class="btn btn-ghost" type="submit">{% icon "plus" 16 %} {% translate "Ajouter" %}</button>
+      </form>
+    </section>
     <div class="settings-block">
       <ul class="settings-links">
         <li><a href="{% url 'community:password_change' %}">{% translate "Changer de mot de passe" %}</a></li>

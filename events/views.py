@@ -53,7 +53,11 @@ def event_detail(request, slug):
     others = Event.objects.published().upcoming().exclude(pk=event.pk)[:3]
     if not others:
         others = Event.objects.published().past().with_type(event.main_type).exclude(pk=event.pk).exclude(poster="")[:3]
-    attendees = [a.user for a in Attendance.objects.filter(event=event, user__is_active=True).select_related("user__profile")]
+    rows = list(Attendance.objects.filter(event=event, user__is_active=True).select_related("user__profile"))
+    attendees = []
+    for a in rows:
+        a.user.guests = a.guests  # « +1 » : billets HelloAsso en plus pris avec la même adresse
+        attendees.append(a.user)
     from community.forms import CommentForm
     from community.models import Comment
 
@@ -73,6 +77,7 @@ def event_detail(request, slug):
         going_ids = {u.pk for u in attendees}
         context.update({
             "is_going": request.user.pk in going_ids,
+            "my_attendance": next((a for a in rows if a.user_id == request.user.pk), None),
             "friends_going": [f for f in friends if f.pk in going_ids],
             "invitable": [f for f in friends if f.pk not in going_ids],
             "can_edit": event.is_community and (event.organizer_id == request.user.pk or request.user.is_staff),

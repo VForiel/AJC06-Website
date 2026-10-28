@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
@@ -23,9 +23,9 @@ from django.utils.http import urlsafe_base64_decode
 from core.security import client_ip, throttled
 from projets.models import SupportRequest
 
-from . import confirmation
+from . import addresses, confirmation
 
-from .forms import (AlertForm, CommentForm, CommunityEventForm, DeleteAccountForm, EmailForm, PhotoForm, ProfileForm, ReportForm, SignupForm,
+from .forms import (AddressForm, AlertForm, CommentForm, CommunityEventForm, DeleteAccountForm, EmailForm, PhotoForm, ProfileForm, ReportForm, SignupForm,
                     SupportRequestForm)
 from .models import (AlertPreference, Attendance, Comment, Friendship, Notification, Photo, Profile, Report, friends_of,
                      relation)
@@ -87,6 +87,7 @@ def confirm(request, uidb64, token):
         messages.error(request, _("Ce lien de confirmation n'est plus valable. Connecte-toi, ou demande un nouveau lien."))
         return redirect("community:login")
     confirmation.approve(user)
+    addresses.confirm_primary(user)  # le lien a été reçu à cette adresse
     login(request, user, backend="community.auth.EmailBackend")
     messages.success(request, _("Adresse confirmée, bienvenue ! Complète ton profil pour que les autres doctorant·es te trouvent."))
     return redirect("community:settings")
@@ -131,7 +132,12 @@ def settings_view(request):
     form = ProfileForm(request.POST or None, request.FILES or None, instance=profile, prefix="p")
     email_form = EmailForm(request.user, initial={"email": request.user.email}, prefix="e")
     if request.method == "POST" and "save_profile" in request.POST and form.is_valid():
-        form.save()  # toujours valide : les champs refusés sont écartés (PartialSaveMixin)
+        relink = "link_helloasso" in form.changed_data
+        form.save()
+        if relink:
+            from projets import linking
+
+            linking.link_user(request.user)  # toujours valide : les champs refusés sont écartés (PartialSaveMixin)
         if form.skipped:
             logger.info("Profil de l'utilisateur %s : champs écartés %s", request.user.pk, ", ".join(form.skipped))
             messages.warning(request, _("Profil enregistré, sauf ces champs, laissés tels quels : %(fields)s.")
@@ -146,9 +152,74 @@ def settings_view(request):
             if "@" in request.user.username:
                 request.user.username = request.user.email
             request.user.save(update_fields=["email", "username"])
-            messages.success(request, _("Adresse mise à jour."))
+            address = request.user.email_addresses.filter(email=request.user.email).first()
+            if address and not address.confirmed and addresses.send(address):
+                messages.success(request, _("Adresse mise à jour. Ouvre le lien reçu pour la confirmer et relier tes inscriptions HelloAsso."))
+            else:
+                messages.success(request, _("Adresse mise à jour."))
             return redirect("community:settings")
-    return render(request, "community/settings.html", {"form": form, "email_form": email_form, "profile": profile})
+    return render(request, "community/settings.html", {
+        "form": form, "email_form": email_form, "profile": profile,
+        "addresses": request.user.email_addresses.all(), "address_form": AddressForm(request.user, prefix="a"),
+    })
+
+
+@login_required
+@require_POST
+def address_add(request):
+    from .models import EmailAddress
+
+    form = AddressForm(request.user, request.POST, prefix="a")
+    if throttled(f"address:{request.user.pk}", 10, 3600):
+        messages.error(request, _("Trop d'essais, réessaie plus tard."))
+    elif form.is_valid():
+        address, _created = EmailAddress.objects.get_or_create(user=request.user, email=form.cleaned_data["email"])
+        if addresses.send(address):
+            messages.success(request, _("Adresse ajoutée : ouvre le lien reçu à %(email)s pour la confirmer.")
+                             % {"email": address.email})
+        else:
+            messages.warning(request, _("Adresse ajoutée, mais le courriel de confirmation n'a pas pu partir. Réessaie plus tard."))
+    else:
+        messages.error(request, " ".join(e for errors in form.errors.values() for e in errors))
+    return redirect(reverse("community:settings") + "#adresses")
+
+
+@login_required
+@require_POST
+def address_action(request, pk, action):
+    address = get_object_or_404(request.user.email_addresses, pk=pk)
+    if action == "renvoyer" and not address.confirmed:
+        if throttled(f"address:{request.user.pk}", 10, 3600) or not addresses.send(address):
+            messages.error(request, _("Le courriel de confirmation n'a pas pu partir. Réessaie plus tard."))
+        else:
+            messages.success(request, _("Lien envoyé à %(email)s.") % {"email": address.email})
+    elif action == "supprimer" and not address.is_primary:
+        address.delete()
+        from projets import linking
+
+        linking.link_user(request.user)
+        messages.success(request, _("Adresse retirée."))
+    elif action == "principale" and address.confirmed and not address.is_primary:
+        request.user.email = address.email
+        if "@" in request.user.username:
+            request.user.username = address.email
+        request.user.save(update_fields=["email", "username"])
+        messages.success(request, _("Tu te connectes désormais avec %(email)s.") % {"email": address.email})
+    return redirect(reverse("community:settings") + "#adresses")
+
+
+def address_confirm(request, token):
+    address = addresses.from_token(token)
+    if address is None:
+        messages.error(request, _("Ce lien de confirmation n'est plus valable : demande-en un nouveau depuis ton profil."))
+    elif addresses.confirm(address):
+        messages.success(request, _("Adresse %(email)s confirmée. Tes inscriptions HelloAsso faites avec elle sont reliées à ton compte.")
+                         % {"email": address.email})
+    else:
+        messages.error(request, _("Cette adresse est déjà confirmée sur un autre compte."))
+    if request.user.is_authenticated:
+        return redirect(reverse("community:settings") + "#adresses")
+    return redirect("community:login")
 
 
 @login_required
@@ -342,14 +413,18 @@ def event_delete(request, slug):
 def attend(request, slug):
     event = get_object_or_404(Event.objects.published(), slug=slug)
     attendance = Attendance.objects.filter(event=event, user=request.user).first()
+    from projets import linking
+
     if attendance:
         attendance.delete()
+        linking.unlink(request.user, event)  # retirée à la main : la synchro HelloAsso ne la recrée pas
     elif not event.is_upcoming:
         messages.error(request, _("Cet événement est passé."))
     elif event.is_full:
         messages.error(request, _("Désolé, c'est complet."))
     else:
         Attendance.objects.create(event=event, user=request.user)
+        linking.relink(request.user, event)
         if event.organizer_id:
             notify(event.organizer, request.user, Notification.Verb.ATTENDING, event)
     return redirect(event.get_absolute_url() + "#participants")

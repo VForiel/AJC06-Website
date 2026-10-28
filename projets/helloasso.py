@@ -81,7 +81,7 @@ def form_items(org, form_type, slug):
     auth = {"Authorization": f"Bearer {token()}"}
     items, continuation = [], ""
     for _page in range(50):
-        query = {"pageSize": 100, "itemStates": "Processed"}
+        query = {"pageSize": 100, "itemStates": "Processed", "withDetails": "true"}  # détails : champs personnalisés
         if continuation:
             query["continuationToken"] = continuation
         page = _request(f"{API}/v5/organizations/{org}/forms/{form_type}/{slug}/items?{urllib.parse.urlencode(query)}",
@@ -156,6 +156,21 @@ def discover_links(events):
     return found
 
 
+def ticket_email(item):
+    """Adresse du participant (fiche ou champ « e-mail » du formulaire), sinon celle du payeur ; en minuscules."""
+    candidates = [(item.get("user") or {}).get("email")]
+    for field in item.get("customFields") or []:
+        name = (field.get("name") or "").lower()
+        if field.get("type") == "Email" or "mail" in name:
+            candidates.append(field.get("answer"))
+    candidates.append((item.get("payer") or {}).get("email"))
+    for value in candidates:
+        value = (value or "").strip().lower()
+        if "@" in value and len(value) <= 254:
+            return value
+    return ""
+
+
 def sync_event(event):
     """Met à jour les billets et le compteur d'un événement. Renvoie le nombre d'inscriptions, ou None."""
     link = parse_link(event.registration_url)
@@ -175,11 +190,15 @@ def sync_event(event):
             "last_name": (user.get("lastName") or "")[:100],
             "tier": (item.get("name") or "")[:200],
             "amount": Decimal(item.get("amount") or 0) / 100,
+            "email": ticket_email(item),
         })
     HelloAssoTicket.objects.filter(event=event).exclude(ticket_id__in=seen).delete()  # remboursés / annulés
     event.helloasso_count = len(items)
     event.helloasso_synced_at = timezone.now()
     event.save(update_fields=["helloasso_count", "helloasso_synced_at"])
+    from . import linking
+
+    linking.link_event(event)
     return len(items)
 
 

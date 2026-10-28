@@ -80,6 +80,10 @@ class Profile(models.Model):
     show_events = models.BooleanField(_("afficher les événements à venir auxquels je participe"), default=True)
     past_events = models.CharField(_("qui voit les événements auxquels j'ai participé"), max_length=10,
                                    choices=PastVisibility.choices, default=PastVisibility.PROFILE)
+    link_helloasso = models.BooleanField(
+        _("relier mes inscriptions HelloAsso à mon compte"), default=True,
+        help_text=_("Les événements où tu t'es inscrit·e sur HelloAsso, avec une de tes adresses confirmées, "
+                    "apparaissent comme « J'y vais » et dans « Y est allé·e »."))
     # Faux tant que le lien de confirmation n'a pas été ouvert (le compte reste alors inactif).
     email_confirmed = models.BooleanField("adresse confirmée", default=True)
     # Coordonnées : jamais publiques, visibles selon contact_visibility.
@@ -206,6 +210,10 @@ class Attendance(models.Model):
     event = models.ForeignKey("events.Event", on_delete=models.CASCADE, related_name="attendances")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="attendances")
     created_at = models.DateTimeField(auto_now_add=True)
+    # Créée d'après un billet HelloAsso (retirée si le billet est remboursé), et nombre de billets en plus pris
+    # avec la même adresse : la personne vient accompagnée (« +1 »).
+    via_helloasso = models.BooleanField(default=False)
+    guests = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["event", "user"], name="unique_attendance")]
@@ -223,6 +231,7 @@ class Notification(models.Model):
         SUPPORT = "support", "demande de soutien reçue (bureau)"
         SUPPORT_ANSWER = "support_answer", "réponse à une demande de soutien"
         ALERT = "alert", "nouvel événement (alerte)"
+        HELLOASSO = "helloasso", "inscription HelloAsso reliée au compte"
 
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications")
     actor = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE, related_name="+")
@@ -373,3 +382,30 @@ class AlertSent(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["user", "event"], name="unique_alert_sent")]
+
+
+class EmailAddress(models.Model):
+    """Adresses d'un membre : la principale (celle du compte) et d'autres, pour reconnaître ses billets HelloAsso.
+
+    Seules les adresses confirmées (lien reçu par courriel) servent ; une adresse confirmée n'appartient qu'à un compte.
+    """
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="email_addresses")
+    email = models.EmailField(_("adresse"))
+    confirmed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+        verbose_name = "adresse e-mail"
+        constraints = [
+            models.UniqueConstraint(fields=["user", "email"], name="unique_address_per_user"),
+            models.UniqueConstraint(fields=["email"], condition=Q(confirmed=True), name="unique_confirmed_address"),
+        ]
+
+    def __str__(self):
+        return self.email
+
+    @property
+    def is_primary(self):
+        return self.email == (self.user.email or "").lower()

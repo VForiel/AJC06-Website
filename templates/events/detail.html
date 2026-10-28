@@ -125,8 +125,14 @@
           {% if friends_going %}<p class="friends-going">{% icon "users" 16 %} {% blocktranslate count n=friends_going|length %}{{ n }} de tes amis y va{% plural %}{{ n }} de tes amis y vont{% endblocktranslate %}</p>{% endif %}
           {% if attendees %}
           <ul class="attendee-list">
-            {% for a in attendees %}<li><a href="{{ a.profile.get_absolute_url }}" title="{{ a.profile.display_name }}">{% include "community/_avatar.html" with p=a.profile size="sm" %}<span>{{ a.profile.display_name }}</span></a></li>{% endfor %}
+            {% for a in attendees %}<li><a href="{{ a.profile.get_absolute_url }}" title="{{ a.profile.display_name }}">{% include "community/_avatar.html" with p=a.profile size="sm" %}<span>{{ a.profile.display_name }}{% if a.guests %} +{{ a.guests }}{% endif %}</span></a></li>{% endfor %}
           </ul>
+          {% endif %}
+          {% if my_attendance.via_helloasso %}
+          <form class="helloasso-mine" method="post" action="{% url 'community:attend' event.slug %}">{% csrf_token %}
+            <p class="help">{% if my_attendance.guests %}{% blocktranslate count n=my_attendance.guests %}Reliée à ton inscription HelloAsso, avec {{ n }} accompagnant·e.{% plural %}Reliée à ton inscription HelloAsso, avec {{ n }} accompagnant·es.{% endblocktranslate %}{% else %}{% translate "Reliée à ton inscription HelloAsso." %}{% endif %}
+            <button class="link-button" type="submit">{% if event.is_upcoming %}{% translate "Ne pas l'afficher" %}{% else %}{% translate "Retirer de mon profil" %}{% endif %}</button></p>
+          </form>
           {% endif %}
           {% if invitable and event.is_upcoming %}
           <details class="invite">
