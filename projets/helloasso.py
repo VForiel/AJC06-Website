@@ -201,3 +201,29 @@ def ensure_synced(event):
         log.warning("HelloAsso %s : %s", event.slug, error)
         return str(error)
     return None
+
+
+def problem(event):
+    """Pourquoi les inscriptions HelloAsso d'un événement ne peuvent pas être lues (pour le bureau), ou None."""
+    url = event.registration_url or ""
+    if "helloasso" not in url:
+        return None
+    link = parse_link(url)
+    if not link:
+        return "Le lien d'inscription n'est pas un lien de formulaire HelloAsso reconnu (…/associations/<asso>/evenements/<nom>)."
+    if not configured():
+        return "Identifiants HelloAsso absents dans les réglages du site : les inscriptions ne peuvent pas être lues."
+    if link[0] != config().helloasso_organization:
+        return f"Le formulaire appartient à une autre organisation HelloAsso ({link[0]}) : pas d'accès à ses inscriptions."
+    return None
+
+
+def sync_on_visit(event):
+    """Première visite d'un événement passé jamais lu : lit sa campagne (sans attendre le cron). Une tentative par heure."""
+    if event.is_upcoming or not configured() or not needs_sync(event):
+        return
+    key = f"helloasso:tried:{event.pk}"
+    if cache.get(key):
+        return
+    cache.set(key, 1, 3600)
+    ensure_synced(event)

@@ -87,7 +87,8 @@
 
     <div class="g-panel">
       <h2 class="g-panel-title">Participant·es ({{ participants|length }})</h2>
-      {% if helloasso_link %}
+      {% if helloasso_problem %}<p class="g-help"><strong>{{ helloasso_problem }}</strong></p>
+      {% elif helloasso_link %}
       <p class="g-help">HelloAsso : {{ event.helloasso_count|default:"?" }} inscription(s){% if event.helloasso_synced_at %}, mis à jour {{ event.helloasso_synced_at|timesince }}{% endif %}.</p>
       {% endif %}
       {% if participants %}<ol class="g-people">{% for name in participants|slice:":40" %}<li>{{ name }}</li>{% endfor %}</ol>{% if participants|length > 40 %}<p class="g-help">… et {{ participants|length|add:"-40" }} autres, tous dans le PDF.</p>{% endif %}

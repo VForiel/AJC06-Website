@@ -332,6 +332,7 @@ def dossier(request, pk):
         "attach_form": AttachmentForm(), "attachments": item.attachments.all(),
         "forecast_totals": item.totals("prev"), "real_totals": item.totals("reel"),
         "participants": participants(event), "helloasso_link": helloasso.parse_link(event.registration_url),
+        "helloasso_problem": helloasso.problem(event),
         "deadline": services.forecast_deadline(event),
         "support": SupportRequest.objects.filter(event=event).first(),
         "today": timezone.localdate(),
@@ -397,7 +398,7 @@ def helloasso_sync(request, pk):
         messages.error(request, str(error))
     else:
         if count is None:
-            messages.error(request, "Pas de lien HelloAsso de l'AJC06 sur cet événement (ou identifiants HelloAsso absents).")
+            messages.error(request, helloasso.problem(event) or "Pas de lien HelloAsso sur cet événement.")
         else:
             messages.success(request, f"{count} inscription(s) HelloAsso récupérée(s).")
     return redirect(request.POST.get("next") or "gestion:events")

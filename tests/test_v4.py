@@ -322,6 +322,27 @@ class HelloAssoTests(TestCase):
         self.assertEqual(len(pdf.participants(old)), 13)  # 12 billets + la membre du site
 
     @override_settings(HELLOASSO_CLIENT_ID="id", HELLOASSO_CLIENT_SECRET="secret")
+    def test_first_visit_of_a_past_event_reads_its_campaign(self):
+        link = "https://www.helloasso.com/associations/association-des-jeunes-chercheurs-des-alpes-mariti/evenements/summer-camp-2026/widget"
+        event = Event.objects.create(title="Summer Camp 2026", start_date=in_days(-90), end_date=in_days(-85),
+                                     registration_url=link)
+        items = [{"id": i, "type": "Registration", "user": {"firstName": "A", "lastName": str(i)}} for i in range(30)]
+        with mock.patch.object(helloasso, "form_items", return_value=items) as fetch:
+            self.assertContains(self.client.get(event.get_absolute_url()), "30 personnes y ont participé")
+            self.client.get(event.get_absolute_url())
+        self.assertEqual(fetch.call_count, 1)
+
+    def test_dossier_says_why_helloasso_is_not_read(self):
+        from siteconfig.models import SiteConfig
+
+        SiteConfig.objects.update(helloasso_client_id="", helloasso_client_secret="")
+        cache.clear()
+        event = Event.objects.create(title="Camp", start_date=in_days(-90), registration_url=(
+            "https://www.helloasso.com/associations/association-des-jeunes-chercheurs-des-alpes-mariti/evenements/camp"))
+        self.client.force_login(member("Bureau AJC", staff=True))
+        self.assertContains(self.client.get(reverse("gestion:dossier", args=[event.pk])), "Identifiants HelloAsso absents")
+
+    @override_settings(HELLOASSO_CLIENT_ID="id", HELLOASSO_CLIENT_SECRET="secret")
     def test_report_syncs_a_campaign_never_read(self):
         link = "https://www.helloasso.com/associations/association-des-jeunes-chercheurs-des-alpes-mariti/evenements/ski"
         event = Event.objects.create(title="Ski", start_date=in_days(-60), registration_url=link)

@@ -46,6 +46,9 @@ def event_detail(request, slug):
     visible = event.is_published and not event.on_hold
     if not visible and not (request.user.is_authenticated and (request.user.is_staff or event.organizer_id == request.user.pk)):
         raise Http404
+    from projets import helloasso
+
+    helloasso.sync_on_visit(event)  # campagne clôturée jamais lue : nombre de participant·es
     photos = event.photos.filter(is_hidden=False)[:12]
     others = Event.objects.published().upcoming().exclude(pk=event.pk)[:3]
     if not others:
