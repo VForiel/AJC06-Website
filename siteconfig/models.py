@@ -58,6 +58,9 @@ class SiteConfig(models.Model):
                                           help_text="« Par lien » seulement une fois le courriel de test reçu.")
 
     # HelloAsso (API v5) : nombre d'inscrit·es aux événements
+    google_client_id = models.CharField("Google : ID client", max_length=200, blank=True,
+                                        help_text="Console Google Cloud › API et services › Identifiants › ID client OAuth")
+    google_client_secret = EncryptedTextField("Google : code secret du client", blank=True)
     helloasso_client_id = models.CharField("HelloAsso : client_id", max_length=200, blank=True)
     helloasso_client_secret = EncryptedTextField("HelloAsso : client_secret", blank=True)
     helloasso_organization = models.CharField("HelloAsso : organisation", max_length=200,
@@ -118,6 +121,10 @@ class SiteConfig(models.Model):
     @property
     def helloasso_ready(self):
         return bool(self.helloasso_client_id and self.helloasso_client_secret)
+
+    @property
+    def google_ready(self):
+        return bool(self.google_client_id and self.google_client_secret)
 
 
 class ConfigChange(models.Model):

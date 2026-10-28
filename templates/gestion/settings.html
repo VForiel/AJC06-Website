@@ -36,6 +36,14 @@
   <section class="g-panel">
     <h2 class="g-panel-title">Comptes membres</h2>
     {% include "gestion/_field.html" with field=form.account_validation %}
+    <h3 class="g-subtitle">Connexion avec Google</h3>
+    <p class="g-help">Console Google Cloud › API et services › Identifiants › « ID client OAuth » de type « Application Web »,
+      URI de redirection autorisé : <code>{{ google_redirect }}</code>.{% if config.google_ready %} <strong>Configuré.</strong>{% endif %}</p>
+    <div class="g-grid g-grid-2">
+      {% include "gestion/_field.html" with field=form.google_client_id %}
+      {% include "gestion/_field.html" with field=form.google_client_secret %}
+      {% include "gestion/_field.html" with field=form.clear_google_client_secret %}
+    </div>
   </section>
 
   <section class="g-panel">

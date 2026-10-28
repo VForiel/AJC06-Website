@@ -296,3 +296,9 @@ fieldset.field legend { font-weight: 700; padding: 0; }
 .address-actions { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .875rem; }
 .address-actions form { margin: 0; }
 .helloasso-mine p { margin: 0; }
+
+/* Connexion avec Google */
+.auth-alt { display: grid; gap: 14px; margin-bottom: 14px; }
+.btn-google { justify-content: center; gap: 10px; }
+.auth-or { display: flex; align-items: center; gap: 12px; margin: 0; color: var(--ink-2); font-size: .875rem; }
+.auth-or::before, .auth-or::after { content: ""; flex: 1; border-top: 1px solid var(--line); }

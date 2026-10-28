@@ -618,6 +618,14 @@ msgid "compte/deconnexion/"
 msgstr "account/logout/"
 
 #: community/urls.py
+msgid "compte/google/"
+msgstr "account/google/"
+
+#: community/urls.py
+msgid "compte/google/retour/"
+msgstr "account/google/return/"
+
+#: community/urls.py
 msgid "compte/inscription/"
 msgstr "account/signup/"
 
@@ -778,6 +786,10 @@ msgid "Commentaire supprimé."
 msgstr "Comment deleted."
 
 #: community/views.py
+msgid "Connexion avec Google annulée."
+msgstr "Google sign-in cancelled."
+
+#: community/views.py
 msgid "Demande envoyée au bureau. Tu recevras une notification dès qu'il aura répondu ; d'ici là, l'événement n'est visible que par toi."
 msgstr "Request sent to the board. You'll get a notification as soon as they reply; until then, only you can see the event."
 
@@ -794,8 +806,16 @@ msgid "Filtre enregistré (alerte désactivée)."
 msgstr "Filter saved (alert off)."
 
 #: community/views.py
+msgid "Google n'a pas confirmé cette adresse : connecte-toi avec ton mot de passe."
+msgstr "Google has not verified this address: log in with your password."
+
+#: community/views.py
 msgid "Invitation envoyée."
 msgstr "Invitation sent."
+
+#: community/views.py
+msgid "La connexion avec Google a échoué, réessaie."
+msgstr "Google sign-in failed, please try again."
 
 #: community/views.py
 msgid "Le courriel de confirmation n'a pas pu partir. Réessaie plus tard."
@@ -852,6 +872,10 @@ msgstr "You are no longer tagged in this photo. If you want it removed, report i
 #: community/views.py
 msgid "Tu te connectes désormais avec %(email)s."
 msgstr "You now log in with %(email)s."
+
+#: community/views.py
+msgid "Un compte existe déjà avec cette adresse, mais elle n'est pas encore confirmée : connecte-toi avec ton mot de passe (ou « mot de passe oublié »), puis confirme-la dans ton profil."
+msgstr "An account already uses this address, but it is not confirmed yet: log in with your password (or \"forgot password\"), then confirm it in your profile."
 
 #: community/views.py
 msgid "Vous êtes maintenant amis."
@@ -1500,6 +1524,14 @@ msgstr "Remove from friends"
 #: templates/community/_friend_button.html
 msgid "Se connecter pour l'ajouter"
 msgstr "Log in to add them"
+
+#: templates/community/_google_button.html
+msgid "Continuer avec Google"
+msgstr "Continue with Google"
+
+#: templates/community/_google_button.html
+msgid "ou"
+msgstr "or"
 
 #: templates/community/address_email.txt
 msgid "Bonjour %(name)s,\n\nPour ajouter l'adresse %(email)s à ton compte de l'AJC06, ouvre ce lien (valable trois jours) :"

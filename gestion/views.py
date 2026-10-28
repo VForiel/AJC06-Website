@@ -476,7 +476,10 @@ def site_settings(request):
                 ConfigChange.objects.create(user=request.user, fields=", ".join(changed))
         messages.success(request, "Réglages enregistrés." if changed else "Aucun changement.")
         return redirect("gestion:settings")
+    from community.google import redirect_uri as google_redirect
+
     return render(request, "gestion/settings.html", {
+        "google_redirect": google_redirect(),
         "form": form,
         "config": config,
         "test_form": TestEmailForm(initial={"to": request.user.email}),

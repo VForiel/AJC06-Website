@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.decorators.http import require_POST
 
 from events.models import Event
@@ -18,7 +19,7 @@ from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 
 from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
+from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode
 
 from core.security import client_ip, throttled
 from projets.models import SupportRequest
@@ -76,6 +77,48 @@ def signup(request):
         messages.success(request, _("Bienvenue ! Complète ton profil pour que les autres doctorant·es te trouvent."))
         return redirect("community:settings")
     return render(request, "community/signup.html", {"form": form})
+
+
+def google_start(request):
+    from . import google
+
+    if not google.enabled():
+        raise Http404
+    next_url = request.GET.get("next", "")
+    if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        next_url = ""
+    return redirect(google.start(request, next_url))
+
+
+GOOGLE_ERRORS = {
+    "cancelled": gettext_lazy("Connexion avec Google annulée."),
+    "email": gettext_lazy("Google n'a pas confirmé cette adresse : connecte-toi avec ton mot de passe."),
+    "unconfirmed": gettext_lazy("Un compte existe déjà avec cette adresse, mais elle n'est pas encore confirmée : connecte-toi "
+                     "avec ton mot de passe (ou « mot de passe oublié »), puis confirme-la dans ton profil."),
+}
+
+
+def google_callback(request):
+    from . import google
+
+    if not google.enabled():
+        raise Http404
+    try:
+        info, next_url = google.identity(request)
+        user, created = google.find_or_create(info)
+    except google.GoogleError as error:
+        messages.error(request, str(GOOGLE_ERRORS.get(str(error), _("La connexion avec Google a échoué, réessaie."))))
+        return redirect("community:login")
+    if not user.is_active:
+        if user.profile.email_confirmed:  # désactivé par le bureau
+            messages.error(request, _("Ce compte est désactivé."))
+            return redirect("community:login")
+        return render(request, "community/confirm_sent.html", {"email": user.email, "by_board": True})
+    login(request, user, backend="community.auth.EmailBackend")
+    if created:
+        messages.success(request, _("Bienvenue ! Complète ton profil pour que les autres doctorant·es te trouvent."))
+        return redirect("community:settings")
+    return redirect(next_url or "community:me")
 
 
 def confirm(request, uidb64, token):

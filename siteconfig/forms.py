@@ -3,7 +3,7 @@ from django import forms
 from .models import SiteConfig
 
 # Champs secrets : jamais réaffichés ; vide = on garde la valeur enregistrée, case « effacer » pour la supprimer.
-SECRETS = ["smtp_password", "helloasso_client_secret", "facebook_page_token"]
+SECRETS = ["smtp_password", "helloasso_client_secret", "facebook_page_token", "google_client_secret"]
 
 
 class SecretInput(forms.PasswordInput):
@@ -15,16 +15,17 @@ class SiteConfigForm(forms.ModelForm):
     clear_smtp_password = forms.BooleanField(label="Effacer le mot de passe enregistré", required=False)
     clear_helloasso_client_secret = forms.BooleanField(label="Effacer le client_secret enregistré", required=False)
     clear_facebook_page_token = forms.BooleanField(label="Effacer le jeton enregistré", required=False)
+    clear_google_client_secret = forms.BooleanField(label="Effacer le code secret enregistré", required=False)
 
     class Meta:
         model = SiteConfig
         fields = ["smtp_host", "smtp_port", "smtp_security", "smtp_user", "smtp_password", "from_email", "contact_email",
-                  "account_validation", "helloasso_client_id", "helloasso_client_secret", "helloasso_organization",
+                  "account_validation", "google_client_id", "google_client_secret", "helloasso_client_id", "helloasso_client_secret", "helloasso_organization",
                   "social_signature", "meta_api_version", "facebook_enabled", "facebook_page_id", "facebook_page_token",
                   "instagram_enabled", "instagram_user_id", "email_diffusion_enabled", "diffusion_emails",
                   "legal_host"]
         widgets = {"smtp_password": SecretInput(), "helloasso_client_secret": SecretInput(),
-                   "facebook_page_token": SecretInput(), "diffusion_emails": forms.Textarea(attrs={"rows": 3}),
+                   "facebook_page_token": SecretInput(), "google_client_secret": SecretInput(), "diffusion_emails": forms.Textarea(attrs={"rows": 3}),
                    "legal_host": forms.Textarea(attrs={"rows": 2})}
 
     def __init__(self, *args, **kwargs):

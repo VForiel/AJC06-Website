@@ -84,6 +84,13 @@ n'apparaît que dans les journaux).
   qui l'intéressent ; `python manage.py send_alerts` (cron) le prévient des nouveaux événements, sur le site et par courriel.
 - **Nice-Event** : les sorties de membres cochées « publier aussi sur Nice-Event » (case cochée par défaut) sont publiées
   dans `/evenements/nice-event.json`, lu par nice-event.fr, avec un bouton « Voir sur Nice-Event » sur la page.
+- **Connexion avec Google** (`community/google.py`, OpenID Connect sans bibliothèque) : ID client et code secret dans
+  `/gestion/reglages/` (Console Google Cloud, « ID client OAuth » Application Web, URI de redirection affiché sur la
+  page des réglages). Compte retrouvé par son identifiant Google ou une adresse confirmée ; une adresse principale non
+  confirmée n'est jamais reprise ; nouveaux comptes soumis à la validation choisie.
+- **Adresses et HelloAsso** : chaque membre peut ajouter et confirmer d'autres adresses (`community/addresses.py`) ;
+  les billets HelloAsso portant une adresse confirmée deviennent des « J'y vais » (`projets/linking.py`), « +1 » par
+  billet en plus sur la même adresse, réglage « relier mes inscriptions HelloAsso » dans le profil.
 - **HelloAsso** : `python manage.py sync_helloasso` récupère les billets des événements dont le lien d'inscription pointe
   vers un formulaire de l'AJC06 (cron horaire en production). Identifiants dans `/gestion/reglages/`.
 - **Photos et vidéos** (`/photos/`) : tout membre peut en publier plusieurs à la fois, liées ou non à un événement, en
