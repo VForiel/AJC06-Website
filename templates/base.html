@@ -161,6 +161,7 @@
       </div>
       <div class="footer-bottom">
         <p>© {% now "Y" %} AJC06 · {% translate "association loi 1901 d'intérêt général" %}{% if effects %} · <button class="effects-toggle" type="button" data-effects-toggle data-on="{% translate "Remettre les effets" %}" data-off="{% translate "Couper les effets" %}">{% translate "Couper les effets" %}</button>{% endif %}</p>
+        <p class="footer-credits">{% blocktranslate with author='<a href="https://vincent.foriel.pro/'|add:LANG|add:'/" rel="noopener">Vincent Foriel</a>'|safe %}Site développé en Django par {{ author }}, avec l'aide de Claude.{% endblocktranslate %}</p>
         <p><a href="{% url 'core:legal' %}">{% translate "Mentions légales" %}</a> · <a href="{% url 'core:privacy' %}">{% translate "Confidentialité" %}</a> · <a href="/gestion/">{% translate "Espace bureau" %}</a></p>
       </div>
     </div>

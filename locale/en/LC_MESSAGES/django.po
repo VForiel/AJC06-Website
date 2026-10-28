@@ -1286,6 +1286,10 @@ msgid "Se déconnecter"
 msgstr "Log out"
 
 #: templates/base.html
+msgid "Site développé en Django par %(author)s, avec l'aide de Claude."
+msgstr "Website built with Django by %(author)s, with the help of Claude."
+
+#: templates/base.html
 msgid "Sorties, soirées, camps et entraide pour les doctorant·es d'Université Côte d'Azur."
 msgstr "Outings, nights out, camps and mutual support for PhD candidates at Université Côte d'Azur."
 
