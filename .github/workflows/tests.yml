@@ -1,0 +1,24 @@
+# Tests à chaque push. Le déploiement (cron ~/deploy/ajc06-deploy.sh sur o2switch) attend qu'ils soient verts
+# avant de mettre un commit de stable en production.
+name: Tests
+
+on:
+  push:
+    branches: [main, stable]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python manage.py test tests

@@ -183,9 +183,14 @@ Hébergement mutualisé de l'asso (`ssh ajc06`), application Python cPanel (Pass
 - virtualenv `~/virtualenv/ajc06-site/3.11`, point d'entrée `passenger_wsgi.py`. Attention : recréer l'application
   avec `cloudlinux-selector create` remplace ce fichier par un modèle qui ne marche pas, il faut le recopier ;
 - domaines : ajc06.com (racine web `~/public_html`, qui ne contient que le `.htaccess` Passenger, `.well-known` et
-  `old_website`) ; www.ajc06.com et beta.ajc06.com (racine `~/website`, domaine sous lequel l'application est
-  enregistrée dans cPanel) redirigent en 301 vers ajc06.com. Les variables `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS` et
-  `SITE_URL` du `.env` listent ces domaines ;
+  `old_website`) ; www.ajc06.com redirige en 301 vers ajc06.com. Les variables `DJANGO_ALLOWED_HOSTS`,
+  `DJANGO_CSRF_TRUSTED_ORIGINS` et `SITE_URL` du `.env` listent ces domaines ;
+- beta.ajc06.com (racine `~/website`, domaine sous lequel l'application est enregistrée dans cPanel) sert la beta :
+  code `~/ajc06-beta`, virtualenv `~/virtualenv/ajc06-beta/3.11`, données `~/ajc06-beta-data`, `.env` propre (autre
+  `DJANGO_SECRET_KEY`, pas de HelloAsso, courriels dans les journaux), non indexée. Son `.htaccess` Passenger est écrit à
+  la main : « Setup Python App » de cPanel le ferait pointer vers `~/ajc06-site`. Pas de cron pour la beta.
+  `~/deploy/ajc06-beta-reset.sh` y recopie la base et les médias de prod, vide les secrets des réglages (SMTP, HelloAsso,
+  Facebook/Instagram, liste de diffusion), annule les diffusions programmées et affiche un bandeau « version de test » ;
 - l'ancien WordPress est archivé sur https://archive.ajc06.com (racine `~/public_html/old_website`, `PassengerEnabled off`
   dans son `.htaccess`, non indexé ; sauvegarde de la base avant bascule dans `~/wordpress-backup`). Le WordPress de
   l'ancien beta est rangé dans `~/beta-wordpress-archive` ;
@@ -198,7 +203,21 @@ Hébergement mutualisé de l'asso (`ssh ajc06`), application Python cPanel (Pass
   est refusé dans le `.htaccess` et casse le site) ;
 - `CACHE_DIR=~/ajc06-data/cache` : cache sur disque partagé entre les processus Passenger (limites d'envoi).
 
-Mise à jour :
+Mise à jour : automatique. o2switch n'accepte le SSH que depuis les IP autorisées dans cPanel, donc pas de GitHub
+Action : un cron lance `~/deploy/ajc06-deploy.sh` toutes les 2 minutes, qui récupère le dépôt (miroir
+`~/deploy/ajc06.git`) et déploie ce qui a changé :
+
+- branche `main` → https://beta.ajc06.com ;
+- branche `stable` → https://ajc06.com. Mettre en production ce qui est validé sur la beta : `git push origin main:stable`.
+
+Pour chaque instance : `git archive` du commit dans le dossier du code (les fichiers supprimés du dépôt sont retirés),
+`pip install` si `requirements.txt` a changé, `migrate`, `collectstatic`, redémarrage Passenger, puis appel du site.
+Le commit en ligne est noté dans `~/deploy/{prod,beta}.rev` ; un échec dans `{prod,beta}.failed` (pas de nouvel essai
+avant le commit suivant). Journaux : `~/deploy/logs/{prod,beta}.log`. Redéployer sans nouveau commit :
+`ssh ajc06 '~/deploy/ajc06-deploy.sh --force prod'` (ou `beta`). Les tests tournent dans GitHub Actions
+(`.github/workflows/tests.yml`) : vérifier qu'ils sont verts sur `main` avant de pousser sur `stable`.
+
+Ancienne méthode, à la main :
 
 ```sh
 tar czf ajc06.tgz --exclude=.venv* --exclude=./media --exclude=./backups --exclude=staticfiles \
