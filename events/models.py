@@ -247,8 +247,17 @@ class Event(models.Model):
         return not self.is_community or self.supported
 
     @property
+    def has_helloasso_count(self):
+        return self.helloasso_count is not None and "helloasso.com" in (self.registration_url or "")
+
+    @property
+    def participant_count(self):
+        """Inscrit·es de la campagne HelloAsso quand elle est synchronisée, sinon membres qui ont dit « J'y vais »."""
+        return self.helloasso_count if self.has_helloasso_count else self.attendee_count
+
+    @property
     def is_full(self):
-        return self.capacity is not None and self.attendee_count >= self.capacity
+        return self.capacity is not None and self.participant_count >= self.capacity
 
     @property
     def body_html(self):

@@ -181,3 +181,23 @@ def sync_event(event):
     event.helloasso_synced_at = timezone.now()
     event.save(update_fields=["helloasso_count", "helloasso_synced_at"])
     return len(items)
+
+
+def needs_sync(event):
+    """Jamais synchronisé, ou pas depuis la fin de l'événement : les billets d'une campagne passée sont alors définitifs."""
+    if not parse_link(event.registration_url):
+        return False
+    synced = event.helloasso_synced_at
+    return synced is None or timezone.localtime(synced).date() <= event.last_date
+
+
+def ensure_synced(event):
+    """Synchronise si besoin (pages du bureau, bilans) ; renvoie un message d'erreur, ou None."""
+    if not configured() or not needs_sync(event):
+        return None
+    try:
+        sync_event(event)
+    except HelloAssoError as error:
+        log.warning("HelloAsso %s : %s", event.slug, error)
+        return str(error)
+    return None

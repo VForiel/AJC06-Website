@@ -82,11 +82,8 @@
         {% if event.price_tr %}
         <div class="fact">{% icon "euro" 20 %}<div><strong>{{ event.price_tr }}</strong></div></div>
         {% endif %}
-        {% if event.helloasso_count %}
-        <div class="fact">{% icon "ticket" 20 %}<div><strong>{% blocktranslate count n=event.helloasso_count %}{{ n }} inscription sur HelloAsso{% plural %}{{ n }} inscriptions sur HelloAsso{% endblocktranslate %}</strong>{% if event.helloasso_synced_at %}<span>{% blocktranslate with when=event.helloasso_synced_at|timesince %}mis à jour il y a {{ when }}{% endblocktranslate %}</span>{% endif %}</div></div>
-        {% endif %}
         {% if event.capacity %}
-        <div class="fact">{% icon "users" 20 %}<div><strong>{% blocktranslate count n=event.capacity %}{{ n }} place{% plural %}{{ n }} places{% endblocktranslate %}</strong>{% if event.is_upcoming %}<span>{% if event.is_full %}{% translate "Complet" %}{% else %}{% blocktranslate with n=attendee_count %}{{ n }} inscrit·es pour l'instant{% endblocktranslate %}{% endif %}</span>{% endif %}</div></div>
+        <div class="fact">{% icon "users" 20 %}<div><strong>{% blocktranslate count n=event.capacity %}{{ n }} place{% plural %}{{ n }} places{% endblocktranslate %}</strong>{% if event.is_upcoming %}<span>{% if event.is_full %}{% translate "Complet" %}{% else %}{% blocktranslate with n=participant_count %}{{ n }} inscrit·es pour l'instant{% endblocktranslate %}{% endif %}</span>{% endif %}</div></div>
         {% endif %}
       </div>
 
@@ -99,10 +96,12 @@
       </div>
       {% endif %}
 
-      {% if event.is_upcoming or attendee_count %}
+      {% if event.is_upcoming or participant_count %}
       <section class="attend" id="participants" aria-labelledby="attend-title">
         <header class="attend-head">
-          {% if event.is_upcoming %}
+          {% if from_helloasso %}
+          <h2 id="attend-title">{% if event.is_upcoming %}{% blocktranslate count n=participant_count %}{{ n }} inscrit·e{% plural %}{{ n }} inscrit·es{% endblocktranslate %}{% else %}{% blocktranslate count n=participant_count %}{{ n }} personne y a participé{% plural %}{{ n }} personnes y ont participé{% endblocktranslate %}{% endif %}</h2>
+          {% elif event.is_upcoming %}
           <h2 id="attend-title">{% blocktranslate count n=attendee_count %}{{ n }} membre y va{% plural %}{{ n }} membres y vont{% endblocktranslate %}</h2>
           {% else %}
           <h2 id="attend-title">{% blocktranslate count n=attendee_count %}{{ n }} membre y est allé·e{% plural %}{{ n }} membres y sont allé·es{% endblocktranslate %}</h2>
@@ -119,6 +118,7 @@
             {% endif %}
           {% endif %}
         </header>
+        {% if from_helloasso %}<p class="help">{% if event.is_upcoming %}{% translate "Inscriptions sur HelloAsso" %}{% else %}{% translate "D'après les inscriptions sur HelloAsso" %}{% endif %}{% if event.helloasso_synced_at and event.is_upcoming %} · {% blocktranslate with when=event.helloasso_synced_at|timesince %}mis à jour il y a {{ when }}{% endblocktranslate %}{% endif %}{% if attendee_count %} · {% if event.is_upcoming %}{% blocktranslate count n=attendee_count %}dont {{ n }} membre du site qui a dit « J'y vais »{% plural %}dont {{ n }} membres du site qui ont dit « J'y vais »{% endblocktranslate %}{% else %}{% blocktranslate count n=attendee_count %}dont {{ n }} membre du site{% plural %}dont {{ n }} membres du site{% endblocktranslate %}{% endif %}{% endif %}</p>{% endif %}
         {% if not event.is_community and event.registration_url and event.is_upcoming %}<p class="help">{% translate "« J'y vais » sert à prévenir les autres membres : l'inscription officielle se fait toujours via le bouton « S'inscrire »." %}</p>{% endif %}
 
         {% if user.is_authenticated %}

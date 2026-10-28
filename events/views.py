@@ -54,7 +54,10 @@ def event_detail(request, slug):
     from community.forms import CommentForm
     from community.models import Comment
 
+    from_helloasso = event.has_helloasso_count
     context = {"event": event, "others": others, "attendees": attendees, "attendee_count": len(attendees),
+               "from_helloasso": from_helloasso,
+               "participant_count": event.helloasso_count if from_helloasso else len(attendees),
                "visible": visible, "photos": photos,
                "comments": Comment.objects.filter(event=event, is_hidden=False, author__is_active=True)
                .select_related("author__profile"),

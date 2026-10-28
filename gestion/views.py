@@ -324,6 +324,9 @@ def dossier(request, pk):
         return redirect("gestion:dossier", pk=event.pk)
     from projets.pdf import participants
 
+    error = helloasso.ensure_synced(event)
+    if error:
+        messages.warning(request, f"Liste HelloAsso non mise à jour : {error}")
     return render(request, "gestion/dossier.html", {
         "event": event, "dossier": item, "form": form, "prev": prev, "real": real,
         "attach_form": AttachmentForm(), "attachments": item.attachments.all(),
@@ -364,6 +367,7 @@ def dossier_detach(request, pk, attachment):
 def dossier_pdf(request, pk, kind):
     event = get_object_or_404(Event, pk=pk)
     item = services.dossier_for(event)
+    helloasso.ensure_synced(event)  # liste des participant·es à jour, même pour une campagne clôturée
     data = pdf.forecast(item) if kind == "previsionnel" else pdf.report(item)
     name = f"{'Projet previsionnel' if kind == 'previsionnel' else 'Bilan'} - {slugify(event.title)} - {event.start_date:%Y-%m-%d}.pdf"
     response = HttpResponse(data, content_type="application/pdf")

@@ -300,7 +300,36 @@ class HelloAssoTests(TestCase):
         event.refresh_from_db()
         self.assertEqual(event.helloasso_count, 2)
         self.assertEqual(set(HelloAssoTicket.objects.values_list("ticket_id", flat=True)), {1, 2})
-        self.assertContains(self.client.get(event.get_absolute_url()), "2 inscriptions sur HelloAsso")
+        page = self.client.get(event.get_absolute_url())
+        self.assertContains(page, "2 inscrit·es")  # le compteur suit la campagne, pas seulement « J'y vais »
+
+    @override_settings(HELLOASSO_CLIENT_ID="id", HELLOASSO_CLIENT_SECRET="secret")
+    def test_past_campaign_read_once_for_counter_and_report(self):
+        link = "https://www.helloasso.com/associations/association-des-jeunes-chercheurs-des-alpes-mariti/evenements/rando"
+        old = Event.objects.create(title="Rando", start_date=in_days(-300), registration_url=link)
+        items = [{"id": i, "type": "Registration", "user": {"firstName": f"P{i}", "lastName": "X"}} for i in range(1, 13)]
+        with mock.patch.object(helloasso, "form_items", return_value=items) as fetch:
+            call_command("sync_helloasso", stdout=io.StringIO())  # sans --all : jamais lue, donc lue
+            call_command("sync_helloasso", stdout=io.StringIO())  # déjà lue après la fin : plus rien
+        self.assertEqual(fetch.call_count, 1)
+        old.refresh_from_db()
+        self.assertEqual(old.helloasso_count, 12)
+        self.assertFalse(helloasso.needs_sync(old))
+        Attendance.objects.create(event=old, user=member("Léa Martin"))
+        page = self.client.get(old.get_absolute_url())
+        self.assertContains(page, "12 personnes y ont participé")
+        self.assertContains(page, "dont 1 membre du site")
+        self.assertEqual(len(pdf.participants(old)), 13)  # 12 billets + la membre du site
+
+    @override_settings(HELLOASSO_CLIENT_ID="id", HELLOASSO_CLIENT_SECRET="secret")
+    def test_report_syncs_a_campaign_never_read(self):
+        link = "https://www.helloasso.com/associations/association-des-jeunes-chercheurs-des-alpes-mariti/evenements/ski"
+        event = Event.objects.create(title="Ski", start_date=in_days(-60), registration_url=link)
+        self.client.force_login(member("Bureau AJC", staff=True))
+        items = [{"id": 5, "type": "Registration", "user": {"firstName": "KARIM", "lastName": "BENALI"}}]
+        with mock.patch.object(helloasso, "form_items", return_value=items):
+            page = self.client.get(reverse("gestion:dossier", args=[event.pk]))
+        self.assertContains(page, "Karim Benali")
 
     @override_settings(HELLOASSO_CLIENT_ID="id", HELLOASSO_CLIENT_SECRET="secret")
     def test_past_event_finds_its_closed_form(self):

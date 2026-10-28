@@ -4,7 +4,8 @@
     python manage.py sync_helloasso
 
 Les événements passés sans lien d'inscription sont rapprochés des formulaires HelloAsso de l'asso (même jour,
-titre le plus proche), clôturés compris ; `--all` le fait pour tout l'historique.
+titre le plus proche), clôturés compris. Les campagnes passées sont lues une fois après la fin de l'événement
+(nombre d'inscrit·es et liste des bilans) ; `--all` relit tout l'historique.
 """
 
 from datetime import timedelta
@@ -26,15 +27,16 @@ class Command(BaseCommand):
         if not helloasso.configured():
             self.stderr.write("Identifiants HelloAsso absents (/gestion/reglages/) : rien à faire.")
             return
-        events = Event.objects.all()
-        if not options["all"]:
-            events = events.filter(start_date__gte=timezone.localdate() - timedelta(days=30))
         try:
-            for event in helloasso.discover_links(events.official().filter(registration_url="")):
+            for event in helloasso.discover_links(Event.objects.official().past().filter(registration_url="")):
                 self.stdout.write(f"{event.slug} : formulaire trouvé, {event.registration_url}")
         except helloasso.HelloAssoError as error:
             self.stderr.write(f"Liste des formulaires : {error}")
-        for event in events.filter(registration_url__contains="helloasso.com"):
+        events = Event.objects.filter(registration_url__contains="helloasso.com")
+        if not options["all"]:
+            recent = timezone.localdate() - timedelta(days=30)
+            events = [e for e in events if e.start_date >= recent or helloasso.needs_sync(e)]
+        for event in events:
             try:
                 count = helloasso.sync_event(event)
             except helloasso.HelloAssoError as error:

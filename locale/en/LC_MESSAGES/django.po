@@ -2456,16 +2456,22 @@ msgid "%(n)s inscrit·es pour l'instant"
 msgstr "%(n)s signed up so far"
 
 #: templates/events/detail.html
+msgid "dont %(n)s membre du site qui a dit « J'y vais »"
+msgid_plural "dont %(n)s membres du site qui ont dit « J'y vais »"
+msgstr[0] "including %(n)s site member who said \"I'm going\""
+msgstr[1] "including %(n)s site members who said \"I'm going\""
+
+#: templates/events/detail.html
 msgid "%(n)s de tes amis y va"
 msgid_plural "%(n)s de tes amis y vont"
 msgstr[0] "%(n)s of your friends is going"
 msgstr[1] "%(n)s of your friends are going"
 
 #: templates/events/detail.html
-msgid "%(n)s inscription sur HelloAsso"
-msgid_plural "%(n)s inscriptions sur HelloAsso"
-msgstr[0] "%(n)s registration on HelloAsso"
-msgstr[1] "%(n)s registrations on HelloAsso"
+msgid "%(n)s inscrit·e"
+msgid_plural "%(n)s inscrit·es"
+msgstr[0] "%(n)s registered"
+msgstr[1] "%(n)s registered"
 
 #: templates/events/detail.html
 msgid "%(n)s membre y est allé·e"
@@ -2480,10 +2486,22 @@ msgstr[0] "%(n)s member is going"
 msgstr[1] "%(n)s members are going"
 
 #: templates/events/detail.html
+msgid "%(n)s personne y a participé"
+msgid_plural "%(n)s personnes y ont participé"
+msgstr[0] "%(n)s person took part"
+msgstr[1] "%(n)s people took part"
+
+#: templates/events/detail.html
 msgid "%(n)s place"
 msgid_plural "%(n)s places"
 msgstr[0] "%(n)s place"
 msgstr[1] "%(n)s places"
+
+#: templates/events/detail.html
+msgid "dont %(n)s membre du site"
+msgid_plural "dont %(n)s membres du site"
+msgstr[0] "including %(n)s site member"
+msgstr[1] "including %(n)s site members"
 
 #: templates/events/detail.html
 msgid "Ajouter à mon agenda"
@@ -2514,6 +2532,10 @@ msgid "Connecte-toi pour voir qui y va."
 msgstr "Log in to see who's going."
 
 #: templates/events/detail.html
+msgid "D'après les inscriptions sur HelloAsso"
+msgstr "Based on HelloAsso registrations"
+
+#: templates/events/detail.html
 msgid "Dans le même esprit"
 msgstr "In the same spirit"
 
@@ -2532,6 +2554,10 @@ msgstr "On hold: this event is not yet visible on the website."
 #: templates/events/detail.html
 msgid "Envoyer les invitations"
 msgstr "Send invitations"
+
+#: templates/events/detail.html
+msgid "Inscriptions sur HelloAsso"
+msgstr "Registrations on HelloAsso"
 
 #: templates/events/detail.html
 msgid "Inviter des amis"
